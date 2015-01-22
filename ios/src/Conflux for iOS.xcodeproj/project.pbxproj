@@ -1,0 +1,427 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		F1907EDD1A70A60E00182F78 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F1907EDC1A70A60E00182F78 /* main.m */; };
+		F1907EE01A70A60E00182F78 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F1907EDF1A70A60E00182F78 /* AppDelegate.m */; };
+		F1907EE31A70A60E00182F78 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F1907EE21A70A60E00182F78 /* ViewController.m */; };
+		F1907EE61A70A60E00182F78 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F1907EE41A70A60E00182F78 /* Main.storyboard */; };
+		F1907EE81A70A60E00182F78 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F1907EE71A70A60E00182F78 /* Images.xcassets */; };
+		F1907EEB1A70A60E00182F78 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = F1907EE91A70A60E00182F78 /* LaunchScreen.xib */; };
+		F1907EF71A70A60E00182F78 /* Conflux_for_iOSTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F1907EF61A70A60E00182F78 /* Conflux_for_iOSTests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		F1907EF11A70A60E00182F78 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F1907ECF1A70A60E00182F78 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F1907ED61A70A60E00182F78;
+			remoteInfo = "Conflux for iOS";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		F1907ED71A70A60E00182F78 /* Conflux for iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Conflux for iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F1907EDB1A70A60E00182F78 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F1907EDC1A70A60E00182F78 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		F1907EDE1A70A60E00182F78 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		F1907EDF1A70A60E00182F78 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		F1907EE11A70A60E00182F78 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		F1907EE21A70A60E00182F78 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		F1907EE51A70A60E00182F78 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		F1907EE71A70A60E00182F78 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		F1907EEA1A70A60E00182F78 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
+		F1907EF01A70A60E00182F78 /* Conflux for iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Conflux for iOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F1907EF51A70A60E00182F78 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F1907EF61A70A60E00182F78 /* Conflux_for_iOSTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Conflux_for_iOSTests.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F1907ED41A70A60E00182F78 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F1907EED1A70A60E00182F78 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		F1907ECE1A70A60E00182F78 = {
+			isa = PBXGroup;
+			children = (
+				F1907ED91A70A60E00182F78 /* Conflux for iOS */,
+				F1907EF31A70A60E00182F78 /* Conflux for iOSTests */,
+				F1907ED81A70A60E00182F78 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		F1907ED81A70A60E00182F78 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F1907ED71A70A60E00182F78 /* Conflux for iOS.app */,
+				F1907EF01A70A60E00182F78 /* Conflux for iOSTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F1907ED91A70A60E00182F78 /* Conflux for iOS */ = {
+			isa = PBXGroup;
+			children = (
+				F1907EDE1A70A60E00182F78 /* AppDelegate.h */,
+				F1907EDF1A70A60E00182F78 /* AppDelegate.m */,
+				F1907EE11A70A60E00182F78 /* ViewController.h */,
+				F1907EE21A70A60E00182F78 /* ViewController.m */,
+				F1907EE41A70A60E00182F78 /* Main.storyboard */,
+				F1907EE71A70A60E00182F78 /* Images.xcassets */,
+				F1907EE91A70A60E00182F78 /* LaunchScreen.xib */,
+				F1907EDA1A70A60E00182F78 /* Supporting Files */,
+			);
+			path = "Conflux for iOS";
+			sourceTree = "<group>";
+		};
+		F1907EDA1A70A60E00182F78 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				F1907EDB1A70A60E00182F78 /* Info.plist */,
+				F1907EDC1A70A60E00182F78 /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		F1907EF31A70A60E00182F78 /* Conflux for iOSTests */ = {
+			isa = PBXGroup;
+			children = (
+				F1907EF61A70A60E00182F78 /* Conflux_for_iOSTests.m */,
+				F1907EF41A70A60E00182F78 /* Supporting Files */,
+			);
+			path = "Conflux for iOSTests";
+			sourceTree = "<group>";
+		};
+		F1907EF41A70A60E00182F78 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				F1907EF51A70A60E00182F78 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F1907ED61A70A60E00182F78 /* Conflux for iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F1907EFA1A70A60E00182F78 /* Build configuration list for PBXNativeTarget "Conflux for iOS" */;
+			buildPhases = (
+				F1907ED31A70A60E00182F78 /* Sources */,
+				F1907ED41A70A60E00182F78 /* Frameworks */,
+				F1907ED51A70A60E00182F78 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Conflux for iOS";
+			productName = "Conflux for iOS";
+			productReference = F1907ED71A70A60E00182F78 /* Conflux for iOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+		F1907EEF1A70A60E00182F78 /* Conflux for iOSTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F1907EFD1A70A60E00182F78 /* Build configuration list for PBXNativeTarget "Conflux for iOSTests" */;
+			buildPhases = (
+				F1907EEC1A70A60E00182F78 /* Sources */,
+				F1907EED1A70A60E00182F78 /* Frameworks */,
+				F1907EEE1A70A60E00182F78 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F1907EF21A70A60E00182F78 /* PBXTargetDependency */,
+			);
+			name = "Conflux for iOSTests";
+			productName = "Conflux for iOSTests";
+			productReference = F1907EF01A70A60E00182F78 /* Conflux for iOSTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F1907ECF1A70A60E00182F78 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0610;
+				ORGANIZATIONNAME = Conflux;
+				TargetAttributes = {
+					F1907ED61A70A60E00182F78 = {
+						CreatedOnToolsVersion = 6.1.1;
+					};
+					F1907EEF1A70A60E00182F78 = {
+						CreatedOnToolsVersion = 6.1.1;
+						TestTargetID = F1907ED61A70A60E00182F78;
+					};
+				};
+			};
+			buildConfigurationList = F1907ED21A70A60E00182F78 /* Build configuration list for PBXProject "Conflux for iOS" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = F1907ECE1A70A60E00182F78;
+			productRefGroup = F1907ED81A70A60E00182F78 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F1907ED61A70A60E00182F78 /* Conflux for iOS */,
+				F1907EEF1A70A60E00182F78 /* Conflux for iOSTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F1907ED51A70A60E00182F78 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F1907EE61A70A60E00182F78 /* Main.storyboard in Resources */,
+				F1907EEB1A70A60E00182F78 /* LaunchScreen.xib in Resources */,
+				F1907EE81A70A60E00182F78 /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F1907EEE1A70A60E00182F78 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F1907ED31A70A60E00182F78 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F1907EE31A70A60E00182F78 /* ViewController.m in Sources */,
+				F1907EE01A70A60E00182F78 /* AppDelegate.m in Sources */,
+				F1907EDD1A70A60E00182F78 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F1907EEC1A70A60E00182F78 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F1907EF71A70A60E00182F78 /* Conflux_for_iOSTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		F1907EF21A70A60E00182F78 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F1907ED61A70A60E00182F78 /* Conflux for iOS */;
+			targetProxy = F1907EF11A70A60E00182F78 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		F1907EE41A70A60E00182F78 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F1907EE51A70A60E00182F78 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		F1907EE91A70A60E00182F78 /* LaunchScreen.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F1907EEA1A70A60E00182F78 /* Base */,
+			);
+			name = LaunchScreen.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		F1907EF81A70A60E00182F78 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		F1907EF91A70A60E00182F78 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		F1907EFB1A70A60E00182F78 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = "Conflux for iOS/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		F1907EFC1A70A60E00182F78 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = "Conflux for iOS/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		F1907EFE1A70A60E00182F78 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "Conflux for iOSTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Conflux for iOS.app/Conflux for iOS";
+			};
+			name = Debug;
+		};
+		F1907EFF1A70A60E00182F78 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "Conflux for iOSTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Conflux for iOS.app/Conflux for iOS";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		F1907ED21A70A60E00182F78 /* Build configuration list for PBXProject "Conflux for iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F1907EF81A70A60E00182F78 /* Debug */,
+				F1907EF91A70A60E00182F78 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F1907EFA1A70A60E00182F78 /* Build configuration list for PBXNativeTarget "Conflux for iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F1907EFB1A70A60E00182F78 /* Debug */,
+				F1907EFC1A70A60E00182F78 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		F1907EFD1A70A60E00182F78 /* Build configuration list for PBXNativeTarget "Conflux for iOSTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F1907EFE1A70A60E00182F78 /* Debug */,
+				F1907EFF1A70A60E00182F78 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = F1907ECF1A70A60E00182F78 /* Project object */;
+}
