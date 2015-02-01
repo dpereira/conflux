@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#include "synergy.h"
 
 @interface AppDelegate ()
 
@@ -24,7 +25,14 @@
 {
     UITouch *touched = [[event allTouches] anyObject];
     CGPoint location = [touched locationInView:touched.view];
-    NSLog(@"x=%.2f y=%.2f", location.x, location.y);
+    NSLog(@"Began: x=%.2f y=%.2f", location.x, location.y);
+}
+
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    UITouch *touched = [[event allTouches] anyObject];
+    CGPoint location = [touched locationInView:touched.view];
+    NSLog(@"Moved: x=%.2f y=%.2f", location.x, location.y);
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
@@ -43,6 +51,8 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    self.s = [synergy new];
+    [self.s loop];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {

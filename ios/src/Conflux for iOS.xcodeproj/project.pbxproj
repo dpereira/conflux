@@ -14,6 +14,7 @@
 		F1907EE81A70A60E00182F78 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F1907EE71A70A60E00182F78 /* Images.xcassets */; };
 		F1907EEB1A70A60E00182F78 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = F1907EE91A70A60E00182F78 /* LaunchScreen.xib */; };
 		F1907EF71A70A60E00182F78 /* Conflux_for_iOSTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F1907EF61A70A60E00182F78 /* Conflux_for_iOSTests.m */; };
+		F1DCB8911A7DCB9900B1455F /* synergy.m in Sources */ = {isa = PBXBuildFile; fileRef = F1DCB8901A7DCB9900B1455F /* synergy.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +41,8 @@
 		F1907EF01A70A60E00182F78 /* Conflux for iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Conflux for iOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1907EF51A70A60E00182F78 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F1907EF61A70A60E00182F78 /* Conflux_for_iOSTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Conflux_for_iOSTests.m; sourceTree = "<group>"; };
+		F1DCB8901A7DCB9900B1455F /* synergy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = synergy.m; sourceTree = "<group>"; };
+		F1DCB8921A7DCCE300B1455F /* synergy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = synergy.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,6 +88,8 @@
 				F1907EDF1A70A60E00182F78 /* AppDelegate.m */,
 				F1907EE11A70A60E00182F78 /* ViewController.h */,
 				F1907EE21A70A60E00182F78 /* ViewController.m */,
+				F1DCB8901A7DCB9900B1455F /* synergy.m */,
+				F1DCB8921A7DCCE300B1455F /* synergy.h */,
 				F1907EE41A70A60E00182F78 /* Main.storyboard */,
 				F1907EE71A70A60E00182F78 /* Images.xcassets */,
 				F1907EE91A70A60E00182F78 /* LaunchScreen.xib */,
@@ -220,6 +225,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F1907EE31A70A60E00182F78 /* ViewController.m in Sources */,
+				F1DCB8911A7DCB9900B1455F /* synergy.m in Sources */,
 				F1907EE01A70A60E00182F78 /* AppDelegate.m in Sources */,
 				F1907EDD1A70A60E00182F78 /* main.m in Sources */,
 			);
@@ -412,6 +418,7 @@
 				F1907EFC1A70A60E00182F78 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		F1907EFD1A70A60E00182F78 /* Build configuration list for PBXNativeTarget "Conflux for iOSTests" */ = {
 			isa = XCConfigurationList;
@@ -420,6 +427,7 @@
 				F1907EFF1A70A60E00182F78 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
