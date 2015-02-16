@@ -64,6 +64,20 @@ static void sendHandshake(CFWriteStreamRef writeStream) {
     
     CFWriteStreamWrite(writeStream, hello, sizeof(hello));
     state = 1;
+
+static void handleReadStream(CFReadStreamRef readStream, CFStreamEventType type, void *info)
+{
+    UInt8 buffer[8];
+    memset(buffer, 0, sizeof(buffer));
+    
+    if(kCFStreamEventHasBytesAvailable == type) {
+        CFIndex howMany = CFReadStreamRead(readStream, buffer, sizeof(buffer));
+        NSLog(@"Read %d bytes", (int)howMany);
+    } else if(kCFStreamEventErrorOccurred) {
+        NSLog(@"Error reading stream");
+    }
+    
+    NSLog(@"OK");
 }
 
 static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataRef address, const void* data, void* info)
@@ -72,6 +86,7 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
     if(kCFSocketAcceptCallBack == type) {
         CFReadStreamRef readStream = NULL;
         CFWriteStreamRef writeStream = NULL;
+<<<<<<< HEAD
         CFStreamCreatePairWithSocket(kCFAllocatorDefault, *(CFSocketNativeHandle*)data, &readStream, &writeStream);
         
         if(!CFReadStreamOpen(readStream)) {
@@ -104,6 +119,19 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
         }
         NSLog(@"LOOP ENDED WITH %ld", howMany);
         close((int)data);
+=======
+        CFStreamCreatePairWithSocket(kCFAllocatorDefault, (CFSocketNativeHandle)data, &readStream, &writeStream);
+        NSLog(@"Handling connect spawned");
+        if(!readStream) {
+            NSLog(@"scewed up");
+        }
+        CFStreamClientContext ctx;
+        ctx.info = 0;
+        CFReadStreamSetClient(readStream, kCFStreamEventOpenCompleted, handleReadStream, &ctx);
+        CFReadStreamScheduleWithRunLoop(readStream, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
+        CFReadStreamOpen(readStream);
+        NSLog(@"SCHEDULED");
+>>>>>>> 26e3b0a46e70613d2a0f686098e7cb6175ed4076
     }
 }
 
@@ -114,6 +142,7 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
 @implementation synergy
 
 - (void) loop {
+    NSLog(@"LOOP starting");
     CFSocketRef myipv4cfsock = CFSocketCreate(
                                               kCFAllocatorDefault,
                                               PF_INET,
@@ -157,6 +186,8 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
     
     CFSocketSetAddress(myipv6cfsock, sin6cfd);
     CFRelease(sin6cfd);
+    
+    NSLog(@"ALL BOUND");
     CFRunLoopSourceRef socketsource = CFSocketCreateRunLoopSource(
                                                                   kCFAllocatorDefault,
                                                                   myipv4cfsock,
@@ -176,6 +207,8 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
                        CFRunLoopGetCurrent(),
                        socketsource6,
                        kCFRunLoopDefaultMode);
+    
+    NSLog(@"ALL DONE");
 
 }
 
