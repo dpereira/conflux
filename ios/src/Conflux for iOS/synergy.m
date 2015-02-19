@@ -14,18 +14,35 @@
 
 static int state = 0;
 
-static void writeSimple(const char *payload, CFWriteStreamRef writeStream) {
-    NSLog(@"Answaring: %s", payload);
-    int len = strlen(payload);
-    UInt8 header[] = {0x00, 0x00, 0x00, len};
-    UInt8 *buffer = malloc(sizeof(header) + len);
+
+static void writeRaw(const UInt8* bytes, int howMany, CFWriteStreamRef writeStream) {
+    UInt8 header[] = {0x00, 0x00, 0x00, howMany };
+    UInt8 *buffer = malloc(sizeof(header) + howMany);
     memcpy(buffer, header, sizeof(header));
-    memcpy(buffer + sizeof(header), payload, len);
-    CFWriteStreamWrite(writeStream, buffer, sizeof(header) + len);
+    memcpy(buffer + sizeof(header), bytes, howMany);
+    CFWriteStreamWrite(writeStream, buffer, sizeof(header) + howMany);
+    free(buffer);
 }
 
-static void writeBytes(UInt8* bytes, int howMany, CFWriteStreamRef writeStream) {
-    CFWriteStreamWrite(writeStream, bytes, howMany);
+static void writeSimple(const char *payload, CFWriteStreamRef writeStream) {
+    NSLog(@"Sending: %s", payload);
+    writeRaw(payload, strlen(payload), writeStream);
+}
+
+
+/*
+ * Enter screen @ x, y
+ */
+static void cinn(UInt16 x, UInt16 y, CFWriteStreamRef writeStream) {
+    NSLog(@"Entering screen");
+    const UInt8 cmd[] = {(UInt8)'C', (UInt8)'I', (UInt8)'N', (UInt8)'N', x >> 8, x & 0x00FF, y >> 8, y & 0x00FF };
+    writeRaw(cmd, sizeof(cmd), writeStream);
+}
+
+static void dmov(UInt16 x, UInt16 y, CFWriteStreamRef writeStream) {
+    NSLog(@"Moving mouse");
+    const UInt8 cmd[] = {'D','M','M','V', x >> 8, x & 0x00FF, y >> 8, y & 0x00FF};
+    writeRaw(cmd, sizeof(cmd), writeStream);
 }
 
 static void processPacket(int numBytes, CFReadStreamRef readStream, CFWriteStreamRef writeStream) {
@@ -50,20 +67,35 @@ static void processPacket(int numBytes, CFReadStreamRef readStream, CFWriteStrea
             //writeSimple("MDLT", writeStream);
             //writeSimple("SSCM", writeStream);
             //writeSimple("SSCS", writeStream);
-            writeSimple("SSVR", writeStream);
+            //writeSimple("SSVR", writeStream);
             //writeSimple("_KFW", writeStream);
+            [NSThread sleepForTimeInterval: 1];
+            writeSimple("CALV", writeStream);
             state = 3;
             break;
-        case 3: [NSThread sleepForTimeInterval: .5]; writeSimple("CALV", writeStream); break;
+        case 3: state = 4;
+            cinn(200, 0, writeStream);
+            [NSThread sleepForTimeInterval: 2];
+            for(UInt16 i = 0; i < 768; i++) {
+                dmov(200, i, writeStream);
+                [NSThread sleepForTimeInterval: .01];
+                if(i % 100) {
+                    writeSimple("CALV", writeStream);
+                }
+            }
+            break;
+        case 4: [NSThread sleepForTimeInterval: 2]; writeSimple("CALV", writeStream); break;
         default: break;
     }
 }
+
 
 static void sendHandshake(CFWriteStreamRef writeStream) {
     UInt8 hello[] = {0x00, 0x00, 0x00, 0x0b, 0x53, 0x79, 0x6e, 0x65, 0x72, 0x67, 0x79, 0x00, 0x01, 0x00, 0x05};
     
     CFWriteStreamWrite(writeStream, hello, sizeof(hello));
     state = 1;
+}
 
 static void handleReadStream(CFReadStreamRef readStream, CFStreamEventType type, void *info)
 {
@@ -86,7 +118,6 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
     if(kCFSocketAcceptCallBack == type) {
         CFReadStreamRef readStream = NULL;
         CFWriteStreamRef writeStream = NULL;
-<<<<<<< HEAD
         CFStreamCreatePairWithSocket(kCFAllocatorDefault, *(CFSocketNativeHandle*)data, &readStream, &writeStream);
         
         if(!CFReadStreamOpen(readStream)) {
@@ -119,19 +150,6 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
         }
         NSLog(@"LOOP ENDED WITH %ld", howMany);
         close((int)data);
-=======
-        CFStreamCreatePairWithSocket(kCFAllocatorDefault, (CFSocketNativeHandle)data, &readStream, &writeStream);
-        NSLog(@"Handling connect spawned");
-        if(!readStream) {
-            NSLog(@"scewed up");
-        }
-        CFStreamClientContext ctx;
-        ctx.info = 0;
-        CFReadStreamSetClient(readStream, kCFStreamEventOpenCompleted, handleReadStream, &ctx);
-        CFReadStreamScheduleWithRunLoop(readStream, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
-        CFReadStreamOpen(readStream);
-        NSLog(@"SCHEDULED");
->>>>>>> 26e3b0a46e70613d2a0f686098e7cb6175ed4076
     }
 }
 
