@@ -33,6 +33,7 @@
     UITouch *touched = [[event allTouches] anyObject];
     CGPoint location = [touched locationInView:touched.view];
     NSLog(@"Moved: x=%.2f y=%.2f", location.x, location.y);
+    [self.s mouseMove: location.x withY: location.y];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {

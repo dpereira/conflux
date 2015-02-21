@@ -13,6 +13,7 @@
 
 @interface synergy: NSObject
 -(void)loop;
+-(void)mouseMove: (UInt16) x withY:(UInt16)y;
 @end
 
 #endif

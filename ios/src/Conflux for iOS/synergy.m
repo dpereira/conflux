@@ -13,7 +13,9 @@
 @import Foundation;
 
 static int state = 0;
-
+static CFWriteStreamRef _writeStream = NULL;
+static double xProportion =  1360. / 320.;
+static double yProportion = 768. / 480.;
 
 static void writeRaw(const UInt8* bytes, int howMany, CFWriteStreamRef writeStream) {
     UInt8 header[] = {0x00, 0x00, 0x00, howMany };
@@ -25,7 +27,6 @@ static void writeRaw(const UInt8* bytes, int howMany, CFWriteStreamRef writeStre
 }
 
 static void writeSimple(const char *payload, CFWriteStreamRef writeStream) {
-    NSLog(@"Sending: %s", payload);
     writeRaw(payload, strlen(payload), writeStream);
 }
 
@@ -69,11 +70,11 @@ static void processPacket(int numBytes, CFReadStreamRef readStream, CFWriteStrea
             //writeSimple("SSCS", writeStream);
             //writeSimple("SSVR", writeStream);
             //writeSimple("_KFW", writeStream);
-            [NSThread sleepForTimeInterval: 1];
-            writeSimple("CALV", writeStream);
+//            [NSThread sleepForTimeInterval: 1];
+//            writeSimple("CALV", writeStream);
             state = 3;
             break;
-        case 3: state = 4;
+/*        case 3: state = 4;
             cinn(200, 0, writeStream);
             [NSThread sleepForTimeInterval: 2];
             for(UInt16 i = 0; i < 768; i++) {
@@ -84,7 +85,8 @@ static void processPacket(int numBytes, CFReadStreamRef readStream, CFWriteStrea
                 }
             }
             break;
-        case 4: [NSThread sleepForTimeInterval: 2]; writeSimple("CALV", writeStream); break;
+*/
+        //case 3: [NSThread sleepForTimeInterval: 2]; writeSimple("CALV", writeStream); break;
         default: break;
     }
 }
@@ -120,6 +122,8 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
         CFWriteStreamRef writeStream = NULL;
         CFStreamCreatePairWithSocket(kCFAllocatorDefault, *(CFSocketNativeHandle*)data, &readStream, &writeStream);
         
+        _writeStream = writeStream;
+        
         if(!CFReadStreamOpen(readStream)) {
             NSLog(@"Failed to open read stream");
             return;
@@ -146,6 +150,9 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
                 NSLog(@"Got 4 bytes: %02x %02x %02x %02x", headerBuffer[0], headerBuffer[1], headerBuffer[2], headerBuffer[3]);
                 processPacket(headerBuffer[03], readStream, writeStream);
                 total = 0;
+                if(state == 3) {
+                    break;
+                }
             }
         }
         NSLog(@"LOOP ENDED WITH %ld", howMany);
@@ -158,6 +165,11 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
 @end
 
 @implementation synergy
+
+- (void) mouseMove:(UInt16)x withY:(UInt16)y {
+    dmov(x * xProportion, y * yProportion, _writeStream);
+
+}
 
 - (void) loop {
     NSLog(@"LOOP starting");
@@ -220,14 +232,20 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
                                                                    kCFAllocatorDefault,
                                                                    myipv6cfsock,
                                                                    0);
-    
+
     CFRunLoopAddSource(
                        CFRunLoopGetCurrent(),
                        socketsource6,
                        kCFRunLoopDefaultMode);
-    
+    [NSTimer scheduledTimerWithTimeInterval:2.0f target:self selector:@selector(_keepAlive:) userInfo:nil repeats:YES];
     NSLog(@"ALL DONE");
 
+}
+
+-(void)_keepAlive:(NSTimer*)timer {
+    if(state == 3) {
+        writeSimple("CALV", _writeStream);
+    }
 }
 
 @end
