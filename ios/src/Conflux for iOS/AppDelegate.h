@@ -7,12 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-#include "synergy.h"
+#include "Synergy.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
-@property synergy *s;
+@property Synergy *s;
 
 @end
 

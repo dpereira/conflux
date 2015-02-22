@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Conflux. All rights reserved.
 //
 
-#import "synergy.h"
+#import "Synergy.h"
 #include <CoreFoundation/CoreFoundation.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -173,11 +173,11 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
     }
 }
 
-@interface synergy()
+@interface Synergy()
 
 @end
 
-@implementation synergy
+@implementation Synergy
 
 - (void) doubleClick:(UInt8) whichButton {
     doubleClick(whichButton, _writeStream);
