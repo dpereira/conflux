@@ -14,6 +14,7 @@
 @interface synergy: NSObject
 -(void)loop;
 -(void)mouseMove: (UInt16) x withY:(UInt16)y;
+-(void)doubleClick: (UInt8)whichButton;
 @end
 
 #endif

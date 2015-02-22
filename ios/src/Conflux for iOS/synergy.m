@@ -46,6 +46,19 @@ static void dmov(UInt16 x, UInt16 y, CFWriteStreamRef writeStream) {
     writeRaw(cmd, sizeof(cmd), writeStream);
 }
 
+static void click(UInt8 whichButton, CFWriteStreamRef writeStream) {
+    const UInt8 downCmd[] = {'D','M','D','N', whichButton };
+    const UInt8 upCmd[] = {'D','M','U','P', whichButton };
+    writeRaw(downCmd, sizeof(downCmd), writeStream);
+    writeRaw(upCmd, sizeof(upCmd), writeStream);
+}
+
+static void doubleClick(UInt8 whichButton, CFWriteStreamRef writeStream) {
+    NSLog(@"Double clicking;");
+    click(whichButton, writeStream);
+    click(whichButton, writeStream);
+}
+
 static void processPacket(int numBytes, CFReadStreamRef readStream, CFWriteStreamRef writeStream) {
     NSLog(@"\t%d bytes to process", numBytes);
     UInt8 buffer[numBytes];
@@ -165,6 +178,10 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
 @end
 
 @implementation synergy
+
+- (void) doubleClick:(UInt8) whichButton {
+    doubleClick(whichButton, _writeStream);
+}
 
 - (void) mouseMove:(UInt16)x withY:(UInt16)y {
     dmov(x * xProportion, y * yProportion, _writeStream);

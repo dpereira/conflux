@@ -36,6 +36,17 @@
     [self.s mouseMove: location.x withY: location.y];
 }
 
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+    for (UITouch *aTouch in touches) {
+        UITouch *touched = [[event allTouches] anyObject];
+        CGPoint location = [touched locationInView:touched.view];
+        if (aTouch.tapCount >= 2) {
+            // The view responds to the tap
+            [self.s doubleClick: 1];
+        }
+    }
+}
+
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
