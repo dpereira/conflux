@@ -70,6 +70,8 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
 }
 
 -(void)_addClient:(CFSocketNativeHandle*)clientSocket {
+    self._state = 0;
+    
     self._protocol = [[CFXProtocol alloc] initWithSocket: clientSocket];
     
     [self._protocol hail];
@@ -83,6 +85,8 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
             break;
         }
     }
+    
+    [self._protocol cinn: [[CFXPoint alloc] initWith:0 and:0]];
 }
 
 -(void) click:(CFXMouseButton) whichButton {
