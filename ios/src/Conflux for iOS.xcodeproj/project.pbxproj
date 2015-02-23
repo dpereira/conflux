@@ -34,9 +34,9 @@
 		F14D428B1A9A8B890027C4C4 /* Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Protocol.h; path = synergy/Protocol.h; sourceTree = "<group>"; };
 		F14D428E1A9AC42C0027C4C4 /* Synergy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Synergy.h; path = synergy/Synergy.h; sourceTree = "<group>"; };
 		F14D428F1A9AC42C0027C4C4 /* Synergy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Synergy.m; path = synergy/Synergy.m; sourceTree = "<group>"; };
-		F14D42921A9ACED60027C4C4 /* Mouse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mouse.h; sourceTree = "<group>"; };
 		F14D42931A9AFFE20027C4C4 /* Point.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Point.m; path = synergy/Point.m; sourceTree = "<group>"; };
 		F14D42951A9B0B4C0027C4C4 /* Point.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Point.h; path = synergy/Point.h; sourceTree = "<group>"; };
+		F14D42961A9B109A0027C4C4 /* Mouse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Mouse.h; path = synergy/Mouse.h; sourceTree = "<group>"; };
 		F1907ED71A70A60E00182F78 /* Conflux for iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Conflux for iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1907EDB1A70A60E00182F78 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F1907EDC1A70A60E00182F78 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -73,12 +73,12 @@
 		F14D428C1A9A8B950027C4C4 /* synergy */ = {
 			isa = PBXGroup;
 			children = (
+				F14D42961A9B109A0027C4C4 /* Mouse.h */,
 				F14D42951A9B0B4C0027C4C4 /* Point.h */,
 				F14D428E1A9AC42C0027C4C4 /* Synergy.h */,
 				F14D428F1A9AC42C0027C4C4 /* Synergy.m */,
 				F14D42881A9A8A270027C4C4 /* Protocol.m */,
 				F14D428B1A9A8B890027C4C4 /* Protocol.h */,
-				F14D42921A9ACED60027C4C4 /* Mouse.h */,
 				F14D42931A9AFFE20027C4C4 /* Point.m */,
 			);
 			name = synergy;
