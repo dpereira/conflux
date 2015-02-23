@@ -37,7 +37,6 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     self.synergy = [Synergy new];
-    [self.synergy loop];
 }
 
 @end

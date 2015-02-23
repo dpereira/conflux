@@ -7,10 +7,11 @@
 //
 
 
-#import "Synergy.h"
 #import <sys/socket.h>
 #import <netinet/in.h>
-@import Foundation;
+#import "Foundation/Foundation.h"
+#import "Synergy.h"
+#import "Protocol.h"
 
 static int state = 0;
 static CFWriteStreamRef _writeStream = NULL;
@@ -148,11 +149,28 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
     }
 }
 
-/*@interface Synergy()
+@interface Synergy()
 
-@end*/
+@property CFXProtocol* _protocol;
+
+@property CFSocketRef _socket;
+
+-(id)init;
+
+@end
 
 @implementation Synergy
+
+-(id)init {
+    if(self = [super init]) {
+        self._socket = [self _initSocket];
+        self._protocol = [[CFXProtocol alloc] initWithSocket: self._socket];
+        return self;
+    } else {
+        return nil;
+    }
+}
+
 
 - (void) doubleClick:(UInt8) whichButton {
     doubleClick(whichButton, _writeStream);
@@ -163,17 +181,11 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
 
 }
 
-- (void) loop {
+- (CFSocketRef) _initSocket {
     NSLog(@"LOOP starting");
     CFSocketRef myipv4cfsock = CFSocketCreate(
                                               kCFAllocatorDefault,
                                               PF_INET,
-                                              SOCK_STREAM,
-                                              IPPROTO_TCP,
-                                              kCFSocketAcceptCallBack, handleConnect, NULL);
-    CFSocketRef myipv6cfsock = CFSocketCreate(
-                                              kCFAllocatorDefault,
-                                              PF_INET6,
                                               SOCK_STREAM,
                                               IPPROTO_TCP,
                                               kCFSocketAcceptCallBack, handleConnect, NULL);
@@ -193,22 +205,6 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
     CFSocketSetAddress(myipv4cfsock, sincfd);
     CFRelease(sincfd);
     
-    struct sockaddr_in6 sin6;
-    
-    memset(&sin6, 0, sizeof(sin6));
-    sin6.sin6_len = sizeof(sin6);
-    sin6.sin6_family = AF_INET6; /* Address family */
-    sin6.sin6_port = htons(0); /* Or a specific port */
-    sin6.sin6_addr = in6addr_any;
-    
-    CFDataRef sin6cfd = CFDataCreate(
-                                     kCFAllocatorDefault,
-                                     (UInt8 *)&sin6,
-                                     sizeof(sin6));
-    
-    CFSocketSetAddress(myipv6cfsock, sin6cfd);
-    CFRelease(sin6cfd);
-    
     NSLog(@"ALL BOUND");
     CFRunLoopSourceRef socketsource = CFSocketCreateRunLoopSource(
                                                                   kCFAllocatorDefault,
@@ -220,18 +216,9 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
                        socketsource,
                        kCFRunLoopDefaultMode);
     
-    CFRunLoopSourceRef socketsource6 = CFSocketCreateRunLoopSource(
-                                                                   kCFAllocatorDefault,
-                                                                   myipv6cfsock,
-                                                                   0);
-
-    CFRunLoopAddSource(
-                       CFRunLoopGetCurrent(),
-                       socketsource6,
-                       kCFRunLoopDefaultMode);
     [NSTimer scheduledTimerWithTimeInterval:2.0f target:self selector:@selector(_keepAlive:) userInfo:nil repeats:YES];
-    NSLog(@"ALL DONE");
-
+    
+    return myipv4cfsock;
 }
 
 -(void)_keepAlive:(NSTimer*)timer {
