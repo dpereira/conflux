@@ -12,8 +12,8 @@
 #import "CoreFoundation/CoreFoundation.h";
 
 @interface CFXPoint: NSObject
-@property UInt8 x;
-@property UInt8 y;
+@property UInt16 x;
+@property UInt16 y;
 @end
 
 #endif
