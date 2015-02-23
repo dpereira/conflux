@@ -13,22 +13,45 @@
 #import "Point.h"
 #import "Mouse.h"
 
+typedef enum {
+    NONE,
+    HAIL,
+    QINF,
+    CALV,
+    CIAK,
+    DSOP,
+    CROP,
+    CINN,
+    DMOV,
+    DMDN,
+    DMUP
+} CFXCommand;
 
 @interface CFXProtocol: NSObject
 
--(id)initWithSocket:(CFSocketRef)socket;
+-(id)initWithSocket:(CFSocketNativeHandle*)socket;
 
--(void)handshake;
+-(void)hail; // not a cmd per se, but a handshake sequence
 
--(void)calv;
+-(void)calv; // server alive
 
--(void)cinn:(const CFXPoint *)coordinates;
+-(void)qinf; // query screen info
 
--(void)dmov:(const CFXPoint *)coordinates;
+-(void)ciak; // ?
 
--(void)dmdn:(const CFXMouseButton)whichButton;
+-(void)dsop; // ?
 
--(void)dmup:(const CFXMouseButton)whichButton;
+-(void)crop; // ?
+
+-(void)cinn:(const CFXPoint *)coordinates; // enter screen @ coordinates
+
+-(void)dmov:(const CFXPoint *)coordinates; // move pointer to coordinates
+
+-(void)dmdn:(const CFXMouseButton)whichButton; // moves given mouse button down (button pressed down)
+
+-(void)dmup:(const CFXMouseButton)whichButton; // moves given mouse button up (btn release)
+
+-(BOOL)waitCommand; // waits for a command from a client
 
 @end
 

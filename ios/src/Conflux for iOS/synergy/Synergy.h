@@ -10,12 +10,16 @@
 #define Conflux_for_iOS_synergy_h
 
 #import <CoreFoundation/CoreFoundation.h>
+#import "Point.h"
+#import "Mouse.h"
 
 @interface Synergy: NSObject
 
--(void)mouseMove: (UInt16) x withY:(UInt16)y;
+-(void)mouseMove:(CFXPoint*) coordinates;
 
--(void)doubleClick: (UInt8)whichButton;
+-(void)doubleClick: (CFXMouseButton)whichButton;
+
+-(void)click: (CFXMouseButton)whichButton;
 @end
 
 #endif
