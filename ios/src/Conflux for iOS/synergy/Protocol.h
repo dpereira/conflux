@@ -22,17 +22,13 @@
 
 -(void)calv;
 
--(void)cinn:(const CFXPoint *)coordinates
-   toStream:(CFWriteStreamRef)writeStream;
+-(void)cinn:(const CFXPoint *)coordinates;
 
--(void)dmov:(const CFXPoint *)coordinates
-   toStream:(CFWriteStreamRef)writeStream;
+-(void)dmov:(const CFXPoint *)coordinates;
 
--(void)dmdn:(const CFXMouseButton)whichButton
-   toStream:(CFWriteStreamRef)writeStream;
+-(void)dmdn:(const CFXMouseButton)whichButton;
 
--(void)dmup:(const CFXMouseButton)whichButton
-   toStream:(CFWriteStreamRef)writeStream;
+-(void)dmup:(const CFXMouseButton)whichButton;
 
 @end
 

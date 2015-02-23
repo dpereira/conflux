@@ -11,6 +11,14 @@
 
 #import "Protocol.h"
 
+@interface CFXProtocol()
+
+@property CFWriteStreamRef _writeStream;
+
+@property CFReadStreamRef _readStream;
+
+@end
+
 @implementation CFXProtocol
 
 -(id)initWithSocket:(CFSocketRef)socket {
@@ -21,29 +29,30 @@
     }
 }
 
--(void)writeRaw:(const UInt8 *)bytes bytes:(int)howMany toStream:(CFWriteStreamRef)writeStream {
-}
-
--(void)writeSimple:(const char *)payload toStream:(CFWriteStreamRef)writeStream {
-}
-
 -(void)handshake {
 }
 
 -(void)calv {
 }
 
--(void)cinn:(const CFXPoint *)coordinates toStream:(CFWriteStreamRef)writeStream {
+-(void)cinn:(const CFXPoint *)coordinates {
 }
 
--(void)dmov:(const CFXPoint *)coordinates toStream:(CFWriteStreamRef)writeStream {
+-(void)dmov:(const CFXPoint *)coordinates {
 }
 
--(void)dmdn:(const int)whichButton toStream:(CFWriteStreamRef)writeStream {
+-(void)dmdn:(CFXMouseButton)whichButton {
 }
 
--(void)dmup:(const int)whichButton toStream:(CFWriteStreamRef)writeStream {
+-(void)dmup:(CFXMouseButton)whichButton {
 }
+
+-(void)_writeRaw:(const UInt8 *)bytes bytes:(int)howMany {
+}
+
+-(void)_writeSimple:(const char *)payload {
+}
+
 
 
 @end
