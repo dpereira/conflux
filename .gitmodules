@@ -1,3 +1,0 @@
-[submodule "synergy"]
-	path = external/synergy
-	url = git@github.com:synergy/synergy.git
