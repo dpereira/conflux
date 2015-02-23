@@ -22,13 +22,6 @@
 
 -(void)calv;
 
--(void)writeRaw:(const UInt8 *)bytes
-          bytes:(int)howMany
-       toStream:(CFWriteStreamRef)writeStream;
-
--(void)writeSimple:(const char *)payload
-          toStream:(CFWriteStreamRef)writeStream;
-
 -(void)cinn:(const CFXPoint *)coordinates
    toStream:(CFWriteStreamRef)writeStream;
 
