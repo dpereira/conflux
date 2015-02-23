@@ -1,0 +1,3 @@
+language: objective-c
+xcode_workspace: "ios/src/Conflux for iOS.xcodeproj"
+xcode_scheme: Conflux for iOS
