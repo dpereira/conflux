@@ -6,10 +6,10 @@
 //  Copyright (c) 2015 Conflux. All rights reserved.
 //
 
+
 #import "Synergy.h"
-#include <CoreFoundation/CoreFoundation.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
+#import <sys/socket.h>
+#import <netinet/in.h>
 @import Foundation;
 
 static int state = 0;
@@ -148,9 +148,9 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
     }
 }
 
-@interface Synergy()
+/*@interface Synergy()
 
-@end
+@end*/
 
 @implementation Synergy
 

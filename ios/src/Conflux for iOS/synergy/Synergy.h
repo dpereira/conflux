@@ -9,7 +9,7 @@
 #ifndef Conflux_for_iOS_synergy_h
 #define Conflux_for_iOS_synergy_h
 
-@import Foundation;
+#import <CoreFoundation/CoreFoundation.h>
 
 @interface Synergy: NSObject
 -(void)loop;

@@ -7,7 +7,7 @@
 //
 
 #import "AppDelegate.h"
-#include "Synergy.h"
+#include "synergy/Synergy.h"
 
 @interface AppDelegate ()
 

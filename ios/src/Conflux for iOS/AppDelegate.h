@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#include "Synergy.h"
+#import "synergy/Synergy.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 

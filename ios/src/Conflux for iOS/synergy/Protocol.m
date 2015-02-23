@@ -9,4 +9,41 @@
 //  with the synergy protocol
 //
 
-#import <Foundation/Foundation.h>
+#import "Protocol.h"
+
+@implementation CFXProtocol
+
+-(id)initWithSocket:(CFSocketRef)socket {
+    if(self = [super init]) {
+        return self;
+    } else {
+        return nil;
+    }
+}
+
+-(void)writeRaw:(const UInt8 *)bytes bytes:(int)howMany toStream:(CFWriteStreamRef)writeStream {
+}
+
+-(void)writeSimple:(const char *)payload toStream:(CFWriteStreamRef)writeStream {
+}
+
+-(void)handshake {
+}
+
+-(void)calv {
+}
+
+-(void)cinn:(const CFXPoint *)coordinates toStream:(CFWriteStreamRef)writeStream {
+}
+
+-(void)dmov:(const CFXPoint *)coordinates toStream:(CFWriteStreamRef)writeStream {
+}
+
+-(void)dmdn:(const int)whichButton toStream:(CFWriteStreamRef)writeStream {
+}
+
+-(void)dmup:(const int)whichButton toStream:(CFWriteStreamRef)writeStream {
+}
+
+
+@end

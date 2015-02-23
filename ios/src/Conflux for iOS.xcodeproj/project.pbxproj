@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F14D42891A9A8A270027C4C4 /* Protocol.m in Sources */ = {isa = PBXBuildFile; fileRef = F14D42881A9A8A270027C4C4 /* Protocol.m */; };
+		F14D42901A9AC42C0027C4C4 /* Synergy.m in Sources */ = {isa = PBXBuildFile; fileRef = F14D428F1A9AC42C0027C4C4 /* Synergy.m */; };
 		F1907EDD1A70A60E00182F78 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F1907EDC1A70A60E00182F78 /* main.m */; };
 		F1907EE01A70A60E00182F78 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F1907EDF1A70A60E00182F78 /* AppDelegate.m */; };
 		F1907EE31A70A60E00182F78 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F1907EE21A70A60E00182F78 /* ViewController.m */; };
@@ -14,7 +16,6 @@
 		F1907EE81A70A60E00182F78 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F1907EE71A70A60E00182F78 /* Images.xcassets */; };
 		F1907EEB1A70A60E00182F78 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = F1907EE91A70A60E00182F78 /* LaunchScreen.xib */; };
 		F1907EF71A70A60E00182F78 /* Conflux_for_iOSTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F1907EF61A70A60E00182F78 /* Conflux_for_iOSTests.m */; };
-		F1DCB8911A7DCB9900B1455F /* Synergy.m in Sources */ = {isa = PBXBuildFile; fileRef = F1DCB8901A7DCB9900B1455F /* Synergy.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -28,6 +29,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		F14D42881A9A8A270027C4C4 /* Protocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Protocol.m; path = synergy/Protocol.m; sourceTree = "<group>"; };
+		F14D428B1A9A8B890027C4C4 /* Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Protocol.h; path = synergy/Protocol.h; sourceTree = "<group>"; };
+		F14D428E1A9AC42C0027C4C4 /* Synergy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Synergy.h; path = synergy/Synergy.h; sourceTree = "<group>"; };
+		F14D428F1A9AC42C0027C4C4 /* Synergy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Synergy.m; path = synergy/Synergy.m; sourceTree = "<group>"; };
+		F14D42911A9ACB6F0027C4C4 /* Point.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Point.h; sourceTree = "<group>"; };
+		F14D42921A9ACED60027C4C4 /* Mouse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mouse.h; sourceTree = "<group>"; };
 		F1907ED71A70A60E00182F78 /* Conflux for iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Conflux for iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1907EDB1A70A60E00182F78 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F1907EDC1A70A60E00182F78 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -41,8 +48,6 @@
 		F1907EF01A70A60E00182F78 /* Conflux for iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Conflux for iOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1907EF51A70A60E00182F78 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F1907EF61A70A60E00182F78 /* Conflux_for_iOSTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Conflux_for_iOSTests.m; sourceTree = "<group>"; };
-		F1DCB8901A7DCB9900B1455F /* Synergy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Synergy.m; sourceTree = "<group>"; };
-		F1DCB8921A7DCCE300B1455F /* Synergy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Synergy.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +68,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		F14D428C1A9A8B950027C4C4 /* synergy */ = {
+			isa = PBXGroup;
+			children = (
+				F14D428E1A9AC42C0027C4C4 /* Synergy.h */,
+				F14D428F1A9AC42C0027C4C4 /* Synergy.m */,
+				F14D42881A9A8A270027C4C4 /* Protocol.m */,
+				F14D428B1A9A8B890027C4C4 /* Protocol.h */,
+				F14D42911A9ACB6F0027C4C4 /* Point.h */,
+				F14D42921A9ACED60027C4C4 /* Mouse.h */,
+			);
+			name = synergy;
+			sourceTree = "<group>";
+		};
 		F1907ECE1A70A60E00182F78 = {
 			isa = PBXGroup;
 			children = (
@@ -84,12 +102,11 @@
 		F1907ED91A70A60E00182F78 /* Conflux for iOS */ = {
 			isa = PBXGroup;
 			children = (
+				F14D428C1A9A8B950027C4C4 /* synergy */,
 				F1907EDE1A70A60E00182F78 /* AppDelegate.h */,
 				F1907EDF1A70A60E00182F78 /* AppDelegate.m */,
 				F1907EE11A70A60E00182F78 /* ViewController.h */,
 				F1907EE21A70A60E00182F78 /* ViewController.m */,
-				F1DCB8901A7DCB9900B1455F /* Synergy.m */,
-				F1DCB8921A7DCCE300B1455F /* Synergy.h */,
 				F1907EE41A70A60E00182F78 /* Main.storyboard */,
 				F1907EE71A70A60E00182F78 /* Images.xcassets */,
 				F1907EE91A70A60E00182F78 /* LaunchScreen.xib */,
@@ -224,9 +241,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F14D42891A9A8A270027C4C4 /* Protocol.m in Sources */,
 				F1907EE31A70A60E00182F78 /* ViewController.m in Sources */,
-				F1DCB8911A7DCB9900B1455F /* Synergy.m in Sources */,
 				F1907EE01A70A60E00182F78 /* AppDelegate.m in Sources */,
+				F14D42901A9AC42C0027C4C4 /* Synergy.m in Sources */,
 				F1907EDD1A70A60E00182F78 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
