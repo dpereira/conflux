@@ -10,12 +10,12 @@
 #define Conflux_for_iOS_Mouse_h
 
 typedef enum {
-    None,
-    Back,
-    Right,
-    Middle,
-    Left,
-    Forward
+    //None
+    //Back,
+    Right = 0x01,
+    //Middle,
+    //Left,
+    //Forward
 
 } CFXMouseButton;
 
