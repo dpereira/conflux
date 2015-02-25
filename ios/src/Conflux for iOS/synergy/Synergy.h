@@ -20,6 +20,9 @@
 -(void)doubleClick: (CFXMouseButton)whichButton;
 
 -(void)click: (CFXMouseButton)whichButton;
+
+-(void)changeOrientation;
+
 @end
 
 #endif

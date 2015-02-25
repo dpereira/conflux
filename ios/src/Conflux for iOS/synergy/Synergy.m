@@ -54,14 +54,24 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
 }
 
 @implementation Synergy {
+    double _sourceX, _sourceY, _targetX, _targetY;
     double _xProjection;
     double _yProjection;
 }
 
+-(void)_updateProjection {
+    self->_xProjection = self->_targetX / self->_sourceX;
+    self->_yProjection = self->_targetY / self->_sourceY;
+}
+
 -(id)init {
     if(self = [super init]) {
-        self->_xProjection = 1360. / 320.;
-        self->_yProjection = 768. / 480.;
+        self->_sourceX = 320.;
+        self->_sourceY = 480.;
+        self->_targetX = 1280.;
+        self->_targetY = 800.;
+        [self _updateProjection];
+        
         self._socket = [self _initSocket];
         return self;
     } else {
@@ -69,6 +79,30 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
     }
 }
 
+-(void) changeOrientation {
+    NSLog(@"Orientation changed: %f, %f", self->_xProjection, self->_yProjection);
+    double tmp = self->_sourceX;
+    self->_sourceX = self->_sourceY;
+    self->_sourceY = tmp;
+    [self _updateProjection];
+}
+
+-(void) click:(CFXMouseButton) whichButton {
+    [self._protocol dmdn: whichButton];
+    [self._protocol dmup: whichButton];
+}
+
+- (void) doubleClick:(CFXMouseButton) whichButton {
+    [self click: whichButton];
+    [self click: whichButton];
+}
+
+- (void) mouseMove:(CFXPoint*)coordinates {
+    CFXPoint* projected = [CFXPoint new];
+    projected.x = coordinates.x * self->_xProjection;
+    projected.y = coordinates.y * self->_yProjection;
+    [self._protocol dmov: projected];
+}
 -(void)_addClient:(CFSocketNativeHandle*)clientSocket {
     self._state = 0;
     
@@ -87,23 +121,6 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
     }
     
     [self._protocol cinn: [[CFXPoint alloc] initWith:0 and:0]];
-}
-
--(void) click:(CFXMouseButton) whichButton {
-    [self._protocol dmdn: whichButton];
-    [self._protocol dmup: whichButton];
-}
-
-- (void) doubleClick:(CFXMouseButton) whichButton {
-    [self click: whichButton];
-    [self click: whichButton];
-}
-
-- (void) mouseMove:(CFXPoint*)coordinates {
-    CFXPoint* projected = [CFXPoint new];
-    projected.x = coordinates.x * self->_xProjection;
-    projected.y = coordinates.y * self->_yProjection;
-    [self._protocol dmov: projected];
 }
 
 -(void) _processPacket:(UInt8*) buffer

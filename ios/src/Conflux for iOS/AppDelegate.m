@@ -44,4 +44,22 @@
     self.synergy = [Synergy new];
 }
 
+- (BOOL)application:(UIApplication*)application
+        didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    UIDevice *device = [UIDevice currentDevice];
+    [device beginGeneratingDeviceOrientationNotifications];
+    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+    
+    [nc addObserver:self
+           selector:@selector(_orientationChanged:)
+               name:UIDeviceOrientationDidChangeNotification
+             object:device];
+    
+    return YES;
+}
+
+- (void) _orientationChanged:(NSNotification*) note {
+    [self.synergy changeOrientation];
+}
+
 @end
