@@ -17,6 +17,7 @@ typedef enum {
     NONE,
     HAIL,
     QINF,
+    DINF,
     CALV,
     CIAK,
     DSOP,
@@ -51,7 +52,10 @@ typedef enum {
 
 -(void)dmup:(const CFXMouseButton)whichButton; // moves given mouse button up (btn release)
 
--(BOOL)waitCommand; // waits for a command from a client
+- (UInt8) peek;
+
+- (CFXCommand) waitCommand:(UInt8*)buffer
+                     bytes:(size_t)toRead; // waits for a command from a client
 
 @end
 

@@ -105,27 +105,57 @@
 
 -(void)_writeSimple:(const char *)payload {
     NSLog(@"-> %s", payload);
-    [self _writeRaw:(const UInt8 *)payload bytes:strlen(payload)];
+    [self _writeRaw:(const UInt8 *)payload bytes:(int)strlen(payload)];
 }
 
--(BOOL)waitCommand {
-    // This is still just a hack:
-    // if the client is talking to
-    // us we keep increasing the state value
-    // in the Synergy object until we think we
-    // can start sending commands to the client.
+- (UInt8) peek {
     UInt8 headerBuffer[4];
     memset(headerBuffer, 0, sizeof(headerBuffer));
     CFReadStreamRead(self->_readStream, headerBuffer, sizeof(headerBuffer));
-    UInt8 buffer[headerBuffer[3] + 1]; // FIXME: find out whether to use the other bytes or not.
-    memset(buffer, 0, headerBuffer[3] + 1);
-    CFIndex howMany = CFReadStreamRead(self->_readStream, buffer, headerBuffer[3]);
+    
+    return headerBuffer[3];
+}
 
-    NSLog(@"Read %d bytes", (int)headerBuffer[3]);
-    if(howMany == 4) {
-        NSLog(@"<- %s", buffer);
+-(CFXCommand)waitCommand:(UInt8*)buffer
+                   bytes:(size_t)toRead {
+    memset(buffer, 0, toRead);
+    CFReadStreamRead(self->_readStream, buffer, toRead);    
+    return [self _classify:buffer];
+}
+
+- (CFXCommand)_classify:(UInt8*) cmd {
+    // Always make this match the CFXCommand
+    // enum or this method will stop working properly.
+    const char* commandIds[] = {
+        "NONE",
+        "HAIL",
+        "QINF",
+        "DINF",
+        "CALV",
+        "CIAK",
+        "DSOP",
+        "CROP",
+        "CINN",
+        "DMOV",
+        "DMDN",
+        "DMUP"
+    };
+    
+    char identifier[5]; identifier[4] = 0;
+    strncpy(identifier, (const char*)cmd, 4);
+    
+    for(int i = 0; i < sizeof(commandIds) / sizeof(char*); i++) {
+        if(strcmp(identifier, commandIds[i]) == 0) {
+            NSLog(@"<- %s", identifier);
+            return (CFXCommand)i;
+        } else if(strcmp(identifier, "Syne"/*rgy*/) == 0) { // cheating
+            return HAIL;
+        }
     }
-    return howMany == headerBuffer[3] ? YES : NO;
+    
+    NSLog(@"!! unable to classify: %s", identifier);
+    
+    return NONE;
 }
 
 

@@ -15,13 +15,15 @@
 
 @interface CFXSynergy: NSObject
 
--(void)mouseMove:(CFXPoint*) coordinates;
+- (id) initWithResolution:(CFXPoint*)sourceResolution;
 
--(void)doubleClick: (CFXMouseButton)whichButton;
+- (void) mouseMove:(CFXPoint*)coordinates;
 
--(void)click: (CFXMouseButton)whichButton;
+- (void) doubleClick:(CFXMouseButton)whichButton;
 
--(void)changeOrientation;
+- (void) click:(CFXMouseButton)whichButton;
+
+- (void) changeOrientation;
 
 @end
 

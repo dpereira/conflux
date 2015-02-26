@@ -43,7 +43,11 @@
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
-    self._synergy = [CFXSynergy new];
+    UIView * current = application.keyWindow.rootViewController.view;
+    CFXPoint* sourceResolution = [[CFXPoint alloc] initWith:current.bounds.size.width
+                                                        and:current.bounds.size.height];
+    
+    self._synergy = [[CFXSynergy alloc] initWithResolution: sourceResolution];
 }
 
 - (BOOL)application:(UIApplication*)application

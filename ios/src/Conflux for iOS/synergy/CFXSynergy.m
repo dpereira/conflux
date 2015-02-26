@@ -22,9 +22,7 @@
 
 @property int _state;
 
--(id)init;
-
--(void)_addClient:(CFSocketNativeHandle*)clientSocket;
+- (void) _addClient:(CFSocketNativeHandle*)clientSocket;
 
 @end
 
@@ -54,22 +52,37 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
 }
 
 @implementation CFXSynergy {
-    double _sourceX, _sourceY, _targetX, _targetY;
-    double _xProjection;
-    double _yProjection;
+    int _sourceWidth, _sourceHeight;
+    int _targetWidth, _targetHeight;
+    int _remoteCursorX, _remoteCursorY;
+    double _xProjection, _yProjection;
 }
 
--(void)_updateProjection {
-    self->_xProjection = self->_targetX / self->_sourceX;
-    self->_yProjection = self->_targetY / self->_sourceY;
+- (id) initWithResolution:(CFXPoint *)sourceResolution {
+    if(self = [super init]) {
+        self->_sourceWidth = sourceResolution.x;
+        self->_sourceHeight = sourceResolution.y;
+        self->_targetWidth = 1280;
+        self->_targetHeight = 800;
+        self->_remoteCursorX = self->_remoteCursorY = 1;
+        [self _updateProjection];
+        
+        self._socket = [self _initSocket];
+        
+        NSLog(@"Initialized source res with: %f, %f", self->_sourceWidth, self->_sourceHeight);
+        return self;
+    } else {
+        return nil;
+    }
 }
 
 -(id)init {
     if(self = [super init]) {
-        self->_sourceX = 320.;
-        self->_sourceY = 480.;
-        self->_targetX = 1280.;
-        self->_targetY = 800.;
+        self->_sourceWidth = 320;
+        self->_sourceHeight = 480;
+        self->_targetWidth = 1280;
+        self->_targetHeight = 800;
+        self->_remoteCursorX = self->_remoteCursorY = 1;
         [self _updateProjection];
         
         self._socket = [self _initSocket];
@@ -81,9 +94,9 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
 
 -(void) changeOrientation {
     NSLog(@"Orientation changed: %f, %f", self->_xProjection, self->_yProjection);
-    double tmp = self->_sourceX;
-    self->_sourceX = self->_sourceY;
-    self->_sourceY = tmp;
+    double tmp = self->_sourceWidth;
+    self->_sourceWidth = self->_sourceHeight;
+    self->_sourceHeight = tmp;
     [self _updateProjection];
 }
 
@@ -103,6 +116,12 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
     projected.y = coordinates.y * self->_yProjection;
     [self._protocol dmov: projected];
 }
+
+-(void)_updateProjection {
+    self->_xProjection = (double)self->_targetWidth / (double)self->_sourceWidth;
+    self->_yProjection = (double)self->_targetHeight / (double)self->_sourceHeight;
+}
+
 -(void)_addClient:(CFSocketNativeHandle*)clientSocket {
     self._state = 0;
     
@@ -110,10 +129,13 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
     
     [self._protocol hail];
     
-    [self _processPacket:nil bytes:0];
+    [self _processPacket:nil ofType:NONE bytes:0];
     
-    while([self._protocol waitCommand]) {
-        [self _processPacket:nil bytes:0];
+    UInt8 cmdLen = 0;
+    while((cmdLen = [self._protocol peek]) > 0) {
+        UInt8 buffer[cmdLen];
+        CFXCommand type = [self._protocol waitCommand:buffer bytes:cmdLen];
+        [self _processPacket:buffer ofType:type bytes:cmdLen];
         
         if(self._state == 3) {
             break;
@@ -123,8 +145,16 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
     [self._protocol cinn: [[CFXPoint alloc] initWith:0 and:0]];
 }
 
--(void) _processPacket:(UInt8*) buffer
+-(void) _processPacket:(UInt8*)buffer
+                    ofType:(CFXCommand)type
                  bytes:(int)numBytes {
+    // process packet data
+    switch(type) {
+        case DINF: [self _processDinf: buffer bytes:numBytes]; break;
+        default:break;
+    }
+    
+    // reply to client
     switch(self._state) {
         case 0: self._state = 1; break;
         case 1: [self._protocol qinf]; self._state = 2; break;
@@ -142,6 +172,26 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
             break;
         default: break;
     }
+}
+
+- (void) _processDinf:(UInt8 *)buffer
+                bytes:(int)numBytes {
+    if(numBytes < 18) {
+        NSLog(@"EE DINF response expected at least 18 bytes. Got %d. Skipping packet.", numBytes);
+        return;
+    }
+    
+    // client info response
+    UInt16 targetWidth = (buffer[8] << 8)+ buffer[9];
+    UInt16 targetHeight = (buffer[10] << 8) + buffer[11];
+    UInt16 remoteCursorX = (buffer[14] << 8) + buffer[15];
+    UInt16 remoteCursorY = (buffer[16] << 8) + buffer[17];
+    NSLog(@"!! Info received: tX: %d, tY: %d, cX: %d, cy: %d",
+           targetWidth, targetHeight, remoteCursorX, remoteCursorY);
+    self->_targetWidth = targetWidth;
+    self->_targetHeight = targetHeight;
+    self->_remoteCursorX = remoteCursorX;
+    self->_remoteCursorY = remoteCursorY;
 }
 
 - (CFSocketRef) _initSocket {
