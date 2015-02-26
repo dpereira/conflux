@@ -10,7 +10,7 @@
 #import <sys/socket.h>
 #import <netinet/in.h>
 #import "Foundation/Foundation.h"
-#import "CFXSynergy.h"
+#import "Synergy.h"
 #import "Protocol.h"
 #import "Mouse.h"
 
@@ -55,6 +55,7 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
     int _sourceWidth, _sourceHeight;
     int _targetWidth, _targetHeight;
     int _remoteCursorX, _remoteCursorY;
+    int _currentCursorX, _currentCursorY;
     double _xProjection, _yProjection;
 }
 
@@ -110,11 +111,31 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
     [self click: whichButton];
 }
 
+- (void)beginMouseMove:(CFXPoint *)coordinates
+{
+    self->_currentCursorX = coordinates.x;
+    self->_currentCursorY = coordinates.y;
+}
+
 - (void) mouseMove:(CFXPoint*)coordinates {
-    CFXPoint* projected = [CFXPoint new];
-    projected.x = coordinates.x * self->_xProjection;
-    projected.y = coordinates.y * self->_yProjection;
+    double projectedDeltaX = (coordinates.x - self->_currentCursorX) * self->_xProjection;
+    double projectedDeltaY = (coordinates.y - self->_currentCursorY) * self->_yProjection;
+    double projectedX = self->_remoteCursorX + projectedDeltaX;
+    double projectedY =self->_remoteCursorY + projectedDeltaY;
+    
+    
+    CFXPoint* projected = [[CFXPoint alloc] initWith:projectedX > 0 ? projectedX : 0
+                                                 and:projectedY > 0 ? projectedY : 0];
+    
+    NSLog(@"!! pd(%f, %f) rc(%d, %d) pj(%d, %d)", projectedDeltaX, projectedDeltaY,
+          self->_remoteCursorX, self->_remoteCursorY, projected.x, projected.y);
+    
     [self._protocol dmov: projected];
+    
+    self->_remoteCursorX = projected.x;
+    self->_remoteCursorY = projected.y;
+    self->_currentCursorX = coordinates.x;
+    self->_currentCursorY = coordinates.y;
 }
 
 -(void)_updateProjection {
@@ -142,7 +163,8 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
         }
     }
     
-    [self._protocol cinn: [[CFXPoint alloc] initWith:0 and:0]];
+    [self._protocol cinn: [[CFXPoint alloc] initWith:self->_remoteCursorX
+                                                 and:self->_remoteCursorY]];
 }
 
 -(void) _processPacket:(UInt8*)buffer

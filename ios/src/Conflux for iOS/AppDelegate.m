@@ -7,7 +7,7 @@
 //
 
 #import "AppDelegate.h"
-#import "synergy/CFXSynergy.h"
+#import "synergy/Synergy.h"
 #import "Point.h"
 #import "Mouse.h"
 
@@ -22,6 +22,14 @@
 
 - (BOOL)application:(UIApplication *)application withOptions:(NSDictionary *)launchOptions{
     return YES;
+}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    UITouch *touched = [[event allTouches] anyObject];
+    CGPoint location = [touched locationInView:touched.view];
+    CFXPoint* p = [[CFXPoint alloc] initWith:location.x and:location.y];
+    [self._synergy beginMouseMove: p];
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event

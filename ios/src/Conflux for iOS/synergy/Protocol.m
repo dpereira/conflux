@@ -75,7 +75,6 @@
 }
 
 -(void)dmov:(const CFXPoint *)coordinates {
-    NSLog(@"Moving mouse");
     UInt16 x = coordinates.x;
     UInt16 y = coordinates.y;
     const UInt8 cmd[] = {'D','M','M','V', x >> 8, x & 0x00FF, y >> 8, y & 0x00FF};

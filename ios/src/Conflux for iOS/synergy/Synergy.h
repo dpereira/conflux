@@ -17,6 +17,8 @@
 
 - (id) initWithResolution:(CFXPoint*)sourceResolution;
 
+- (void) beginMouseMove:(CFXPoint*)coordinates;
+
 - (void) mouseMove:(CFXPoint*)coordinates;
 
 - (void) doubleClick:(CFXMouseButton)whichButton;
