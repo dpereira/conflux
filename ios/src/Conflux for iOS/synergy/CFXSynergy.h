@@ -13,7 +13,7 @@
 #import "Point.h"
 #import "Mouse.h"
 
-@interface Synergy: NSObject
+@interface CFXSynergy: NSObject
 
 -(void)mouseMove:(CFXPoint*) coordinates;
 

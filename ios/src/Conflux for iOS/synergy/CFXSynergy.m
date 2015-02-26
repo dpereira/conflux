@@ -10,11 +10,11 @@
 #import <sys/socket.h>
 #import <netinet/in.h>
 #import "Foundation/Foundation.h"
-#import "Synergy.h"
+#import "CFXSynergy.h"
 #import "Protocol.h"
 #import "Mouse.h"
 
-@interface Synergy()
+@interface CFXSynergy()
 
 @property CFXProtocol* _protocol;
 
@@ -48,12 +48,12 @@ static void handleReadStream(CFReadStreamRef readStream, CFStreamEventType type,
 static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataRef address, const void* data, void* info)
 {
     if(kCFSocketAcceptCallBack == type) {
-        Synergy* synergy = (__bridge Synergy*)info;
+        CFXSynergy* synergy = (__bridge CFXSynergy*)info;
         [synergy _addClient:(CFSocketNativeHandle*)data];
     }
 }
 
-@implementation Synergy {
+@implementation CFXSynergy {
     double _sourceX, _sourceY, _targetX, _targetY;
     double _xProjection;
     double _yProjection;

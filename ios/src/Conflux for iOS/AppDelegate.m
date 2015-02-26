@@ -7,11 +7,13 @@
 //
 
 #import "AppDelegate.h"
-#import "synergy/Synergy.h"
+#import "synergy/CFXSynergy.h"
 #import "Point.h"
 #import "Mouse.h"
 
 @interface AppDelegate ()
+
+@property CFXSynergy *_synergy;
 
 @end
 
@@ -27,21 +29,21 @@
     UITouch *touched = [[event allTouches] anyObject];
     CGPoint location = [touched locationInView:touched.view];
     CFXPoint* p = [[CFXPoint alloc] initWith:location.x and:location.y];
-    [self.synergy mouseMove: p];
+    [self._synergy mouseMove: p];
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
     for (UITouch *aTouch in touches) {
         if (aTouch.tapCount >= 2) {
-            [self.synergy doubleClick: Right];
+            [self._synergy doubleClick: Right];
         } else if(aTouch.tapCount == 1) {
-            [self.synergy click: Right];
+            [self._synergy click: Right];
         }
     }
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
-    self.synergy = [Synergy new];
+    self._synergy = [CFXSynergy new];
 }
 
 - (BOOL)application:(UIApplication*)application
@@ -59,7 +61,7 @@
 }
 
 - (void) _orientationChanged:(NSNotification*) note {
-    [self.synergy changeOrientation];
+    [self._synergy changeOrientation];
 }
 
 @end
