@@ -22,6 +22,8 @@
 
 @property int _state;
 
+@property NSTimer* _calvTimer;
+
 - (void) _addClient:(CFSocketNativeHandle*)clientSocket;
 
 @end
@@ -61,6 +63,7 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
 
 - (id) initWithResolution:(CFXPoint *)sourceResolution {
     if(self = [super init]) {
+        self._calvTimer = nil;
         self->_sourceWidth = sourceResolution.x;
         self->_sourceHeight = sourceResolution.y;
         self->_targetWidth = 1280;
@@ -79,6 +82,7 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
 
 -(id)init {
     if(self = [super init]) {
+        self._calvTimer = nil;
         self->_sourceWidth = 320;
         self->_sourceHeight = 480;
         self->_targetWidth = 1280;
@@ -178,14 +182,20 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
     
     // reply to client
     switch(self._state) {
-        case 0: self._state = 1; break;
+        case 0:
+            if(self._calvTimer != nil) {
+                [self._calvTimer invalidate];
+                self._calvTimer = nil;
+            }
+            self._state = 1;
+            break;
         case 1: [self._protocol qinf]; self._state = 2; break;
         case 2:
             [self._protocol ciak];
             [self._protocol crop];
             [self._protocol dsop];
             self._state = 3;
-            [NSTimer scheduledTimerWithTimeInterval:2.0f
+            self._calvTimer = [NSTimer scheduledTimerWithTimeInterval:2.0f
                                              target:self
                                            selector:@selector(_keepAlive:)
                                            userInfo:nil repeats:YES
