@@ -24,6 +24,8 @@
 
 @property NSTimer* _calvTimer;
 
+@property CFRunLoopSourceRef _socketSource;
+
 - (void) _addClient:(CFSocketNativeHandle*)clientSocket;
 
 @end
@@ -61,40 +63,27 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
     double _xProjection, _yProjection;
 }
 
-- (id) initWithResolution:(CFXPoint *)sourceResolution {
-    if(self = [super init]) {
-        self._calvTimer = nil;
-        self->_sourceWidth = sourceResolution.x;
-        self->_sourceHeight = sourceResolution.y;
-        self->_targetWidth = 1280;
-        self->_targetHeight = 800;
-        self->_remoteCursorX = self->_remoteCursorY = 1;
-        [self _updateProjection];
-        
-        self._socket = [self _initSocket];
-        
-        NSLog(@"Initialized source res with: %f, %f", self->_sourceWidth, self->_sourceHeight);
-        return self;
-    } else {
-        return nil;
-    }
+- (void) load:(CFXPoint *)sourceResolution {
+    self._calvTimer = nil;
+    self->_sourceWidth = sourceResolution.x;
+    self->_sourceHeight = sourceResolution.y;
+    self->_targetWidth = 1280;
+    self->_targetHeight = 800;
+    self->_remoteCursorX = self->_remoteCursorY = 1;
+    [self _updateProjection];
+    
+    self._socket = [self _initSocket];
+    
+    NSLog(@"Initialized source res with: %f, %f", self->_sourceWidth, self->_sourceHeight);
 }
 
--(id)init {
-    if(self = [super init]) {
-        self._calvTimer = nil;
-        self->_sourceWidth = 320;
-        self->_sourceHeight = 480;
-        self->_targetWidth = 1280;
-        self->_targetHeight = 800;
-        self->_remoteCursorX = self->_remoteCursorY = 1;
-        [self _updateProjection];
-        
-        self._socket = [self _initSocket];
-        return self;
-    } else {
-        return nil;
-    }
+- (void) unload {
+    NSLog(@"1");
+    CFRunLoopRemoveSource(CFRunLoopGetCurrent(), self._socketSource, kCFRunLoopDefaultMode);
+    NSLog(@"2");
+    CFSocketInvalidate(self._socket);
+    NSLog(@"3");
+    
 }
 
 -(void) changeOrientation {
@@ -248,12 +237,12 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
     CFSocketSetAddress(myipv4cfsock, sincfd);
     CFRelease(sincfd);
     
-    CFRunLoopSourceRef socketsource = CFSocketCreateRunLoopSource(kCFAllocatorDefault,
+    self._socketSource = CFSocketCreateRunLoopSource(kCFAllocatorDefault,
                                                                   myipv4cfsock,
                                                                   0);
     
     CFRunLoopAddSource(CFRunLoopGetCurrent(),
-                       socketsource,
+                       self._socketSource,
                        kCFRunLoopDefaultMode);
     
     return myipv4cfsock;

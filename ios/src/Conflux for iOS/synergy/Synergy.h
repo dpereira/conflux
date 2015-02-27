@@ -15,7 +15,9 @@
 
 @interface CFXSynergy: NSObject
 
-- (id) initWithResolution:(CFXPoint*)sourceResolution;
+- (void) load:(CFXPoint*)sourceResolution;
+
+- (void) unload;
 
 - (void) beginMouseMove:(CFXPoint*)coordinates;
 

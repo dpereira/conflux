@@ -19,6 +19,14 @@
 
 @implementation AppDelegate
 
+- (id)init {
+    if(self = [super init]) {
+        self._synergy = [CFXSynergy new];
+        return self;
+    } else {
+        return nil;
+    }
+}
 
 - (BOOL)application:(UIApplication *)application withOptions:(NSDictionary *)launchOptions{
     return YES;
@@ -54,8 +62,17 @@
     UIView * current = application.keyWindow.rootViewController.view;
     CFXPoint* sourceResolution = [[CFXPoint alloc] initWith:current.bounds.size.width
                                                         and:current.bounds.size.height];
-    
-    self._synergy = [[CFXSynergy alloc] initWithResolution: sourceResolution];
+    [self ._synergy load:sourceResolution];
+}
+
+- (void) applicationWillResignActive:(UIApplication *)application {
+    NSLog(@"Will resign");
+    [self._synergy unload];
+}
+
+- (void) applicationWillTerminate:(UIApplication *)application {
+    NSLog(@"Will terminate");
+    [self._synergy unload];
 }
 
 - (BOOL)application:(UIApplication*)application
