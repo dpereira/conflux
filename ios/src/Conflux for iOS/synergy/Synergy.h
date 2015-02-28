@@ -12,8 +12,9 @@
 #import <CoreFoundation/CoreFoundation.h>
 #import "Point.h"
 #import "Mouse.h"
+#import "Protocol.h"
 
-@interface CFXSynergy: NSObject
+@interface CFXSynergy: NSObject <CFXProtocolListener>
 
 - (void) load:(CFXPoint*)sourceResolution;
 

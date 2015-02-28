@@ -30,23 +30,6 @@
 
 @end
 
-/*
-static void handleReadStream(CFReadStreamRef readStream, CFStreamEventType type, void *info)
-{
-    UInt8 buffer[8];
-    memset(buffer, 0, sizeof(buffer));
-    
-    if(kCFStreamEventHasBytesAvailable == type) {
-        CFIndex howMany = CFReadStreamRead(readStream, buffer, sizeof(buffer));
-        NSLog(@"Read %d bytes", (int)howMany);
-    } else if(kCFStreamEventErrorOccurred) {
-        NSLog(@"Error reading stream");
-    }
-    
-    NSLog(@"OK");
-}
-*/
-
 static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataRef address, const void* data, void* info)
 {
     if(kCFSocketAcceptCallBack == type) {
@@ -131,6 +114,13 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
     self->_currentCursorY = coordinates.y;
 }
 
+- (void)receive:(UInt8*)cmd
+         ofType:(CFXCommand)type
+     withLength:(size_t)length
+{
+    [self _processPacket:cmd ofType:type bytes:length];
+}
+
 -(void)_updateProjection {
     self->_xProjection = (double)self->_targetWidth / (double)self->_sourceWidth;
     self->_yProjection = (double)self->_targetHeight / (double)self->_sourceHeight;
@@ -139,25 +129,28 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
 -(void)_addClient:(CFSocketNativeHandle*)clientSocket {
     self._state = 0;
     
-    self._protocol = [[CFXProtocol alloc] initWithSocket: clientSocket];
+    if(self._protocol != nil) {
+        [self._protocol unload];
+    }
+    
+    self._protocol = [[CFXProtocol alloc] initWithSocket: clientSocket
+                                             andListener: self];
     
     [self._protocol hail];
     
+    /*
     [self _processPacket:nil ofType:NONE bytes:0];
     
     UInt8 cmdLen = 0;
     while((cmdLen = [self._protocol peek]) > 0) {
         UInt8 buffer[cmdLen];
         CFXCommand type = [self._protocol waitCommand:buffer bytes:cmdLen];
-        [self _processPacket:buffer ofType:type bytes:cmdLen];
         
         if(self._state == 3) {
             break;
         }
     }
-    
-    [self._protocol cinn: [[CFXPoint alloc] initWith:self->_remoteCursorX
-                                                 and:self->_remoteCursorY]];
+     */
 }
 
 -(void) _processPacket:(UInt8*)buffer
@@ -169,6 +162,8 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
         default:break;
     }
     
+    //NSLog(@"PPKT: type %u, state %u, nbytes: %u",type, self._state, numBytes);
+    
     // reply to client
     switch(self._state) {
         case 0:
@@ -177,18 +172,26 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
                 self._calvTimer = nil;
             }
             self._state = 1;
+            
+            [self._protocol qinf];
             break;
-        case 1: [self._protocol qinf]; self._state = 2; break;
-        case 2:
+        case 1:
             [self._protocol ciak];
             [self._protocol crop];
             [self._protocol dsop];
-            self._state = 3;
+            
+            self._state = 2;
+            
             self._calvTimer = [NSTimer scheduledTimerWithTimeInterval:2.0f
-                                             target:self
-                                           selector:@selector(_keepAlive:)
-                                           userInfo:nil repeats:YES
-             ];
+                                                               target:self
+                                                             selector:@selector(_keepAlive:)
+                                                             userInfo:nil repeats:YES
+                               ];
+            break;            
+        case 2:
+            [self._protocol cinn: [[CFXPoint alloc] initWith:self->_remoteCursorX
+                                                         and:self->_remoteCursorY]];
+            self._state = 3;
             
             break;
         default: break;
@@ -238,8 +241,8 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
     CFRelease(sincfd);
     
     self._socketSource = CFSocketCreateRunLoopSource(kCFAllocatorDefault,
-                                                                  myipv4cfsock,
-                                                                  0);
+                                                     myipv4cfsock,
+                                                     0);
     
     CFRunLoopAddSource(CFRunLoopGetCurrent(),
                        self._socketSource,

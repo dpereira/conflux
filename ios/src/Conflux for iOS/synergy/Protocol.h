@@ -16,6 +16,7 @@
 typedef enum {
     NONE,
     HAIL,
+    CNOP,    
     QINF,
     DINF,
     CALV,
@@ -28,34 +29,49 @@ typedef enum {
     DMUP
 } CFXCommand;
 
+@protocol CFXProtocolListener <NSObject>
+
+- (void)receive:(UInt8*)cmd
+         ofType:(CFXCommand)type
+     withLength:(size_t)length;
+
+@end
+
 @interface CFXProtocol: NSObject
 
--(id)initWithSocket:(CFSocketNativeHandle*)socket;
+- (id)initWithSocket:(CFSocketNativeHandle*)socket
+        andListener:(id<CFXProtocolListener>)listener;
 
--(void)hail; // not a cmd per se, but a handshake sequence
+- (void)unload;
 
--(void)calv; // server alive
+- (void)hail; // not a cmd per se, but a handshake sequence
 
--(void)qinf; // query screen info
+- (void)calv; // server alive
 
--(void)ciak; // ?
+- (void)qinf; // query screen info
 
--(void)dsop; // ?
+- (void)ciak; // ?
 
--(void)crop; // ?
+- (void)dsop; // ?
 
--(void)cinn:(const CFXPoint *)coordinates; // enter screen @ coordinates
+- (void)crop; // ?
 
--(void)dmov:(const CFXPoint *)coordinates; // move pointer to coordinates
+- (void)cinn:(const CFXPoint *)coordinates; // enter screen @ coordinates
 
--(void)dmdn:(const CFXMouseButton)whichButton; // moves given mouse button down (button pressed down)
+- (void)dmov:(const CFXPoint *)coordinates; // move pointer to coordinates
 
--(void)dmup:(const CFXMouseButton)whichButton; // moves given mouse button up (btn release)
+- (void)dmdn:(const CFXMouseButton)whichButton; // moves given mouse button down (button pressed down)
+
+- (void)dmup:(const CFXMouseButton)whichButton; // moves given mouse button up (btn release)
 
 - (UInt8) peek;
 
 - (CFXCommand) waitCommand:(UInt8*)buffer
                      bytes:(size_t)toRead; // waits for a command from a client
+
+- (void)processCmd:(UInt8*)cmd
+            ofType:(CFXCommand)type
+             bytes:(size_t)toSend;
 
 @end
 

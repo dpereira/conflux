@@ -14,14 +14,41 @@
 #import <sys/socket.h>
 
 
-@implementation CFXProtocol {
+static void handleReadStream(CFReadStreamRef readStream, CFStreamEventType eventType, void *ctx)
+{
+    CFXProtocol* p = (__bridge CFXProtocol*)ctx;
+    
+    size_t howMany = [p peek];
+    
+    UInt8 cmd[howMany];
+    CFXCommand type = [p waitCommand:cmd bytes:howMany];
+    
+    [p processCmd:cmd ofType:type bytes:howMany];
+}
+
+@interface  CFXProtocol()
+
+- (void) _scheduleReadStreamRead:(CFReadStreamRef)readStream;
+
+@end
+
+
+@implementation CFXProtocol
+{
+    CFSocketNativeHandle* _socket;
     CFWriteStreamRef _writeStream;
     CFReadStreamRef _readStream;
+    id<CFXProtocolListener>  _listener;
 }
 
 
--(id)initWithSocket:(CFSocketNativeHandle*)socket {
+-(id)initWithSocket:(CFSocketNativeHandle*)socket
+        andListener:(id<CFXProtocolListener>)listener
+{
     if(self = [super init]) {
+        self->_socket = socket;
+        self->_listener = listener;
+        
         CFStreamCreatePairWithSocket(kCFAllocatorDefault, *socket, &self->_readStream, &self->_writeStream);
         
         if(!CFReadStreamOpen(self->_readStream)) {
@@ -29,15 +56,34 @@
             return nil;
         }
         
+        [self _scheduleReadStreamRead:self->_readStream];
+        
         if(!CFWriteStreamOpen(self->_writeStream)) {
             NSLog(@"Failed to open write stream");
             return nil;
         }
         
+        CFReadStreamSetProperty(self->_readStream,
+                               kCFStreamPropertyShouldCloseNativeSocket,
+                               kCFBooleanTrue);
+        
+        CFWriteStreamSetProperty(self->_writeStream,
+                                 kCFStreamPropertyShouldCloseNativeSocket,
+                                 kCFBooleanTrue);
+        
         return self;
     } else {
         return nil;
     }
+}
+
+- (void)unload
+{
+    CFReadStreamUnscheduleFromRunLoop(self->_readStream, CFRunLoopGetCurrent(), kCFRunLoopCommonModes);
+    CFReadStreamClose(self->_readStream);
+    CFWriteStreamClose(self->_writeStream);
+    self->_readStream = nil;
+    self->_writeStream = nil;
 }
 
 -(void)hail {
@@ -115,19 +161,27 @@
     return headerBuffer[3];
 }
 
--(CFXCommand)waitCommand:(UInt8*)buffer
+- (void)_scheduleReadStreamRead:(CFReadStreamRef)readStream
+{
+    CFStreamClientContext ctx = {0, (__bridge void*)self, NULL, NULL, NULL};
+    CFReadStreamSetClient(readStream, kCFStreamEventHasBytesAvailable, handleReadStream, &ctx);
+    CFReadStreamScheduleWithRunLoop(readStream, CFRunLoopGetCurrent(), kCFRunLoopCommonModes);
+}
+
+- (CFXCommand) waitCommand:(UInt8*)buffer
                    bytes:(size_t)toRead {
     memset(buffer, 0, toRead);
     CFReadStreamRead(self->_readStream, buffer, toRead);    
     return [self _classify:buffer];
 }
 
-- (CFXCommand)_classify:(UInt8*) cmd {
+- (CFXCommand) _classify:(UInt8*) cmd {
     // Always make this match the CFXCommand
     // enum or this method will stop working properly.
     const char* commandIds[] = {
         "NONE",
         "HAIL",
+        "CNOP",
         "QINF",
         "DINF",
         "CALV",
@@ -157,6 +211,11 @@
     return NONE;
 }
 
-
+- (void)processCmd:(UInt8*)cmd
+            ofType:(CFXCommand)type
+             bytes:(size_t)length
+{
+    [self->_listener receive:cmd ofType:type withLength: length];
+}
 
 @end
