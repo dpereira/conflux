@@ -63,12 +63,8 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
 }
 
 - (void) unload {
-    NSLog(@"1");
     CFRunLoopRemoveSource(CFRunLoopGetCurrent(), self._socketSource, kCFRunLoopDefaultMode);
-    NSLog(@"2");
     CFSocketInvalidate(self._socket);
-    NSLog(@"3");
-    
 }
 
 -(void) changeOrientation {
