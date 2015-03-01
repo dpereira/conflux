@@ -56,12 +56,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Conflux for iOS/synergy/Protocol.h"
-            timestampString = "446529510.048751"
+            timestampString = "446791555.355101"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "48"
-            endingLineNumber = "48"
-            landmarkName = "-cinn:"
+            startingLineNumber = "61"
+            endingLineNumber = "61"
+            landmarkName = "-dmov:"
             landmarkType = "4">
          </BreakpointContent>
       </BreakpointProxy>
@@ -88,12 +88,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Conflux for iOS/synergy/Protocol.m"
-            timestampString = "446366233.198929"
+            timestampString = "446929176.319104"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "25"
-            endingLineNumber = "25"
-            landmarkName = "-initWithSocket:"
+            startingLineNumber = "55"
+            endingLineNumber = "55"
+            landmarkName = "-initWithSocket:andListener:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -104,11 +104,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Conflux for iOS/synergy/Protocol.m"
-            timestampString = "446533449.311337"
+            timestampString = "446929176.319104"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "108"
-            endingLineNumber = "108"
+            startingLineNumber = "156"
+            endingLineNumber = "156"
             landmarkName = "-_writeSimple:"
             landmarkType = "5">
          </BreakpointContent>
@@ -126,6 +126,54 @@
             startingLineNumber = "19"
             endingLineNumber = "19"
             landmarkName = "-initWith:and:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Conflux for iOS/synergy/Protocol.m"
+            timestampString = "446929176.319104"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "44"
+            endingLineNumber = "44"
+            landmarkName = "@implementation CFXProtocol"
+            landmarkType = "3">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Conflux for iOS/synergy/Synergy.m"
+            timestampString = "446930532.552515"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "142"
+            endingLineNumber = "142"
+            landmarkName = "-_addClient:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Conflux for iOS/synergy/Protocol.m"
+            timestampString = "446929958.754906"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "211"
+            endingLineNumber = "211"
+            landmarkName = "-_classify:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

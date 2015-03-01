@@ -1,5 +1,6 @@
 # Xcode
 #
+.DS_Store
 build/
 *.pbxuser
 !default.pbxuser
@@ -15,7 +16,9 @@ DerivedData
 *.hmap
 *.ipa
 *.xcuserstate
-
+*.cer
+*.p12
+*.mobileprovision
 # CocoaPods
 #
 # We recommend against adding the Pods directory to your .gitignore. However
