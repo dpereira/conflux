@@ -64,7 +64,7 @@ typedef enum {
 
 - (void)dmup:(const CFXMouseButton)whichButton; // moves given mouse button up (btn release)
 
-- (UInt8) peek;
+- (UInt32) peek;
 
 - (CFXCommand) waitCommand:(UInt8*)buffer
                      bytes:(size_t)toRead; // waits for a command from a client

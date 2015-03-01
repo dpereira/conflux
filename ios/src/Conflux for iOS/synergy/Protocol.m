@@ -12,7 +12,10 @@
 #import "Protocol.h"
 #import <Foundation/Foundation.h>
 #import <sys/socket.h>
+#import <arpa/inet.h>
 
+#define SYNERGY_PKTLEN_MAX 4096
+#define SYNERGY_HEADER_LEN 4
 
 static void handleReadStream(CFReadStreamRef readStream, CFStreamEventType eventType, void *ctx)
 {
@@ -20,7 +23,7 @@ static void handleReadStream(CFReadStreamRef readStream, CFStreamEventType event
     
     size_t howMany = [p peek];
     
-    UInt8 cmd[howMany];
+    UInt8 cmd[howMany < SYNERGY_PKTLEN_MAX ? howMany : SYNERGY_PKTLEN_MAX];
     CFXCommand type = [p waitCommand:cmd bytes:howMany];
     
     [p processCmd:cmd ofType:type bytes:howMany];
@@ -153,12 +156,21 @@ static void handleReadStream(CFReadStreamRef readStream, CFStreamEventType event
     [self _writeRaw:(const UInt8 *)payload bytes:(int)strlen(payload)];
 }
 
-- (UInt8) peek {
-    UInt8 headerBuffer[4];
+- (UInt32) peek {
+    UInt8 headerBuffer[SYNERGY_HEADER_LEN];
     memset(headerBuffer, 0, sizeof(headerBuffer));
     CFReadStreamRead(self->_readStream, headerBuffer, sizeof(headerBuffer));
+    return [self _fromQuartetTo32Bits:headerBuffer];
+}
+
+- (UInt32)_fromQuartetTo32Bits:(const UInt8 [4])quartet {
+    UInt32 value = 0;
+    value += quartet[0] << 24;
+    value += quartet[1] << 16;
+    value += quartet[2] << 8;
+    value += quartet[3];
     
-    return headerBuffer[3];
+    return value;
 }
 
 - (void)_scheduleReadStreamRead:(CFReadStreamRef)readStream

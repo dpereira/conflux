@@ -43,10 +43,12 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
     int _targetWidth, _targetHeight;
     int _remoteCursorX, _remoteCursorY;
     int _currentCursorX, _currentCursorY;
+    int _dmmvSeq, _dmmvFilter;
     double _xProjection, _yProjection;
 }
 
 - (void) load:(CFXPoint *)sourceResolution {
+    self->_dmmvFilter = 1;
     self._calvTimer = nil;
     self->_sourceWidth = sourceResolution.x;
     self->_sourceHeight = sourceResolution.y;
@@ -94,6 +96,10 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
 }
 
 - (void) mouseMove:(CFXPoint*)coordinates {
+    if(self->_dmmvSeq++ % self->_dmmvFilter) {
+        // this is done to avoid flooding client.
+        return;
+    }
     double projectedDeltaX = (coordinates.x - self->_currentCursorX) * self->_xProjection;
     double projectedDeltaY = (coordinates.y - self->_currentCursorY) * self->_yProjection;
     double projectedX = self->_remoteCursorX + projectedDeltaX;
@@ -154,7 +160,7 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
 }
 
 -(void) _processPacket:(UInt8*)buffer
-                    ofType:(CFXCommand)type
+                ofType:(CFXCommand)type
                  bytes:(int)numBytes {
     // process packet data
     switch(type) {
