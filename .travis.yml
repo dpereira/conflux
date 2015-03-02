@@ -10,17 +10,6 @@ env:
   - PROFILE_NAME: conflux
   - secure: PDQT8Ivi9D56bkOS/s7x/wDW1rR2WDqkw9d0FNPRnsyvfZJM4GEpY0O5j/NYVNUWF4c3sItVCHPaYYUXhOWhm5ADcqwVo9AH98+mRwgu/05cEYBISXDreLl9ioI9Neuft0bEUgF3Iz65MExk+PbSmIWX8xjjxCrXQAppb529N0Y=
 
-before_script:
-- openssl enc -d -aes-256-cbc -k "$ENCRYPTION_SECRET" -in ci/conflux.mobileprovision.enc -out ci/conflux.mobileprovision
-- openssl enc -d -aes-256-cbc -k "$ENCRYPTION_SECRET" -in ci/conflux.cer.enc -out ci/conflux.cer
-- openssl enc -d -aes-256-cbc -k "$ENCRYPTION_SECRET" -in ci/conflux.p12.enc -out ci/conflux.p12
-- sh ci/add-keys.sh
-
 script:
-- xctool -workspace "ios/src/Conflux for iOS.xcodeproj/project.xcworkspace" -scheme conflux -sdk iphoneos -configuration Release OBJROOT=$PWD/build SYMROOT=$PWD/build ONLY_ACTIVE_ARCH=NO 'CODE_SIGN_RESOURCE_RULES_PATH=$(SDKROOT)/ResourceRules.plist'
+- xctool -workspace "ios/src/Conflux for iOS.xcodeproj/project.xcworkspace" -scheme conflux -sdk iphonesimulator -configuration Release OBJROOT=$PWD/build SYMROOT=$PWD/build ONLY_ACTIVE_ARCH=NO 'CODE_SIGN_RESOURCE_RULES_PATH=$(SDKROOT)/ResourceRules.plist'
 
-after_success:
-- sh ci/sign.sh
-
-after_script:
-- sh ci/rm-keys.sh
