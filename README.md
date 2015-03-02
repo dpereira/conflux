@@ -1,7 +1,7 @@
 Conflux 
 =======
 
-[!(https://travis-ci.org/dpereira/conflux.svg?branch=master)]
+[[Build status]!(https://travis-ci.org/dpereira/conflux.svg?branch=master)](https://travis-ci.org/dpereira/conflux)
 
 A [Synergy](http://synergy-project.org/) server for mobile devices.
 
