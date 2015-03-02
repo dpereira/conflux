@@ -5,8 +5,8 @@ xcode_scheme: conflux
 env:
   global:
   - secure: EBD379V1Vs0YR6sYPHfq6YTnwJnGfouiqTNx/RMxCTf3ATkGZn1Iat5x1lf3qXaFw4DIStNiQBviHsrl8GCRhLa38pBpL3GqP0+YGi56aDIYapnEIVWUIrcTWe2kUx+w4yWUGt51F7g5IOCapLGw0jGUHYgkKcY0D1QELphPaCc=
-  - APP_NAME: Conflux for iOS
-  - DEVELOPER_NAME: iOS Developer
+  - APP_NAME: "Conflux for iOS"
+  - DEVELOPER_NAME: "iPhone Developer: Diego Pereira (HKTHU82ZYQ)"
   - PROFILE_NAME: conflux
   - secure: PDQT8Ivi9D56bkOS/s7x/wDW1rR2WDqkw9d0FNPRnsyvfZJM4GEpY0O5j/NYVNUWF4c3sItVCHPaYYUXhOWhm5ADcqwVo9AH98+mRwgu/05cEYBISXDreLl9ioI9Neuft0bEUgF3Iz65MExk+PbSmIWX8xjjxCrXQAppb529N0Y=
 
