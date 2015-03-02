@@ -1,4 +1,4 @@
-Conflux
+Conflux [!https://travis-ci.org/dpereira/conflux.svg?branch=master]
 =======
 
 A [Synergy](http://synergy-project.org/) server for mobile devices.
