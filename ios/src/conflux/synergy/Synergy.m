@@ -1,12 +1,3 @@
-//
-//  synergy.m
-//  Conflux for iOS
-//
-//  Created by Diego Pereira on 2/1/15.
-//  Copyright (c) 2015 Conflux. All rights reserved.
-//
-
-
 #import <sys/socket.h>
 #import <netinet/in.h>
 #import "Foundation/Foundation.h"
@@ -38,7 +29,8 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
     }
 }
 
-@implementation CFXSynergy {
+@implementation CFXSynergy
+{
     int _sourceWidth, _sourceHeight;
     int _targetWidth, _targetHeight;
     int _remoteCursorX, _remoteCursorY;
@@ -47,7 +39,8 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
     double _xProjection, _yProjection;
 }
 
-- (void) load:(CFXPoint *)sourceResolution {
+- (void) load:(CFXPoint *)sourceResolution
+{
     self->_dmmvFilter = 1;
     self._calvTimer = nil;
     self->_sourceWidth = sourceResolution.x;
@@ -59,15 +52,17 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
     
     self._socket = [self _initSocket];
     
-    NSLog(@"Initialized source res with: %f, %f", self->_sourceWidth, self->_sourceHeight);
+    NSLog(@"Initialized source res with: %d, %d", self->_sourceWidth, self->_sourceHeight);
 }
 
-- (void) unload {
+- (void) unload
+{
     CFRunLoopRemoveSource(CFRunLoopGetCurrent(), self._socketSource, kCFRunLoopDefaultMode);
     CFSocketInvalidate(self._socket);
 }
 
--(void) changeOrientation {
+-(void) changeOrientation
+{
     NSLog(@"Orientation changed: %f, %f", self->_xProjection, self->_yProjection);
     double tmp = self->_sourceWidth;
     self->_sourceWidth = self->_sourceHeight;
@@ -75,12 +70,14 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
     [self _updateProjection];
 }
 
--(void) click:(CFXMouseButton) whichButton {
+-(void) click:(CFXMouseButton) whichButton
+{
     [self._protocol dmdn: whichButton];
     [self._protocol dmup: whichButton];
 }
 
-- (void) doubleClick:(CFXMouseButton) whichButton {
+- (void) doubleClick:(CFXMouseButton) whichButton
+{
     [self click: whichButton];
     [self click: whichButton];
 }
@@ -91,7 +88,8 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
     self->_currentCursorY = coordinates.y;
 }
 
-- (void) mouseMove:(CFXPoint*)coordinates {
+- (void) mouseMove:(CFXPoint*)coordinates
+{
     if(self->_dmmvSeq++ % self->_dmmvFilter) {
         // this is done to avoid flooding client.
         return;
@@ -123,12 +121,14 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
     [self _processPacket:cmd ofType:type bytes:length];
 }
 
--(void)_updateProjection {
+-(void)_updateProjection
+{
     self->_xProjection = (double)self->_targetWidth / (double)self->_sourceWidth;
     self->_yProjection = (double)self->_targetHeight / (double)self->_sourceHeight;
 }
 
--(void)_addClient:(CFSocketNativeHandle*)clientSocket {
+-(void)_addClient:(CFSocketNativeHandle*)clientSocket
+{
     self._state = 0;
     
     if(self._protocol != nil) {
@@ -139,25 +139,12 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
                                              andListener: self];
     
     [self._protocol hail];
-    
-    /*
-    [self _processPacket:nil ofType:NONE bytes:0];
-    
-    UInt8 cmdLen = 0;
-    while((cmdLen = [self._protocol peek]) > 0) {
-        UInt8 buffer[cmdLen];
-        CFXCommand type = [self._protocol waitCommand:buffer bytes:cmdLen];
-        
-        if(self._state == 3) {
-            break;
-        }
-    }
-     */
 }
 
 -(void) _processPacket:(UInt8*)buffer
                 ofType:(CFXCommand)type
-                 bytes:(int)numBytes {
+                 bytes:(size_t)numBytes
+{
     // process packet data
     switch(type) {
         case DINF: [self _processDinf: buffer bytes:numBytes]; break;
@@ -201,9 +188,10 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
 }
 
 - (void) _processDinf:(UInt8 *)buffer
-                bytes:(int)numBytes {
+                bytes:(size_t)numBytes
+{
     if(numBytes < 18) {
-        NSLog(@"EE DINF response expected at least 18 bytes. Got %d. Skipping packet.", numBytes);
+        NSLog(@"EE DINF response expected at least 18 bytes. Got %zu. Skipping packet.", numBytes);
         return;
     }
     
@@ -220,7 +208,8 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
     self->_remoteCursorY = remoteCursorY;
 }
 
-- (CFSocketRef) _initSocket {
+- (CFSocketRef) _initSocket
+{
     CFSocketContext ctx = {0, (__bridge void*)self, NULL, NULL, NULL};
     CFSocketRef myipv4cfsock = CFSocketCreate(kCFAllocatorDefault,
                                               PF_INET,
@@ -253,7 +242,8 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
     return myipv4cfsock;
 }
 
--(void)_keepAlive:(NSTimer*)timer {
+-(void)_keepAlive:(NSTimer*)timer
+{
     [self._protocol calv];
 }
 
