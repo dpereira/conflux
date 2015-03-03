@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "F1907ED61A70A60E00182F78"
-               BuildableName = "Conflux for iOS.app"
-               BlueprintName = "Conflux for iOS"
-               ReferencedContainer = "container:Conflux for iOS.xcodeproj">
+               BuildableName = "conflux.app"
+               BlueprintName = "conflux"
+               ReferencedContainer = "container:conflux.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -29,9 +29,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "F1907EEF1A70A60E00182F78"
-               BuildableName = "Conflux for iOSTests.xctest"
-               BlueprintName = "Conflux for iOSTests"
-               ReferencedContainer = "container:Conflux for iOS.xcodeproj">
+               BuildableName = "confluxTests.xctest"
+               BlueprintName = "confluxTests"
+               ReferencedContainer = "container:conflux.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -47,9 +47,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "F1907EEF1A70A60E00182F78"
-               BuildableName = "Conflux for iOSTests.xctest"
-               BlueprintName = "Conflux for iOSTests"
-               ReferencedContainer = "container:Conflux for iOS.xcodeproj">
+               BuildableName = "confluxTests.xctest"
+               BlueprintName = "confluxTests"
+               ReferencedContainer = "container:conflux.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -57,9 +57,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F1907ED61A70A60E00182F78"
-            BuildableName = "Conflux for iOS.app"
-            BlueprintName = "Conflux for iOS"
-            ReferencedContainer = "container:Conflux for iOS.xcodeproj">
+            BuildableName = "conflux.app"
+            BlueprintName = "conflux"
+            ReferencedContainer = "container:conflux.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
@@ -76,9 +76,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F1907ED61A70A60E00182F78"
-            BuildableName = "Conflux for iOS.app"
-            BlueprintName = "Conflux for iOS"
-            ReferencedContainer = "container:Conflux for iOS.xcodeproj">
+            BuildableName = "conflux.app"
+            BlueprintName = "conflux"
+            ReferencedContainer = "container:conflux.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -94,9 +94,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F1907ED61A70A60E00182F78"
-            BuildableName = "Conflux for iOS.app"
-            BlueprintName = "Conflux for iOS"
-            ReferencedContainer = "container:Conflux for iOS.xcodeproj">
+            BuildableName = "conflux.app"
+            BlueprintName = "conflux"
+            ReferencedContainer = "container:conflux.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

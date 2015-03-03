@@ -1,11 +1,3 @@
-//
-//  AppDelegate.m
-//  Conflux for iOS
-//
-//  Created by Diego Pereira on 1/22/15.
-//  Copyright (c) 2015 Conflux. All rights reserved.
-//
-
 #import "AppDelegate.h"
 #import "synergy/Synergy.h"
 #import "Point.h"
@@ -19,7 +11,8 @@
 
 @implementation AppDelegate
 
-- (id)init {
+- (id)init
+{
     if(self = [super init]) {
         self._synergy = [CFXSynergy new];
         return self;
@@ -28,11 +21,14 @@
     }
 }
 
-- (BOOL)application:(UIApplication *)application withOptions:(NSDictionary *)launchOptions{
+- (BOOL)application:(UIApplication *)application
+        withOptions:(NSDictionary *)launchOptions
+{
     return YES;
 }
 
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+- (void)touchesBegan:(NSSet *)touches
+           withEvent:(UIEvent *)event
 {
     UITouch *touched = [[event allTouches] anyObject];
     CGPoint location = [touched locationInView:touched.view];
@@ -40,7 +36,8 @@
     [self._synergy beginMouseMove: p];
 }
 
-- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
+- (void)touchesMoved:(NSSet *)touches
+           withEvent:(UIEvent *)event
 {
     UITouch *touched = [[event allTouches] anyObject];
     CGPoint location = [touched locationInView:touched.view];
@@ -48,7 +45,9 @@
     [self._synergy mouseMove: p];
 }
 
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+- (void)touchesEnded:(NSSet *)touches
+           withEvent:(UIEvent *)event
+{
     for (UITouch *aTouch in touches) {
         if (aTouch.tapCount >= 2) {
             [self._synergy doubleClick: Right];
@@ -58,25 +57,29 @@
     }
 }
 
-- (void)applicationDidBecomeActive:(UIApplication *)application {
+- (void)applicationDidBecomeActive:(UIApplication *)application
+{
     UIView * current = application.keyWindow.rootViewController.view;
     CFXPoint* sourceResolution = [[CFXPoint alloc] initWith:current.bounds.size.width
                                                         and:current.bounds.size.height];
     [self ._synergy load:sourceResolution];
 }
 
-- (void) applicationWillResignActive:(UIApplication *)application {
+- (void) applicationWillResignActive:(UIApplication *)application
+{
     NSLog(@"Will resign");
     [self._synergy unload];
 }
 
-- (void) applicationWillTerminate:(UIApplication *)application {
+- (void) applicationWillTerminate:(UIApplication *)application
+{
     NSLog(@"Will terminate");
     [self._synergy unload];
 }
 
 - (BOOL)application:(UIApplication*)application
-        didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
     UIDevice *device = [UIDevice currentDevice];
     [device beginGeneratingDeviceOrientationNotifications];
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
@@ -89,7 +92,8 @@
     return YES;
 }
 
-- (void) _orientationChanged:(NSNotification*) note {
+- (void) _orientationChanged:(NSNotification*) note
+{
     [self._synergy changeOrientation];
 }
 
