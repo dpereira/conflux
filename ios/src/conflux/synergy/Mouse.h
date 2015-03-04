@@ -5,7 +5,7 @@ typedef enum
 {
     //None
     //Back,
-    Right = 0x01,
+    kCFXRight = 0x01,
     //Middle,
     //Left,
     //Forward

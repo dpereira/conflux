@@ -50,9 +50,9 @@
 {
     for (UITouch *aTouch in touches) {
         if (aTouch.tapCount >= 2) {
-            [self._synergy doubleClick: Right];
+            [self._synergy doubleClick: kCFXRight];
         } else if(aTouch.tapCount == 1) {
-            [self._synergy click: Right];
+            [self._synergy click: kCFXRight];
         }
     }
 }
