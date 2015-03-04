@@ -30,6 +30,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		F11F9F401AA6A8ED0088A456 /* Socket.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Socket.h; sourceTree = "<group>"; };
 		F14D42881A9A8A270027C4C4 /* Protocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Protocol.m; path = synergy/Protocol.m; sourceTree = "<group>"; };
 		F14D428B1A9A8B890027C4C4 /* Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Protocol.h; path = synergy/Protocol.h; sourceTree = "<group>"; };
 		F14D428E1A9AC42C0027C4C4 /* Synergy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Synergy.h; path = synergy/Synergy.h; sourceTree = "<group>"; };
@@ -70,6 +71,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		F11F9F3F1AA6A89B0088A456 /* foundation */ = {
+			isa = PBXGroup;
+			children = (
+				F11F9F401AA6A8ED0088A456 /* Socket.h */,
+			);
+			path = foundation;
+			sourceTree = "<group>";
+		};
 		F14D428C1A9A8B950027C4C4 /* synergy */ = {
 			isa = PBXGroup;
 			children = (
@@ -105,6 +114,7 @@
 		F1907ED91A70A60E00182F78 /* conflux */ = {
 			isa = PBXGroup;
 			children = (
+				F11F9F3F1AA6A89B0088A456 /* foundation */,
 				F14D428C1A9A8B950027C4C4 /* synergy */,
 				F1907EDE1A70A60E00182F78 /* AppDelegate.h */,
 				F1907EDF1A70A60E00182F78 /* AppDelegate.m */,
@@ -374,7 +384,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				INFOPLIST_FILE = "conflux/Info.plist";
+				INFOPLIST_FILE = conflux/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = conflux;
 				PROVISIONING_PROFILE = "";
@@ -386,7 +396,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				INFOPLIST_FILE = "conflux/Info.plist";
+				INFOPLIST_FILE = conflux/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = conflux;
 				PROVISIONING_PROFILE = "";
@@ -407,7 +417,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = "conflux_tests/Info.plist";
+				INFOPLIST_FILE = conflux_tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = confluxTests;
 				PROVISIONING_PROFILE = "";
@@ -425,7 +435,7 @@
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = "conflux_tests/Info.plist";
+				INFOPLIST_FILE = conflux_tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = confluxTests;
 				PROVISIONING_PROFILE = "";
