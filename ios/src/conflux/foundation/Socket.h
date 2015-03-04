@@ -23,8 +23,9 @@ typedef enum {
 
 @protocol CFXSocket <NSObject>
 
-- (void)bind:(UInt8[4])address
-      atPort:(UInt16)port;
+- (void)bind:(UInt16)port;
+
+- (void)open;
 
 - (size_t)recv:(UInt8*)buffer
          bytes:(size_t)howMany;

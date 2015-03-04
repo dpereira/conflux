@@ -5,8 +5,9 @@
 #import "Point.h"
 #import "Mouse.h"
 #import "Protocol.h"
+#import "Socket.h"
 
-@interface CFXSynergy: NSObject <CFXProtocolListener>
+@interface CFXSynergy: NSObject <CFXProtocolListener, CFXSocketListener>
 
 - (void) load:(CFXPoint*)sourceResolution;
 

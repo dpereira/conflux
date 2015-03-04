@@ -11,6 +11,7 @@
 #define SYNERGY_PKTLEN_MAX 4096
 #define SYNERGY_HEADER_LEN 4
 
+/*
 static void handleReadStream(CFReadStreamRef readStream, CFStreamEventType eventType, void *ctx)
 {
     CFXProtocol* p = (__bridge CFXProtocol*)ctx;
@@ -22,30 +23,30 @@ static void handleReadStream(CFReadStreamRef readStream, CFStreamEventType event
     
     [p processCmd:cmd ofType:type bytes:howMany];
 }
-
+*/
 @interface  CFXProtocol()
-
-- (void) _scheduleReadStreamRead:(CFReadStreamRef)readStream;
-
 @end
 
 
 @implementation CFXProtocol
 {
-    CFSocketNativeHandle* _socket;
-    CFWriteStreamRef _writeStream;
-    CFReadStreamRef _readStream;
+    id<CFXSocket> _socket;
     id<CFXProtocolListener>  _listener;
 }
 
 
--(id)initWithSocket:(CFSocketNativeHandle*)socket
+-(id)initWithSocket:(id<CFXSocket>)socket
         andListener:(id<CFXProtocolListener>)listener
 {
     if(self = [super init]) {
+        [socket registerListener:self];
+        
         self->_socket = socket;
         self->_listener = listener;
         
+        [socket open];
+        
+        /*
         CFStreamCreatePairWithSocket(kCFAllocatorDefault, *socket, &self->_readStream, &self->_writeStream);
         
         if(!CFReadStreamOpen(self->_readStream)) {
@@ -67,7 +68,7 @@ static void handleReadStream(CFReadStreamRef readStream, CFStreamEventType event
         CFWriteStreamSetProperty(self->_writeStream,
                                  kCFStreamPropertyShouldCloseNativeSocket,
                                  kCFBooleanTrue);
-        
+        */
         return self;
     } else {
         return nil;
@@ -76,11 +77,14 @@ static void handleReadStream(CFReadStreamRef readStream, CFStreamEventType event
 
 - (void)unload
 {
+    [self->_socket disconnect];
+    /*
     CFReadStreamUnscheduleFromRunLoop(self->_readStream, CFRunLoopGetCurrent(), kCFRunLoopCommonModes);
     CFReadStreamClose(self->_readStream);
     CFWriteStreamClose(self->_writeStream);
     self->_readStream = nil;
     self->_writeStream = nil;
+     */
 }
 
 -(void)hail {
@@ -141,7 +145,9 @@ static void handleReadStream(CFReadStreamRef readStream, CFStreamEventType event
     UInt8 *buffer = malloc(sizeof(header) + howMany);
     memcpy(buffer, header, sizeof(header));
     memcpy(buffer + sizeof(header), bytes, howMany);
-    CFWriteStreamWrite(self->_writeStream, buffer, sizeof(header) + howMany);
+    
+    [self->_socket send:buffer bytes:sizeof(header) + howMany];
+    //CFWriteStreamWrite(self->_writeStream, buffer, sizeof(header) + howMany);
     free(buffer);
 }
 
@@ -153,7 +159,8 @@ static void handleReadStream(CFReadStreamRef readStream, CFStreamEventType event
 - (UInt32) peek {
     UInt8 headerBuffer[SYNERGY_HEADER_LEN];
     memset(headerBuffer, 0, sizeof(headerBuffer));
-    CFReadStreamRead(self->_readStream, headerBuffer, sizeof(headerBuffer));
+    [self->_socket recv:headerBuffer bytes:sizeof(headerBuffer)];
+    //CFReadStreamRead(self->_readStream, headerBuffer, sizeof(headerBuffer));
     return [self _fromQuartetTo32Bits:headerBuffer];
 }
 
@@ -167,17 +174,20 @@ static void handleReadStream(CFReadStreamRef readStream, CFStreamEventType event
     return value;
 }
 
+/*
 - (void)_scheduleReadStreamRead:(CFReadStreamRef)readStream
 {
     CFStreamClientContext ctx = {0, (__bridge void*)self, NULL, NULL, NULL};
     CFReadStreamSetClient(readStream, kCFStreamEventHasBytesAvailable, handleReadStream, &ctx);
     CFReadStreamScheduleWithRunLoop(readStream, CFRunLoopGetCurrent(), kCFRunLoopCommonModes);
 }
+ */
 
 - (CFXCommand) waitCommand:(UInt8*)buffer
                    bytes:(size_t)toRead {
     memset(buffer, 0, toRead);
-    CFReadStreamRead(self->_readStream, buffer, toRead);    
+    [self->_socket recv:buffer bytes:toRead];
+    //CFReadStreamRead(self->_readStream, buffer, toRead);
     return [self _classify:buffer];
 }
 
@@ -222,6 +232,16 @@ static void handleReadStream(CFReadStreamRef readStream, CFStreamEventType event
              bytes:(size_t)length
 {
     [self->_listener receive:cmd ofType:type withLength: length];
+}
+
+- (void)receive:(CFXSocketEvent)event
+     fromSender:(id<CFXSocket>)socket
+    withPayload:(void *)data
+{
+    size_t howMany = [self peek];
+    UInt8 cmd[howMany < SYNERGY_PKTLEN_MAX ? howMany : SYNERGY_PKTLEN_MAX];
+    CFXCommand type = [self waitCommand:cmd bytes:howMany];
+    [self processCmd:cmd ofType:type bytes:howMany];
 }
 
 @end

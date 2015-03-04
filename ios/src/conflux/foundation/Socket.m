@@ -7,13 +7,15 @@
 //
 
 #import "Socket.h"
-#import <CoreFoundation/CoreFoundation.h>
+#import <Foundation/Foundation.h>
 #import <sys/socket.h>
 #import <netinet/in.h>
+#import <arpa/inet.h>
 
 @interface CFXFoundationSocket()
 -(id)initWith:(CFSocketNativeHandle*)handle;
 -(void)_handleConnect:(CFSocketNativeHandle*)clientSocket;
+-(void)_handleReadStream;
 @end
 
 static void _handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataRef address, const void* data, void* info)
@@ -24,10 +26,27 @@ static void _handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFData
     }
 }
 
+static void _handleReadStream(CFReadStreamRef readStream, CFStreamEventType eventType, void *ctx)
+{
+    CFXFoundationSocket* socket = (__bridge CFXFoundationSocket*)ctx;
+    [socket _handleReadStream];
+}
+
+
 @implementation CFXFoundationSocket {
+    // states
+    bool _disconnecting;
+    
+    // server sockets
     CFRunLoopSourceRef _source;
     CFSocketRef _serverSocket;
+    
+    // client sockets
     CFSocketNativeHandle* _clientSocket;
+    CFReadStreamRef _readStream;
+    CFWriteStreamRef _writeStream;
+    
+    // observers
     id<CFXSocketListener> _listener;
 }
 
@@ -36,6 +55,7 @@ static void _handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFData
     if(self = [super init]) {
         self->_clientSocket = handle;
         self->_serverSocket = nil;
+        self->_disconnecting = NO;
         return self;
     } else {
         return nil;
@@ -46,13 +66,43 @@ static void _handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFData
 {
     if(self = [super init]) {
         self->_clientSocket = nil;
+        self->_serverSocket = nil;
+        self->_disconnecting = NO;
         return self;
     } else {
         return nil;
     }
 }
 
-- (void)bindTo:(UInt16)port
+- (void)registerListener:(id<CFXSocketListener>)listener
+{
+    self->_listener = listener;
+}
+
+- (void)open
+{
+    CFStreamCreatePairWithSocket(kCFAllocatorDefault, *self->_clientSocket, &self->_readStream, &self->_writeStream);
+    
+    if(!CFReadStreamOpen(self->_readStream)) {
+        NSLog(@"Failed to open read stream");
+    }
+    
+    [self _scheduleReadStreamRead:self->_readStream];
+    
+    if(!CFWriteStreamOpen(self->_writeStream)) {
+        NSLog(@"Failed to open write stream");
+    }
+    
+    CFReadStreamSetProperty(self->_readStream,
+                            kCFStreamPropertyShouldCloseNativeSocket,
+                            kCFBooleanTrue);
+    
+    CFWriteStreamSetProperty(self->_writeStream,
+                             kCFStreamPropertyShouldCloseNativeSocket,
+                             kCFBooleanTrue);
+}
+
+- (void)bind:(UInt16)port
 {
     CFSocketContext ctx = {0, (__bridge void*)self, NULL, NULL, NULL};
     self->_serverSocket = CFSocketCreate(kCFAllocatorDefault,
@@ -83,16 +133,52 @@ static void _handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFData
                        kCFRunLoopDefaultMode);
 }
 
-- (void)registerListener:(id<CFXSocketListener>)listener
+- (size_t)send:(const UInt8 *)buffer bytes:(size_t)howMany
 {
-    self->_listener = listener;
+    return CFWriteStreamWrite(self->_writeStream, buffer, howMany);
+}
+
+-(size_t)recv:(UInt8 *)buffer bytes:(size_t)howMany
+{
+    return CFReadStreamRead(self->_readStream, buffer, howMany);
 }
 
 - (void)disconnect
 {
+    self->_disconnecting = YES;
     if(self->_serverSocket) {
+        NSLog(@"Disconnecting server socket");
+        CFRunLoopRemoveSource(CFRunLoopGetCurrent(), self->_source, kCFRunLoopDefaultMode);
+        CFSocketInvalidate(self->_serverSocket);
+        NSLog(@"Server socket disconnected");
+    }
+    
+    if(self->_clientSocket) {
+        NSLog(@"Disconnecting client socket");
+        if(self->_readStream) {
+            CFReadStreamUnscheduleFromRunLoop(self->_readStream, CFRunLoopGetCurrent(), kCFRunLoopCommonModes);
+            CFReadStreamClose(self->_readStream);
+            self->_readStream = nil;
+            NSLog(@"Read stream released");
+        }
+        if(self->_writeStream) {
+            CFWriteStreamClose(self->_writeStream);
+            self->_writeStream = nil;
+            NSLog(@"Write stream released");            
+        }
+
+
+        NSLog(@"Client socket disconnected");
     }
 }
+
+- (void)_scheduleReadStreamRead:(CFReadStreamRef)readStream
+{
+    CFStreamClientContext ctx = {0, (__bridge void*)self, NULL, NULL, NULL};
+    CFReadStreamSetClient(readStream, kCFStreamEventHasBytesAvailable, _handleReadStream, &ctx);
+    CFReadStreamScheduleWithRunLoop(readStream, CFRunLoopGetCurrent(), kCFRunLoopCommonModes);
+}
+
 
 - (void)_handleConnect:(CFSocketNativeHandle *)clientSocket
 {
@@ -101,6 +187,15 @@ static void _handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFData
     [self->_listener receive:kCFXSocketConnected
                   fromSender:self
                  withPayload:(__bridge void*)socket];
+}
+
+- (void)_handleReadStream
+{
+    if(!self->_disconnecting) {
+        [self->_listener receive:kCFXSocketReceivedData
+                      fromSender:self
+                     withPayload:NULL];
+    }
 }
 
 @end
