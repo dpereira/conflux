@@ -9,25 +9,17 @@
 
 @property CFXProtocol* _protocol;
 
-@property CFSocketRef _socket;
-
 @property int _state;
 
 @property NSTimer* _calvTimer;
 
 @property CFRunLoopSourceRef _socketSource;
 
-- (void) _addClient:(CFSocketNativeHandle*)clientSocket;
+- (void) _addClient:(id<CFXSocket>)clientSocket;
+
+- (id<CFXSocket>) _newSocket;
 
 @end
-
-static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataRef address, const void* data, void* info)
-{
-    if(kCFSocketAcceptCallBack == type) {
-        CFXSynergy* synergy = (__bridge CFXSynergy*)info;
-        [synergy _addClient:(CFSocketNativeHandle*)data];
-    }
-}
 
 @implementation CFXSynergy
 {
@@ -37,6 +29,8 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
     int _currentCursorX, _currentCursorY;
     int _dmmvSeq, _dmmvFilter;
     double _xProjection, _yProjection;
+    
+    id<CFXSocket> _socket;
 }
 
 - (void) load:(CFXPoint *)sourceResolution
@@ -50,15 +44,16 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
     self->_remoteCursorX = self->_remoteCursorY = 1;
     [self _updateProjection];
     
-    self._socket = [self _initSocket];
+    self->_socket = [self _newSocket];
     
     NSLog(@"Initialized source res with: %d, %d", self->_sourceWidth, self->_sourceHeight);
 }
 
 - (void) unload
 {
-    CFRunLoopRemoveSource(CFRunLoopGetCurrent(), self._socketSource, kCFRunLoopDefaultMode);
-    CFSocketInvalidate(self._socket);
+    [self._calvTimer invalidate];
+    [self._protocol unload];
+    [self->_socket disconnect];
 }
 
 -(void) changeOrientation
@@ -121,13 +116,23 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
     [self _processPacket:cmd ofType:type bytes:length];
 }
 
+- (void)receive:(CFXSocketEvent)event
+     fromSender:(id<CFXSocket>)socket
+    withPayload:(void *)data
+{
+    if(event == kCFXSocketConnected) {
+        id<CFXSocket> client = (__bridge id<CFXSocket>)data;
+        [self _addClient:client];
+    }
+}
+
 -(void)_updateProjection
 {
     self->_xProjection = (double)self->_targetWidth / (double)self->_sourceWidth;
     self->_yProjection = (double)self->_targetHeight / (double)self->_sourceHeight;
 }
 
--(void)_addClient:(CFSocketNativeHandle*)clientSocket
+-(void)_addClient:(id<CFXSocket>)clientSocket
 {
     self._state = 0;
     
@@ -208,38 +213,12 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
     self->_remoteCursorY = remoteCursorY;
 }
 
-- (CFSocketRef) _initSocket
+- (id<CFXSocket>) _newSocket
 {
-    CFSocketContext ctx = {0, (__bridge void*)self, NULL, NULL, NULL};
-    CFSocketRef myipv4cfsock = CFSocketCreate(kCFAllocatorDefault,
-                                              PF_INET,
-                                              SOCK_STREAM,
-                                              IPPROTO_TCP,
-                                              kCFSocketAcceptCallBack, handleConnect, &ctx);
-    struct sockaddr_in sin;
-    
-    memset(&sin, 0, sizeof(sin));
-    sin.sin_len = sizeof(sin);
-    sin.sin_family = AF_INET;
-    sin.sin_port = htons(24800);
-    sin.sin_addr.s_addr= INADDR_ANY;
-    
-    CFDataRef sincfd = CFDataCreate(kCFAllocatorDefault,
-                                    (UInt8 *)&sin,
-                                    sizeof(sin));
-    
-    CFSocketSetAddress(myipv4cfsock, sincfd);
-    CFRelease(sincfd);
-    
-    self._socketSource = CFSocketCreateRunLoopSource(kCFAllocatorDefault,
-                                                     myipv4cfsock,
-                                                     0);
-    
-    CFRunLoopAddSource(CFRunLoopGetCurrent(),
-                       self._socketSource,
-                       kCFRunLoopDefaultMode);
-    
-    return myipv4cfsock;
+    id<CFXSocket> socket = [[CFXFoundationSocket alloc] init];
+    [socket registerListener:self];
+    [socket bind:24800];
+    return socket;
 }
 
 -(void)_keepAlive:(NSTimer*)timer

@@ -1,28 +1,47 @@
 // Defines a protocol for sockets.
 // The primary motivation is injecting
-// mock socket objects.
+// mock socket objects and remove
+// coupling from CF* code.
+
 #ifndef conflux_socket_h
 #define conflux_socket_h
 
 #import <CoreFoundation/CoreFoundation.h>
 
 typedef enum {
-    kCFXSocketConnected
+    kCFXSocketConnected,
+    kCFXSocketReceivedData
 } CFXSocketEvent;
 
+@protocol CFXSocket;
+
 @protocol CFXSocketListener <NSObject>
-
 - (void)receive:(CFXSocketEvent)event
-     fromSender:(CFXSocket)socket;
-
+     fromSender:(id<CFXSocket>)socket
+    withPayload:(void*)data;
 @end
 
 @protocol CFXSocket <NSObject>
 
-- (void)bindTo:(UInt8[4])address
-        atPort:(UInt16)port;
+- (void)bind:(UInt16)port;
+
+- (void)open;
+
+- (size_t)recv:(UInt8*)buffer
+         bytes:(size_t)howMany;
+
+- (size_t)send:(const UInt8*)buffer
+         bytes:(size_t)howMany;
 
 - (void)registerListener:(id<CFXSocketListener>)listener;
+
+- (void)disconnect;
+
+@end
+
+@interface CFXFoundationSocket : NSObject <CFXSocket>
+
+- (id)init;
 
 @end
 

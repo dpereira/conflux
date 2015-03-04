@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F11F9F421AA6B4190088A456 /* Socket.m in Sources */ = {isa = PBXBuildFile; fileRef = F11F9F411AA6B4190088A456 /* Socket.m */; };
 		F14D42891A9A8A270027C4C4 /* Protocol.m in Sources */ = {isa = PBXBuildFile; fileRef = F14D42881A9A8A270027C4C4 /* Protocol.m */; };
 		F14D42901A9AC42C0027C4C4 /* Synergy.m in Sources */ = {isa = PBXBuildFile; fileRef = F14D428F1A9AC42C0027C4C4 /* Synergy.m */; };
 		F14D42941A9AFFE20027C4C4 /* Point.m in Sources */ = {isa = PBXBuildFile; fileRef = F14D42931A9AFFE20027C4C4 /* Point.m */; };
@@ -31,6 +32,7 @@
 
 /* Begin PBXFileReference section */
 		F11F9F401AA6A8ED0088A456 /* Socket.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Socket.h; sourceTree = "<group>"; };
+		F11F9F411AA6B4190088A456 /* Socket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Socket.m; sourceTree = "<group>"; };
 		F14D42881A9A8A270027C4C4 /* Protocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Protocol.m; path = synergy/Protocol.m; sourceTree = "<group>"; };
 		F14D428B1A9A8B890027C4C4 /* Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Protocol.h; path = synergy/Protocol.h; sourceTree = "<group>"; };
 		F14D428E1A9AC42C0027C4C4 /* Synergy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Synergy.h; path = synergy/Synergy.h; sourceTree = "<group>"; };
@@ -75,6 +77,7 @@
 			isa = PBXGroup;
 			children = (
 				F11F9F401AA6A8ED0088A456 /* Socket.h */,
+				F11F9F411AA6B4190088A456 /* Socket.m */,
 			);
 			path = foundation;
 			sourceTree = "<group>";
@@ -258,6 +261,7 @@
 			files = (
 				F14D42941A9AFFE20027C4C4 /* Point.m in Sources */,
 				F14D42891A9A8A270027C4C4 /* Protocol.m in Sources */,
+				F11F9F421AA6B4190088A456 /* Socket.m in Sources */,
 				F1907EE31A70A60E00182F78 /* ViewController.m in Sources */,
 				F1907EE01A70A60E00182F78 /* AppDelegate.m in Sources */,
 				F14D42901A9AC42C0027C4C4 /* Synergy.m in Sources */,

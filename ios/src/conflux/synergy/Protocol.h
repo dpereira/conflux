@@ -4,12 +4,13 @@
 #import <Foundation/Foundation.h>
 #import "Point.h"
 #import "Mouse.h"
+#import "Socket.h"
 
 typedef enum
 {
     NONE,
     HAIL,
-    CNOP,    
+    CNOP,
     QINF,
     DINF,
     CALV,
@@ -30,9 +31,9 @@ typedef enum
 
 @end
 
-@interface CFXProtocol: NSObject
+@interface CFXProtocol: NSObject <CFXSocketListener>
 
-- (id)initWithSocket:(CFSocketNativeHandle*)socket
+- (id)initWithSocket:(id<CFXSocket>)socket
         andListener:(id<CFXProtocolListener>)listener;
 
 - (void)unload;
