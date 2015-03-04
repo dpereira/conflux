@@ -21,16 +21,6 @@
 
 @end
 
-/*
-static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataRef address, const void* data, void* info)
-{
-    if(kCFSocketAcceptCallBack == type) {
-        CFXSynergy* synergy = (__bridge CFXSynergy*)info;
-        [synergy _addClient:(CFSocketNativeHandle*)data];
-    }
-}
- */
-
 @implementation CFXSynergy
 {
     int _sourceWidth, _sourceHeight;
@@ -229,39 +219,6 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
     [socket registerListener:self];
     [socket bind:24800];
     return socket;
-    
-    /*
-    CFSocketContext ctx = {0, (__bridge void*)self, NULL, NULL, NULL};
-    CFSocketRef myipv4cfsock = CFSocketCreate(kCFAllocatorDefault,
-                                              PF_INET,
-                                              SOCK_STREAM,
-                                              IPPROTO_TCP,
-                                              kCFSocketAcceptCallBack, handleConnect, &ctx);
-    struct sockaddr_in sin;
-    
-    memset(&sin, 0, sizeof(sin));
-    sin.sin_len = sizeof(sin);
-    sin.sin_family = AF_INET;
-    sin.sin_port = htons(24800);
-    sin.sin_addr.s_addr= INADDR_ANY;
-    
-    CFDataRef sincfd = CFDataCreate(kCFAllocatorDefault,
-                                    (UInt8 *)&sin,
-                                    sizeof(sin));
-    
-    CFSocketSetAddress(myipv4cfsock, sincfd);
-    CFRelease(sincfd);
-    
-    self._socketSource = CFSocketCreateRunLoopSource(kCFAllocatorDefault,
-                                                     myipv4cfsock,
-                                                     0);
-    
-    CFRunLoopAddSource(CFRunLoopGetCurrent(),
-                       self._socketSource,
-                       kCFRunLoopDefaultMode);
-    
-    return myipv4cfsock;
-     */
 }
 
 -(void)_keepAlive:(NSTimer*)timer
