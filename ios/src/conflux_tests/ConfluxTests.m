@@ -1,19 +1,11 @@
-//
-//  Conflux_for_iOSTests.m
-//  Conflux for iOSTests
-//
-//  Created by Diego Pereira on 1/22/15.
-//  Copyright (c) 2015 Conflux. All rights reserved.
-//
-
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 
-@interface Conflux_for_iOSTests : XCTestCase
+@interface ConfluxTests : XCTestCase
 
 @end
 
-@implementation Conflux_for_iOSTests
+@implementation ConfluxTests
 
 - (void)setUp {
     [super setUp];

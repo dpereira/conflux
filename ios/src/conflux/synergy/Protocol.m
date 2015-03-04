@@ -124,13 +124,13 @@ static void handleReadStream(CFReadStreamRef readStream, CFStreamEventType event
     [self _writeRaw:cmd bytes:sizeof(cmd)];
 }
 
--(void)dmdn:(CFXMouseButton)whichButton {
+-(void)dmdn:(kCFXMouseButton)whichButton {
     NSLog(@"Mouse down: %02x", whichButton);
     const UInt8 cmd[] = {'D','M','D','N', whichButton };
     [self _writeRaw:cmd bytes:sizeof(cmd)];
 }
 
--(void)dmup:(CFXMouseButton)whichButton {
+-(void)dmup:(kCFXMouseButton)whichButton {
     NSLog(@"Mouse up: %02x", whichButton);    
     const UInt8 cmd[] = {'D','M','U','P', whichButton };
     [self _writeRaw:cmd bytes:sizeof(cmd)];

@@ -53,9 +53,9 @@ typedef enum
 
 - (void)dmov:(const CFXPoint *)coordinates; // move pointer to coordinates
 
-- (void)dmdn:(const CFXMouseButton)whichButton; // moves given mouse button down (button pressed down)
+- (void)dmdn:(const kCFXMouseButton)whichButton; // moves given mouse button down (button pressed down)
 
-- (void)dmup:(const CFXMouseButton)whichButton; // moves given mouse button up (btn release)
+- (void)dmup:(const kCFXMouseButton)whichButton; // moves given mouse button up (btn release)
 
 - (UInt32) peek;
 
