@@ -10,6 +10,6 @@ typedef enum
     //Left,
     //Forward
 
-} CFXMouseButton;
+} kCFXMouseButton;
 
 #endif
