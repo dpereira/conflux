@@ -70,13 +70,13 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
     [self _updateProjection];
 }
 
--(void) click:(kCFXMouseButton) whichButton
+-(void) click:(CFXMouseButton) whichButton
 {
     [self._protocol dmdn: whichButton];
     [self._protocol dmup: whichButton];
 }
 
-- (void) doubleClick:(kCFXMouseButton) whichButton
+- (void) doubleClick:(CFXMouseButton) whichButton
 {
     [self click: whichButton];
     [self click: whichButton];

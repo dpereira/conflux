@@ -16,9 +16,9 @@
 
 - (void) mouseMove:(CFXPoint*)coordinates;
 
-- (void) doubleClick:(kCFXMouseButton)whichButton;
+- (void) doubleClick:(CFXMouseButton)whichButton;
 
-- (void) click:(kCFXMouseButton)whichButton;
+- (void) click:(CFXMouseButton)whichButton;
 
 - (void) changeOrientation;
 
