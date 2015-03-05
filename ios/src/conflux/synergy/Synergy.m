@@ -33,7 +33,7 @@
     id<CFXSocket> _socket;
 }
 
-- (void) load:(CFXPoint *)sourceResolution
+- (void)load:(CFXPoint *)sourceResolution
 {
     self->_dmmvFilter = 1;
     self._calvTimer = nil;
@@ -49,14 +49,14 @@
     NSLog(@"Initialized source res with: %d, %d", self->_sourceWidth, self->_sourceHeight);
 }
 
-- (void) unload
+- (void)unload
 {
     [self._calvTimer invalidate];
     [self._protocol unload];
     [self->_socket disconnect];
 }
 
--(void) changeOrientation
+- (void)changeOrientation
 {
     NSLog(@"Orientation changed: %f, %f", self->_xProjection, self->_yProjection);
     double tmp = self->_sourceWidth;
@@ -65,13 +65,13 @@
     [self _updateProjection];
 }
 
--(void) click:(CFXMouseButton) whichButton
+- (void)click:(CFXMouseButton)whichButton
 {
     [self._protocol dmdn: whichButton];
     [self._protocol dmup: whichButton];
 }
 
-- (void) doubleClick:(CFXMouseButton) whichButton
+- (void)doubleClick:(CFXMouseButton)whichButton
 {
     [self click: whichButton];
     [self click: whichButton];
@@ -83,7 +83,7 @@
     self->_currentCursorY = coordinates.y;
 }
 
-- (void) mouseMove:(CFXPoint*)coordinates
+- (void)mouseMove:(CFXPoint*)coordinates
 {
     if(self->_dmmvSeq++ % self->_dmmvFilter) {
         // this is done to avoid flooding client.
@@ -126,13 +126,13 @@
     }
 }
 
--(void)_updateProjection
+- (void)_updateProjection
 {
     self->_xProjection = (double)self->_targetWidth / (double)self->_sourceWidth;
     self->_yProjection = (double)self->_targetHeight / (double)self->_sourceHeight;
 }
 
--(void)_addClient:(id<CFXSocket>)clientSocket
+- (void)_addClient:(id<CFXSocket>)clientSocket
 {
     self._state = 0;
     
@@ -146,7 +146,7 @@
     [self._protocol hail];
 }
 
--(void) _processPacket:(UInt8*)buffer
+- (void)_processPacket:(UInt8*)buffer
                 ofType:(CFXCommand)type
                  bytes:(size_t)numBytes
 {
@@ -192,7 +192,7 @@
     }
 }
 
-- (void) _processDinf:(UInt8 *)buffer
+- (void)_processDinf:(UInt8 *)buffer
                 bytes:(size_t)numBytes
 {
     if(numBytes < 18) {
@@ -213,7 +213,7 @@
     self->_remoteCursorY = remoteCursorY;
 }
 
-- (id<CFXSocket>) _newSocket
+- (id<CFXSocket>)_newSocket
 {
     id<CFXSocket> socket = [[CFXFoundationSocket alloc] init];
     [socket registerListener:self];
@@ -221,7 +221,7 @@
     return socket;
 }
 
--(void)_keepAlive:(NSTimer*)timer
+- (void)_keepAlive:(NSTimer*)timer
 {
     [self._protocol calv];
 }
