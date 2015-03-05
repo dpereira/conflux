@@ -13,11 +13,9 @@
 
 @property NSTimer* _calvTimer;
 
-@property CFRunLoopSourceRef _socketSource;
+- (void)_addClient:(id<CFXSocket>)clientSocket;
 
-- (void) _addClient:(id<CFXSocket>)clientSocket;
-
-- (id<CFXSocket>) _newSocket;
+- (void)_setupSocket;
 
 @end
 
@@ -35,6 +33,15 @@
 
 - (void)load:(CFXPoint *)sourceResolution
 {
+    [self load:sourceResolution
+          with:[[CFXFoundationSocket alloc] init]];
+}
+
+- (void)load:(CFXPoint *)sourceResolution
+        with:(id<CFXSocket>)socket
+
+{
+    self->_socket = socket;
     self->_dmmvFilter = 1;
     self._calvTimer = nil;
     self->_sourceWidth = sourceResolution.x;
@@ -43,8 +50,7 @@
     self->_targetHeight = 800;
     self->_remoteCursorX = self->_remoteCursorY = 1;
     [self _updateProjection];
-    
-    self->_socket = [self _newSocket];
+    [self _setupSocket:self->_socket];
     
     NSLog(@"Initialized source res with: %d, %d", self->_sourceWidth, self->_sourceHeight);
 }
@@ -213,12 +219,10 @@
     self->_remoteCursorY = remoteCursorY;
 }
 
-- (id<CFXSocket>)_newSocket
+- (void)_setupSocket:(id<CFXSocket>)socket
 {
-    id<CFXSocket> socket = [[CFXFoundationSocket alloc] init];
     [socket registerListener:self];
-    [socket bind:24800];
-    return socket;
+    [socket listen:24800];
 }
 
 - (void)_keepAlive:(NSTimer*)timer

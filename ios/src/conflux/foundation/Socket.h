@@ -23,7 +23,7 @@ typedef enum {
 
 @protocol CFXSocket <NSObject>
 
-- (void)bind:(UInt16)port;
+- (void)listen:(UInt16)port;
 
 - (void)open;
 
