@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		F11F9F421AA6B4190088A456 /* Socket.m in Sources */ = {isa = PBXBuildFile; fileRef = F11F9F411AA6B4190088A456 /* Socket.m */; };
+		F12051AA1AA9667300386A67 /* libOCMock.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F12051A91AA9667300386A67 /* libOCMock.a */; };
 		F14D42891A9A8A270027C4C4 /* Protocol.m in Sources */ = {isa = PBXBuildFile; fileRef = F14D42881A9A8A270027C4C4 /* Protocol.m */; };
 		F14D42901A9AC42C0027C4C4 /* Synergy.m in Sources */ = {isa = PBXBuildFile; fileRef = F14D428F1A9AC42C0027C4C4 /* Synergy.m */; };
 		F14D42941A9AFFE20027C4C4 /* Point.m in Sources */ = {isa = PBXBuildFile; fileRef = F14D42931A9AFFE20027C4C4 /* Point.m */; };
@@ -33,6 +34,16 @@
 /* Begin PBXFileReference section */
 		F11F9F401AA6A8ED0088A456 /* Socket.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Socket.h; sourceTree = "<group>"; };
 		F11F9F411AA6B4190088A456 /* Socket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Socket.m; sourceTree = "<group>"; };
+		F120519D1AA9640700386A67 /* NSNotificationCenter+OCMAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSNotificationCenter+OCMAdditions.h"; sourceTree = "<group>"; };
+		F120519E1AA9640700386A67 /* OCMArg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMArg.h; sourceTree = "<group>"; };
+		F120519F1AA9640700386A67 /* OCMConstraint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMConstraint.h; sourceTree = "<group>"; };
+		F12051A01AA9640700386A67 /* OCMLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMLocation.h; sourceTree = "<group>"; };
+		F12051A11AA9640700386A67 /* OCMMacroState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMMacroState.h; sourceTree = "<group>"; };
+		F12051A21AA9640700386A67 /* OCMock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMock.h; sourceTree = "<group>"; };
+		F12051A31AA9640700386A67 /* OCMockObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMockObject.h; sourceTree = "<group>"; };
+		F12051A41AA9640700386A67 /* OCMRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMRecorder.h; sourceTree = "<group>"; };
+		F12051A51AA9640700386A67 /* OCMStubRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMStubRecorder.h; sourceTree = "<group>"; };
+		F12051A91AA9667300386A67 /* libOCMock.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libOCMock.a; path = ../lib/libOCMock.a; sourceTree = "<group>"; };
 		F14D42881A9A8A270027C4C4 /* Protocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Protocol.m; path = synergy/Protocol.m; sourceTree = "<group>"; };
 		F14D428B1A9A8B890027C4C4 /* Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Protocol.h; path = synergy/Protocol.h; sourceTree = "<group>"; };
 		F14D428E1A9AC42C0027C4C4 /* Synergy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Synergy.h; path = synergy/Synergy.h; sourceTree = "<group>"; };
@@ -67,6 +78,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F12051AA1AA9667300386A67 /* libOCMock.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -80,6 +92,30 @@
 				F11F9F411AA6B4190088A456 /* Socket.m */,
 			);
 			path = foundation;
+			sourceTree = "<group>";
+		};
+		F12051991AA9640700386A67 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				F120519C1AA9640700386A67 /* OCMock */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		F120519C1AA9640700386A67 /* OCMock */ = {
+			isa = PBXGroup;
+			children = (
+				F120519D1AA9640700386A67 /* NSNotificationCenter+OCMAdditions.h */,
+				F120519E1AA9640700386A67 /* OCMArg.h */,
+				F120519F1AA9640700386A67 /* OCMConstraint.h */,
+				F12051A01AA9640700386A67 /* OCMLocation.h */,
+				F12051A11AA9640700386A67 /* OCMMacroState.h */,
+				F12051A21AA9640700386A67 /* OCMock.h */,
+				F12051A31AA9640700386A67 /* OCMockObject.h */,
+				F12051A41AA9640700386A67 /* OCMRecorder.h */,
+				F12051A51AA9640700386A67 /* OCMStubRecorder.h */,
+			);
+			path = OCMock;
 			sourceTree = "<group>";
 		};
 		F14D428C1A9A8B950027C4C4 /* synergy */ = {
@@ -99,6 +135,7 @@
 		F1907ECE1A70A60E00182F78 = {
 			isa = PBXGroup;
 			children = (
+				F12051A91AA9667300386A67 /* libOCMock.a */,
 				F1907ED91A70A60E00182F78 /* conflux */,
 				F1907EF31A70A60E00182F78 /* conflux_tests */,
 				F1907ED81A70A60E00182F78 /* Products */,
@@ -143,6 +180,7 @@
 		F1907EF31A70A60E00182F78 /* conflux_tests */ = {
 			isa = PBXGroup;
 			children = (
+				F12051991AA9640700386A67 /* include */,
 				F1907EF61A70A60E00182F78 /* ConfluxTests.m */,
 				F1907EF41A70A60E00182F78 /* Supporting Files */,
 			);
@@ -310,7 +348,7 @@
 		F1907EF81A70A60E00182F78 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -341,6 +379,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"$(PROJECT_DIR)/conflux_tests/include/",
+				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -351,7 +394,7 @@
 		F1907EF91A70A60E00182F78 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -376,6 +419,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"$(PROJECT_DIR)/conflux_tests/include/",
+				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
@@ -388,8 +436,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"$(PROJECT_DIR)/conflux_tests/include/",
+				);
 				INFOPLIST_FILE = conflux/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/diego/githome/conflux/ios/lib,
+				);
 				PRODUCT_NAME = conflux;
 				PROVISIONING_PROFILE = "";
 			};
@@ -400,8 +457,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"$(PROJECT_DIR)/conflux_tests/include/",
+				);
 				INFOPLIST_FILE = conflux/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/diego/githome/conflux/ios/lib,
+				);
 				PRODUCT_NAME = conflux;
 				PROVISIONING_PROFILE = "";
 			};
@@ -423,6 +489,10 @@
 				);
 				INFOPLIST_FILE = conflux_tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/diego/githome/conflux/ios/lib,
+				);
 				PRODUCT_NAME = confluxTests;
 				PROVISIONING_PROFILE = "";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/conflux.app/conflux";
@@ -441,6 +511,10 @@
 				);
 				INFOPLIST_FILE = conflux_tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/diego/githome/conflux/ios/lib,
+				);
 				PRODUCT_NAME = confluxTests;
 				PROVISIONING_PROFILE = "";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/conflux.app/conflux";
