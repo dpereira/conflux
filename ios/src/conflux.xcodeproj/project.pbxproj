@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		F11F9F421AA6B4190088A456 /* Socket.m in Sources */ = {isa = PBXBuildFile; fileRef = F11F9F411AA6B4190088A456 /* Socket.m */; };
-		F12051AA1AA9667300386A67 /* libOCMock.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F12051A91AA9667300386A67 /* libOCMock.a */; };
+		F12051AC1AA9715200386A67 /* libOCMock.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F12051AB1AA9715200386A67 /* libOCMock.a */; };
 		F14D42891A9A8A270027C4C4 /* Protocol.m in Sources */ = {isa = PBXBuildFile; fileRef = F14D42881A9A8A270027C4C4 /* Protocol.m */; };
 		F14D42901A9AC42C0027C4C4 /* Synergy.m in Sources */ = {isa = PBXBuildFile; fileRef = F14D428F1A9AC42C0027C4C4 /* Synergy.m */; };
 		F14D42941A9AFFE20027C4C4 /* Point.m in Sources */ = {isa = PBXBuildFile; fileRef = F14D42931A9AFFE20027C4C4 /* Point.m */; };
@@ -43,7 +43,7 @@
 		F12051A31AA9640700386A67 /* OCMockObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMockObject.h; sourceTree = "<group>"; };
 		F12051A41AA9640700386A67 /* OCMRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMRecorder.h; sourceTree = "<group>"; };
 		F12051A51AA9640700386A67 /* OCMStubRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMStubRecorder.h; sourceTree = "<group>"; };
-		F12051A91AA9667300386A67 /* libOCMock.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libOCMock.a; path = ../lib/libOCMock.a; sourceTree = "<group>"; };
+		F12051AB1AA9715200386A67 /* libOCMock.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libOCMock.a; path = conflux_tests/lib/libOCMock.a; sourceTree = "<group>"; };
 		F14D42881A9A8A270027C4C4 /* Protocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Protocol.m; path = synergy/Protocol.m; sourceTree = "<group>"; };
 		F14D428B1A9A8B890027C4C4 /* Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Protocol.h; path = synergy/Protocol.h; sourceTree = "<group>"; };
 		F14D428E1A9AC42C0027C4C4 /* Synergy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Synergy.h; path = synergy/Synergy.h; sourceTree = "<group>"; };
@@ -78,7 +78,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F12051AA1AA9667300386A67 /* libOCMock.a in Frameworks */,
+				F12051AC1AA9715200386A67 /* libOCMock.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -135,7 +135,7 @@
 		F1907ECE1A70A60E00182F78 = {
 			isa = PBXGroup;
 			children = (
-				F12051A91AA9667300386A67 /* libOCMock.a */,
+				F12051AB1AA9715200386A67 /* libOCMock.a */,
 				F1907ED91A70A60E00182F78 /* conflux */,
 				F1907EF31A70A60E00182F78 /* conflux_tests */,
 				F1907ED81A70A60E00182F78 /* Products */,
@@ -491,7 +491,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/diego/githome/conflux/ios/lib,
+					"$(PROJECT_DIR)/conflux_tests/lib",
 				);
 				PRODUCT_NAME = confluxTests;
 				PROVISIONING_PROFILE = "";
@@ -513,7 +513,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/diego/githome/conflux/ios/lib,
+					"$(PROJECT_DIR)/conflux_tests/lib",
 				);
 				PRODUCT_NAME = confluxTests;
 				PROVISIONING_PROFILE = "";
