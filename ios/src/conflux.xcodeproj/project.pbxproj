@@ -493,6 +493,12 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/conflux_tests/lib",
 				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-framework",
+					XCTest,
+					"-ObjC",
+				);
 				PRODUCT_NAME = confluxTests;
 				PROVISIONING_PROFILE = "";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/conflux.app/conflux";
@@ -514,6 +520,12 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/conflux_tests/lib",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-framework",
+					XCTest,
+					"-ObjC",
 				);
 				PRODUCT_NAME = confluxTests;
 				PROVISIONING_PROFILE = "";
