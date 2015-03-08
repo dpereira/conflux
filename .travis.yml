@@ -2,5 +2,5 @@ language: objective-c
 xcode_project: ios/src/conflux.xcodeproj
 xcode_scheme: conflux
 script:
-- xctool -project ios/src/conflux.xcodeproj/ -scheme conflux -sdk iphonesimulator test
+- make test
 

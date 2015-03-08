@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EC6C7023EA5E18735C35F448 /* libPods-confluxTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 72EB220625794A3E5C680179 /* libPods-confluxTests.a */; };
 		F11F9F421AA6B4190088A456 /* Socket.m in Sources */ = {isa = PBXBuildFile; fileRef = F11F9F411AA6B4190088A456 /* Socket.m */; };
-		F12051AC1AA9715200386A67 /* libOCMock.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F12051AB1AA9715200386A67 /* libOCMock.a */; };
 		F14D42891A9A8A270027C4C4 /* Protocol.m in Sources */ = {isa = PBXBuildFile; fileRef = F14D42881A9A8A270027C4C4 /* Protocol.m */; };
 		F14D42901A9AC42C0027C4C4 /* Synergy.m in Sources */ = {isa = PBXBuildFile; fileRef = F14D428F1A9AC42C0027C4C4 /* Synergy.m */; };
 		F14D42941A9AFFE20027C4C4 /* Point.m in Sources */ = {isa = PBXBuildFile; fileRef = F14D42931A9AFFE20027C4C4 /* Point.m */; };
@@ -18,7 +18,7 @@
 		F1907EE61A70A60E00182F78 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F1907EE41A70A60E00182F78 /* Main.storyboard */; };
 		F1907EE81A70A60E00182F78 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F1907EE71A70A60E00182F78 /* Images.xcassets */; };
 		F1907EEB1A70A60E00182F78 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = F1907EE91A70A60E00182F78 /* LaunchScreen.xib */; };
-		F1907EF71A70A60E00182F78 /* ConfluxTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F1907EF61A70A60E00182F78 /* ConfluxTests.m */; };
+		F1907EF71A70A60E00182F78 /* SynergyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F1907EF61A70A60E00182F78 /* SynergyTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -32,6 +32,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		12537474D3ABE5D9E54A151F /* Pods-confluxTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-confluxTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-confluxTests/Pods-confluxTests.debug.xcconfig"; sourceTree = "<group>"; };
+		3115E18B281917DF2F074E23 /* Pods-confluxTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-confluxTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-confluxTests/Pods-confluxTests.release.xcconfig"; sourceTree = "<group>"; };
+		72EB220625794A3E5C680179 /* libPods-confluxTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-confluxTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F11F9F401AA6A8ED0088A456 /* Socket.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Socket.h; sourceTree = "<group>"; };
 		F11F9F411AA6B4190088A456 /* Socket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Socket.m; sourceTree = "<group>"; };
 		F120519D1AA9640700386A67 /* NSNotificationCenter+OCMAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSNotificationCenter+OCMAdditions.h"; sourceTree = "<group>"; };
@@ -43,7 +46,6 @@
 		F12051A31AA9640700386A67 /* OCMockObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMockObject.h; sourceTree = "<group>"; };
 		F12051A41AA9640700386A67 /* OCMRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMRecorder.h; sourceTree = "<group>"; };
 		F12051A51AA9640700386A67 /* OCMStubRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMStubRecorder.h; sourceTree = "<group>"; };
-		F12051AB1AA9715200386A67 /* libOCMock.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libOCMock.a; path = conflux_tests/lib/libOCMock.a; sourceTree = "<group>"; };
 		F14D42881A9A8A270027C4C4 /* Protocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Protocol.m; path = synergy/Protocol.m; sourceTree = "<group>"; };
 		F14D428B1A9A8B890027C4C4 /* Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Protocol.h; path = synergy/Protocol.h; sourceTree = "<group>"; };
 		F14D428E1A9AC42C0027C4C4 /* Synergy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Synergy.h; path = synergy/Synergy.h; sourceTree = "<group>"; };
@@ -63,7 +65,7 @@
 		F1907EEA1A70A60E00182F78 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		F1907EF01A70A60E00182F78 /* confluxTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = confluxTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1907EF51A70A60E00182F78 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		F1907EF61A70A60E00182F78 /* ConfluxTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ConfluxTests.m; sourceTree = "<group>"; };
+		F1907EF61A70A60E00182F78 /* SynergyTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SynergyTests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,13 +80,30 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F12051AC1AA9715200386A67 /* libOCMock.a in Frameworks */,
+				EC6C7023EA5E18735C35F448 /* libPods-confluxTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		399815CB213D283FDB44F887 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				12537474D3ABE5D9E54A151F /* Pods-confluxTests.debug.xcconfig */,
+				3115E18B281917DF2F074E23 /* Pods-confluxTests.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		44995AF32C6F661206CF458A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				72EB220625794A3E5C680179 /* libPods-confluxTests.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		F11F9F3F1AA6A89B0088A456 /* foundation */ = {
 			isa = PBXGroup;
 			children = (
@@ -135,10 +154,11 @@
 		F1907ECE1A70A60E00182F78 = {
 			isa = PBXGroup;
 			children = (
-				F12051AB1AA9715200386A67 /* libOCMock.a */,
 				F1907ED91A70A60E00182F78 /* conflux */,
 				F1907EF31A70A60E00182F78 /* conflux_tests */,
 				F1907ED81A70A60E00182F78 /* Products */,
+				399815CB213D283FDB44F887 /* Pods */,
+				44995AF32C6F661206CF458A /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -181,7 +201,7 @@
 			isa = PBXGroup;
 			children = (
 				F12051991AA9640700386A67 /* include */,
-				F1907EF61A70A60E00182F78 /* ConfluxTests.m */,
+				F1907EF61A70A60E00182F78 /* SynergyTests.m */,
 				F1907EF41A70A60E00182F78 /* Supporting Files */,
 			);
 			path = conflux_tests;
@@ -219,9 +239,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = F1907EFD1A70A60E00182F78 /* Build configuration list for PBXNativeTarget "confluxTests" */;
 			buildPhases = (
+				FDE6FAD143ABD636B0ACA7BC /* Check Pods Manifest.lock */,
 				F1907EEC1A70A60E00182F78 /* Sources */,
 				F1907EED1A70A60E00182F78 /* Frameworks */,
 				F1907EEE1A70A60E00182F78 /* Resources */,
+				7DB1773AAF7E1D7D88C10DD1 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -292,6 +314,39 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		7DB1773AAF7E1D7D88C10DD1 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-confluxTests/Pods-confluxTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FDE6FAD143ABD636B0ACA7BC /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		F1907ED31A70A60E00182F78 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -311,7 +366,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F1907EF71A70A60E00182F78 /* ConfluxTests.m in Sources */,
+				F1907EF71A70A60E00182F78 /* SynergyTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -443,10 +498,7 @@
 				);
 				INFOPLIST_FILE = conflux/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					/Users/diego/githome/conflux/ios/lib,
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = conflux;
 				PROVISIONING_PROFILE = "";
 			};
@@ -464,10 +516,7 @@
 				);
 				INFOPLIST_FILE = conflux/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					/Users/diego/githome/conflux/ios/lib,
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = conflux;
 				PROVISIONING_PROFILE = "";
 			};
@@ -475,6 +524,7 @@
 		};
 		F1907EFE1A70A60E00182F78 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 12537474D3ABE5D9E54A151F /* Pods-confluxTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -489,10 +539,7 @@
 				);
 				INFOPLIST_FILE = conflux_tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/conflux_tests/lib",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-framework",
@@ -507,6 +554,7 @@
 		};
 		F1907EFF1A70A60E00182F78 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3115E18B281917DF2F074E23 /* Pods-confluxTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -517,10 +565,7 @@
 				);
 				INFOPLIST_FILE = conflux_tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/conflux_tests/lib",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-framework",
