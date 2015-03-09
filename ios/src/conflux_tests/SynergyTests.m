@@ -1,3 +1,6 @@
+#define HC_SHORTHAND
+#define MOCKITO_SHORTHAND
+
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 #import "OCHamcrest.h"
@@ -16,7 +19,7 @@
 @implementation SynergyTests
 
 - (void)testListening {
-    id socket = MKTMockObjectAndProtocol([CFXFoundationSocket class], @protocol(CFXSocket));
+    id socket = mockObjectAndProtocol([CFXFoundationSocket class], @protocol(CFXSocket));
     CFXSynergy* synergy = [CFXSynergy new];
     
     CFXPoint* resolution = [[CFXPoint alloc] initWith:320 and:240];
@@ -26,27 +29,22 @@
     [MKTVerify(socket) listen:24800];
 }
 
-
+/*
 - (void)testConnection {
-    id synergySocket = MKTMockObjectAndProtocol([CFXFoundationSocket class], @protocol(CFXSocket));
+    id synergySocket = OCMClassMock([CFXFoundationSocket class]);
     CFXSynergy* synergy = [CFXSynergy new];
- 
+    
+    
     CFXPoint* resolution = [[CFXPoint alloc] initWith:320 and:240];
     [synergy load:resolution with:synergySocket];
- 
-    [MKTVerify(synergySocket) registerListener:synergy];
-    [MKTVerify(synergySocket) listen:24800];
- 
-    id clientSocket = MKTMockObjectAndProtocol([CFXFoundationSocket class], @protocol(CFXSocket));
+    
+    id clientSocket = OCMClassMock([CFXFoundationSocket class]);
     
     [synergy receive:kCFXSocketReceivedData fromSender:synergySocket withPayload:(__bridge void*)clientSocket];
     
-    MKTArgumentCaptor* buffer = [[MKTArgumentCaptor alloc] init];
-    MKTArgumentCaptor* bytes = [[MKTArgumentCaptor alloc] init];
-    [MKTVerify(clientSocket) send:[buffer capture] bytes:[bytes capture]];
-    //OCMVerify([clientSocket send:[OCMArg anyPointer] bytes:(size_t)[OCMArg setToValue:OCMOCK_ANY]]);
+    OCMVerify([clientSocket send:[OCMArg anyPointer] bytes:(size_t)[OCMArg setToValue:OCMOCK_ANY]]);
  
 }
-
+*/
 
 @end
