@@ -3,5 +3,6 @@
 target 'confluxTests' do
     pod 'OCHamcrest', '~> 4.0' 
     pod 'OCMockito', '~> 1.0'
+    pod 'OCMock'
 end
 

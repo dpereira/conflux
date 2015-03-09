@@ -1,10 +1,6 @@
-#define HC_SHORTHAND
-#define MOCKITO_SHORTHAND
-
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
-#import "OCHamcrest.h"
-#import "OCMockito.h"
+#import "OCMock.h"
 #import "Socket.h"
 #import "Synergy.h"
 
@@ -19,17 +15,16 @@
 @implementation SynergyTests
 
 - (void)testListening {
-    id socket = mockObjectAndProtocol([CFXFoundationSocket class], @protocol(CFXSocket));
+    id socket = OCMClassMock([CFXFoundationSocket class]);
     CFXSynergy* synergy = [CFXSynergy new];
     
     CFXPoint* resolution = [[CFXPoint alloc] initWith:320 and:240];
     [synergy load:resolution with:socket];
     
-    [MKTVerify(socket) registerListener:synergy];
-    [MKTVerify(socket) listen:24800];
+    OCMVerify([socket registerListener:[OCMArg isEqual:synergy]]);
+    OCMVerify([socket listen:24800]);
 }
 
-/*
 - (void)testConnection {
     id synergySocket = OCMClassMock([CFXFoundationSocket class]);
     CFXSynergy* synergy = [CFXSynergy new];
@@ -43,8 +38,6 @@
     [synergy receive:kCFXSocketReceivedData fromSender:synergySocket withPayload:(__bridge void*)clientSocket];
     
     OCMVerify([clientSocket send:[OCMArg anyPointer] bytes:(size_t)[OCMArg setToValue:OCMOCK_ANY]]);
- 
 }
-*/
 
 @end

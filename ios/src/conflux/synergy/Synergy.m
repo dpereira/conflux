@@ -15,7 +15,7 @@
 
 - (void)_addClient:(id<CFXSocket>)clientSocket;
 
-- (void)_setupSocket:(id<CFXSocket>)socket;
+- (void)_setupSocket;
 
 @end
 
