@@ -12,6 +12,7 @@
 		F14D42891A9A8A270027C4C4 /* Protocol.m in Sources */ = {isa = PBXBuildFile; fileRef = F14D42881A9A8A270027C4C4 /* Protocol.m */; };
 		F14D42901A9AC42C0027C4C4 /* Synergy.m in Sources */ = {isa = PBXBuildFile; fileRef = F14D428F1A9AC42C0027C4C4 /* Synergy.m */; };
 		F14D42941A9AFFE20027C4C4 /* Point.m in Sources */ = {isa = PBXBuildFile; fileRef = F14D42931A9AFFE20027C4C4 /* Point.m */; };
+		F160806C1AAD39B50019EC1F /* MockSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = F160806B1AAD39B50019EC1F /* MockSocket.m */; };
 		F1907EDD1A70A60E00182F78 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F1907EDC1A70A60E00182F78 /* main.m */; };
 		F1907EE01A70A60E00182F78 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F1907EDF1A70A60E00182F78 /* AppDelegate.m */; };
 		F1907EE31A70A60E00182F78 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F1907EE21A70A60E00182F78 /* ViewController.m */; };
@@ -37,15 +38,6 @@
 		72EB220625794A3E5C680179 /* libPods-confluxTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-confluxTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F11F9F401AA6A8ED0088A456 /* Socket.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Socket.h; sourceTree = "<group>"; };
 		F11F9F411AA6B4190088A456 /* Socket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Socket.m; sourceTree = "<group>"; };
-		F120519D1AA9640700386A67 /* NSNotificationCenter+OCMAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSNotificationCenter+OCMAdditions.h"; sourceTree = "<group>"; };
-		F120519E1AA9640700386A67 /* OCMArg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMArg.h; sourceTree = "<group>"; };
-		F120519F1AA9640700386A67 /* OCMConstraint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMConstraint.h; sourceTree = "<group>"; };
-		F12051A01AA9640700386A67 /* OCMLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMLocation.h; sourceTree = "<group>"; };
-		F12051A11AA9640700386A67 /* OCMMacroState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMMacroState.h; sourceTree = "<group>"; };
-		F12051A21AA9640700386A67 /* OCMock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMock.h; sourceTree = "<group>"; };
-		F12051A31AA9640700386A67 /* OCMockObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMockObject.h; sourceTree = "<group>"; };
-		F12051A41AA9640700386A67 /* OCMRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMRecorder.h; sourceTree = "<group>"; };
-		F12051A51AA9640700386A67 /* OCMStubRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMStubRecorder.h; sourceTree = "<group>"; };
 		F14D42881A9A8A270027C4C4 /* Protocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Protocol.m; path = synergy/Protocol.m; sourceTree = "<group>"; };
 		F14D428B1A9A8B890027C4C4 /* Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Protocol.h; path = synergy/Protocol.h; sourceTree = "<group>"; };
 		F14D428E1A9AC42C0027C4C4 /* Synergy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Synergy.h; path = synergy/Synergy.h; sourceTree = "<group>"; };
@@ -53,6 +45,8 @@
 		F14D42931A9AFFE20027C4C4 /* Point.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Point.m; path = synergy/Point.m; sourceTree = "<group>"; };
 		F14D42951A9B0B4C0027C4C4 /* Point.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Point.h; path = synergy/Point.h; sourceTree = "<group>"; };
 		F14D42961A9B109A0027C4C4 /* Mouse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Mouse.h; path = synergy/Mouse.h; sourceTree = "<group>"; };
+		F160806A1AAD39720019EC1F /* MockSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockSocket.h; sourceTree = "<group>"; };
+		F160806B1AAD39B50019EC1F /* MockSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockSocket.m; sourceTree = "<group>"; };
 		F1907ED71A70A60E00182F78 /* conflux.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = conflux.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1907EDB1A70A60E00182F78 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F1907EDC1A70A60E00182F78 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -111,30 +105,6 @@
 				F11F9F411AA6B4190088A456 /* Socket.m */,
 			);
 			path = foundation;
-			sourceTree = "<group>";
-		};
-		F12051991AA9640700386A67 /* include */ = {
-			isa = PBXGroup;
-			children = (
-				F120519C1AA9640700386A67 /* OCMock */,
-			);
-			path = include;
-			sourceTree = "<group>";
-		};
-		F120519C1AA9640700386A67 /* OCMock */ = {
-			isa = PBXGroup;
-			children = (
-				F120519D1AA9640700386A67 /* NSNotificationCenter+OCMAdditions.h */,
-				F120519E1AA9640700386A67 /* OCMArg.h */,
-				F120519F1AA9640700386A67 /* OCMConstraint.h */,
-				F12051A01AA9640700386A67 /* OCMLocation.h */,
-				F12051A11AA9640700386A67 /* OCMMacroState.h */,
-				F12051A21AA9640700386A67 /* OCMock.h */,
-				F12051A31AA9640700386A67 /* OCMockObject.h */,
-				F12051A41AA9640700386A67 /* OCMRecorder.h */,
-				F12051A51AA9640700386A67 /* OCMStubRecorder.h */,
-			);
-			path = OCMock;
 			sourceTree = "<group>";
 		};
 		F14D428C1A9A8B950027C4C4 /* synergy */ = {
@@ -200,9 +170,10 @@
 		F1907EF31A70A60E00182F78 /* conflux_tests */ = {
 			isa = PBXGroup;
 			children = (
-				F12051991AA9640700386A67 /* include */,
 				F1907EF61A70A60E00182F78 /* SynergyTests.m */,
 				F1907EF41A70A60E00182F78 /* Supporting Files */,
+				F160806A1AAD39720019EC1F /* MockSocket.h */,
+				F160806B1AAD39B50019EC1F /* MockSocket.m */,
 			);
 			path = conflux_tests;
 			sourceTree = "<group>";
@@ -366,6 +337,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F160806C1AAD39B50019EC1F /* MockSocket.m in Sources */,
 				F1907EF71A70A60E00182F78 /* SynergyTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

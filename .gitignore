@@ -19,6 +19,7 @@ DerivedData
 *.cer
 *.p12
 *.mobileprovision
+xcuserdata
 # CocoaPods
 #
 # We recommend against adding the Pods directory to your .gitignore. However
