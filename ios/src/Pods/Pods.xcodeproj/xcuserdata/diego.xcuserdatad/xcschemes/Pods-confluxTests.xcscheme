@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "AF08E9F0B96AC9F0CC67C51B"
+               BlueprintIdentifier = "3C9DBC6F56219EA32CA801E1"
                BuildableName = "libPods-confluxTests.a"
                BlueprintName = "Pods-confluxTests"
                ReferencedContainer = "container:Pods.xcodeproj">

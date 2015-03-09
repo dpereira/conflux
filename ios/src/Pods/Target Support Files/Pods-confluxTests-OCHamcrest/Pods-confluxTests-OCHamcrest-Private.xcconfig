@@ -1,5 +1,5 @@
 #include "Pods-confluxTests-OCHamcrest.xcconfig"
 GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
-HEADER_SEARCH_PATHS = "${PODS_ROOT}/Headers/Build" "${PODS_ROOT}/Headers/Build/OCHamcrest" "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/OCHamcrest" "${PODS_ROOT}/Headers/Public/OCMock" "${PODS_ROOT}/Headers/Public/OCMockito"
+HEADER_SEARCH_PATHS = "${PODS_ROOT}/Headers/Build" "${PODS_ROOT}/Headers/Build/OCHamcrest" "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/OCHamcrest" "${PODS_ROOT}/Headers/Public/OCMockito"
 OTHER_LDFLAGS = -ObjC
 PODS_ROOT = ${SRCROOT}
