@@ -11,6 +11,9 @@
 
 @interface SynergyTests : XCTestCase
 
+@property CFXSynergy* synergy;
+@property id<CFXSocket> synergySocket;
+
 @end
 
 @implementation SynergyTests
@@ -53,41 +56,45 @@
 
 // tests
 
-- (void)testListening {
+- (void)setUp
+{
     id socket = OCMClassMock([CFXFoundationSocket class]);
     CFXSynergy* synergy = [CFXSynergy new];
     
+    self.synergy = synergy;
+    self.synergySocket = socket;
+}
+
+- (void)testListening {
     CFXPoint* resolution = [[CFXPoint alloc] initWith:320 and:240];
-    [synergy load:resolution with:socket];
+    [self.synergy load:resolution with:self.synergySocket];
     
-    OCMVerify([socket registerListener:[OCMArg isEqual:synergy]]);
-    OCMVerify([socket listen:24800]);
+    OCMVerify([self.synergySocket registerListener:[OCMArg isEqual:self.synergy]]);
+    OCMVerify([self.synergySocket listen:24800]);
 }
 
 - (void)testConnection {
-    id synergySocket = OCMClassMock([CFXFoundationSocket class]);
-    CFXSynergy* synergy = [CFXSynergy new];
-    
-    
-    CFXPoint* resolution = [[CFXPoint alloc] initWith:320 and:240];
-    [synergy load:resolution with:synergySocket];
-    
     CFXMockSocket* clientSocket = [[CFXMockSocket alloc] init];
-    
     [self _recordConnectionSequence:clientSocket];
+
+    CFXPoint* resolution = [[CFXPoint alloc] initWith:320 and:240];
+    [self.synergy load:resolution with:self.synergySocket];
     
-    [synergy receive:kCFXSocketConnected fromSender:synergySocket withPayload:(__bridge void*)clientSocket];
+    
+    [self.synergy receive:kCFXSocketConnected
+               fromSender:self.synergySocket
+              withPayload:(__bridge void*)clientSocket];
     
     [clientSocket step];
     [clientSocket step];
     [clientSocket step];
     
-    [synergy beginMouseMove:[[CFXPoint alloc] initWith:20 and:20]];
+    [self.synergy beginMouseMove:[[CFXPoint alloc] initWith:20 and:20]];
     
     [clientSocket step];
     
     for(int i = 0; i < 100; i++) {
-        [synergy mouseMove:[[CFXPoint alloc ] initWith:i and:i]];
+        [self.synergy mouseMove:[[CFXPoint alloc ] initWith:i and:i]];
     }
 }
 
