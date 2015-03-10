@@ -102,7 +102,7 @@ static void _handleReadStream(CFReadStreamRef readStream, CFStreamEventType even
                              kCFBooleanTrue);
 }
 
-- (void)bind:(UInt16)port
+- (void)listen:(UInt16)port
 {
     CFSocketContext ctx = {0, (__bridge void*)self, NULL, NULL, NULL};
     self->_serverSocket = CFSocketCreate(kCFAllocatorDefault,

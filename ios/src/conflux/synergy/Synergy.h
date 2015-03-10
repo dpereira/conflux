@@ -11,6 +11,9 @@
 
 - (void) load:(CFXPoint*)sourceResolution;
 
+- (void) load:(CFXPoint*)sourceResolution
+         with:(id<CFXSocket>)socket;
+
 - (void) unload;
 
 - (void) beginMouseMove:(CFXPoint*)coordinates;
