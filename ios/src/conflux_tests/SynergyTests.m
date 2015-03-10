@@ -80,7 +80,7 @@
     [self _assertCommandIn:[clientSocket popSent] is:"CINN"];
 }
 
-// auxilliary
+// auxiliary
 
 - (void)_record:(const char*)message
              in:(CFXMockSocket*)recorder
