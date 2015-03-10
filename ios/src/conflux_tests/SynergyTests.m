@@ -96,11 +96,12 @@
              in:(CFXMockSocket*)recorder
 {
     UInt8 header[] = {
-        (bytes >> 24) & 0x000F,
-        (bytes >> 16) & 0x000F,
-        (bytes >> 8) & 0x000F,
-        bytes & 0x000F
+        (bytes >> 24) & 0x00FF,
+        (bytes >> 16) & 0x00FF,
+        (bytes >> 8) & 0x00FF,
+        bytes & 0x00FF
     };
+
     [recorder record:header bytes:sizeof(header)];
     [recorder record:message bytes:bytes];
 }
