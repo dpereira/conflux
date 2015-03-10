@@ -8,9 +8,6 @@
 #import <sys/socket.h>
 #import <arpa/inet.h>
 
-#define SYNERGY_PKTLEN_MAX 4096
-#define SYNERGY_HEADER_LEN 4
-
 @interface  CFXProtocol()
 @end
 

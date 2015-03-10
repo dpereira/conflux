@@ -6,6 +6,9 @@
 #import "Mouse.h"
 #import "Socket.h"
 
+#define SYNERGY_PKTLEN_MAX 4096
+#define SYNERGY_HEADER_LEN 4
+
 typedef enum
 {
     NONE,

@@ -25,7 +25,7 @@
         self->_rcvdCount = 0;
         self->_poppedCount = 0;
         memset(self->_sent, 0, sizeof(self->_sent));
-        memset(self->_rcvd, 0, sizeof(self->_sent));
+        memset(self->_rcvd, 0, sizeof(self->_rcvd));
         return self;
     } else {
         return nil;
@@ -41,6 +41,8 @@
     for(int i = 0; i < self->_recordedCount; i++) {
         free(self->_rcvd[i].buffer);
     }
+    
+    [super finalize];
 }
 
 - (size_t)saveTo:(CFXParameters*)storage
@@ -87,6 +89,9 @@
 
 - (CFXParameters*)popSent
 {
+    if(self->_poppedCount >= self->_sentCount) {
+        return NULL;
+    }
     CFXParameters* popped = &self->_sent[self->_poppedCount];
     self->_poppedCount += 1;
     return popped;
