@@ -28,6 +28,8 @@ typedef struct
 
 - (id)init;
 
+- (CFXParameters*)popSent;
+
 @end
 
 #endif

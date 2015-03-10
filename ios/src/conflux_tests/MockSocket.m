@@ -14,7 +14,7 @@
     CFXParameters _sent[MAX_SENT_RECORDED];
     CFXParameters _rcvd[MAX_RECV_PLAYED_BACK];
     id<CFXSocketListener> _listener;
-    int _sentCount, _rcvdCount, _recordedCount;
+    int _sentCount, _rcvdCount, _recordedCount, _poppedCount;
 }
 
 - (id)init
@@ -23,6 +23,7 @@
         self->_listener = nil;
         self->_sentCount = 0;
         self->_rcvdCount = 0;
+        self->_poppedCount = 0;
         memset(self->_sent, 0, sizeof(self->_sent));
         memset(self->_rcvd, 0, sizeof(self->_sent));
         return self;
@@ -31,17 +32,16 @@
     }
 }
 
-- (void) registerListener:(id<CFXSocketListener>)listener
+- (void)finalize
 {
-    NSLog(@"Listener registered");
-    self->_listener = listener;
+    for(int i = 0; i < self->_sentCount; i++) {
+        free(self->_sent[i].buffer);
+    }
+
+    for(int i = 0; i < self->_recordedCount; i++) {
+        free(self->_rcvd[i].buffer);
+    }
 }
-
-- (void)listen:(UInt16)port
-{}
-
-- (void)open
-{}
 
 - (size_t)saveTo:(CFXParameters*)storage
           buffer:(const UInt8*)data
@@ -60,6 +60,8 @@
     [self record:header bytes:sizeof(header)];
     [self record:bytes bytes:howMany];
 }
+
+// auxiliary methods for mocking
 
 -(void)record:(const char *)payload {
     NSLog(@"-> %s", payload);
@@ -82,6 +84,28 @@
     NSLog(@"STEP");
     [self->_listener receive:kCFXSocketReceivedData fromSender:self withPayload:NULL];
 }
+
+- (CFXParameters*)popSent
+{
+    CFXParameters* popped = &self->_sent[self->_poppedCount];
+    self->_poppedCount += 1;
+    return popped;
+}
+
+// mocked methods
+
+
+- (void) registerListener:(id<CFXSocketListener>)listener
+{
+    NSLog(@"Listener registered");
+    self->_listener = listener;
+}
+
+- (void)listen:(UInt16)port
+{}
+
+- (void)open
+{}
 
 - (size_t)send:(const UInt8 *)buffer
          bytes:(size_t)howMany
