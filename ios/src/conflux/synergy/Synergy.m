@@ -27,6 +27,7 @@
     int _currentCursorX, _currentCursorY;
     int _dmmvSeq, _dmmvFilter;
     double _xProjection, _yProjection;
+    BOOL _loaded;
     
     id<CFXSocket> _socket;
 }
@@ -52,6 +53,8 @@
     [self _updateProjection];
     [self _setupSocket:self->_socket];
     
+    self->_loaded = YES;
+    
     NSLog(@"Initialized source res with: %d, %d", self->_sourceWidth, self->_sourceHeight);
 }
 
@@ -68,15 +71,18 @@
     self._protocol = nil;
     [self->_socket disconnect];
     self->_socket = nil;
+    self->_loaded = NO;
 }
 
 - (void)changeOrientation
 {
-    NSLog(@"Orientation changed: %f, %f", self->_xProjection, self->_yProjection);
-    double tmp = self->_sourceWidth;
-    self->_sourceWidth = self->_sourceHeight;
-    self->_sourceHeight = tmp;
-    [self _updateProjection];
+    if(self->_loaded) {
+        NSLog(@"Orientation changed: %f, %f", self->_xProjection, self->_yProjection);
+        double tmp = self->_sourceWidth;
+        self->_sourceWidth = self->_sourceHeight;
+        self->_sourceHeight = tmp;
+        [self _updateProjection];
+    }
 }
 
 - (void)click:(CFXMouseButton)whichButton

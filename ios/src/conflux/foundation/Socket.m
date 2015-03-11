@@ -126,6 +126,8 @@ static void _handleReadStream(CFReadStreamRef readStream, CFStreamEventType even
                                    IPPROTO_TCP,
                                    kCFSocketAcceptCallBack, _handleConnect, &ctx);
     
+    NSLog(@"Socket created %u", self._serverSocket != NULL);
+    
     struct sockaddr_in sin;
     memset(&sin, 0, sizeof(sin));
     sin.sin_len = sizeof(sin);
@@ -143,9 +145,13 @@ static void _handleReadStream(CFReadStreamRef readStream, CFStreamEventType even
                                                 self._serverSocket,
                                                 0);
     
+    NSLog(@"Created source %u", self._source != NULL);
+    
     CFRunLoopAddSource(CFRunLoopGetCurrent(),
                        self._source,
                        kCFRunLoopDefaultMode);
+    
+    NSLog(@"Registered into run loop");
 }
 
 - (size_t)send:(const UInt8 *)buffer bytes:(size_t)howMany
@@ -165,7 +171,9 @@ static void _handleReadStream(CFReadStreamRef readStream, CFStreamEventType even
         NSLog(@"Disconnecting server socket");
         CFRunLoopRemoveSource(CFRunLoopGetCurrent(), self._source, kCFRunLoopDefaultMode);
         CFSocketInvalidate(self._serverSocket);
+        CFRelease(self._source);
         self._source = nil;
+        CFRelease(self._serverSocket);
         self._serverSocket = nil;
         NSLog(@"Server socket disconnected");
     }
@@ -175,11 +183,13 @@ static void _handleReadStream(CFReadStreamRef readStream, CFStreamEventType even
         if(self._readStream) {
             CFReadStreamUnscheduleFromRunLoop(self._readStream, CFRunLoopGetCurrent(), kCFRunLoopCommonModes);
             CFReadStreamClose(self._readStream);
+            CFRelease(self._readStream);
             self._readStream = nil;
             NSLog(@"Read stream released");
         }
         if(self._writeStream) {
             CFWriteStreamClose(self._writeStream);
+            CFRelease(self._writeStream);
             self._writeStream = nil;
             NSLog(@"Write stream released");            
         }

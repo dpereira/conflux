@@ -63,6 +63,7 @@
     CFXPoint* sourceResolution = [[CFXPoint alloc] initWith:current.bounds.size.width
                                                         and:current.bounds.size.height];
     [self ._synergy load:sourceResolution];
+    NSLog(@"Became active");
 }
 
 - (void) applicationWillResignActive:(UIApplication *)application
