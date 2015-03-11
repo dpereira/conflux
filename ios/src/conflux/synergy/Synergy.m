@@ -55,11 +55,19 @@
     NSLog(@"Initialized source res with: %d, %d", self->_sourceWidth, self->_sourceHeight);
 }
 
+- (void)finalize
+{
+    [self unload];
+}
+
 - (void)unload
 {
     [self._calvTimer invalidate];
+    self._calvTimer = nil;
     [self._protocol unload];
+    self._protocol = nil;
     [self->_socket disconnect];
+    self->_socket = nil;
 }
 
 - (void)changeOrientation
