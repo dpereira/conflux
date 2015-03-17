@@ -32,6 +32,16 @@
     id<CFXSocket> _socket;
 }
 
+- (id)init
+{
+    if(self = [super init]) {
+        self->_socket = nil;
+        return self;
+    } else {
+        return nil;
+    }
+}
+
 - (void)load:(CFXPoint *)sourceResolution
 {
     [self load:sourceResolution
@@ -42,7 +52,6 @@
         with:(id<CFXSocket>)socket
 
 {
-    self->_socket = socket;
     self->_dmmvFilter = 1;
     self._calvTimer = nil;
     self->_sourceWidth = sourceResolution.x;
@@ -51,6 +60,8 @@
     self->_targetHeight = 800;
     self->_remoteCursorX = self->_remoteCursorY = 1;
     [self _updateProjection];
+    
+    self->_socket = socket;
     [self _setupSocket:self->_socket];
     
     self->_loaded = YES;
@@ -65,11 +76,11 @@
 
 - (void)unload
 {
-    [self._calvTimer invalidate];
+    [self._calvTimer invalidate];    
     self._calvTimer = nil;
+    [self->_socket disconnect];
     [self._protocol unload];
     self._protocol = nil;
-    [self->_socket disconnect];
     self->_socket = nil;
     self->_loaded = NO;
 }

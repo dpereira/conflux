@@ -98,6 +98,14 @@ static void _handleReadStream(CFReadStreamRef readStream, CFStreamEventType even
     self._readStream = readStream;
     self._writeStream = writeStream;
     
+    CFReadStreamSetProperty(self._readStream,
+                            kCFStreamPropertyShouldCloseNativeSocket,
+                            kCFBooleanTrue);
+    
+    CFWriteStreamSetProperty(self._writeStream,
+                             kCFStreamPropertyShouldCloseNativeSocket,
+                             kCFBooleanTrue);
+
     if(!CFReadStreamOpen(self._readStream)) {
         NSLog(@"Failed to open read stream");
     }
@@ -108,13 +116,6 @@ static void _handleReadStream(CFReadStreamRef readStream, CFStreamEventType even
         NSLog(@"Failed to open write stream");
     }
     
-    CFReadStreamSetProperty(self._readStream,
-                            kCFStreamPropertyShouldCloseNativeSocket,
-                            kCFBooleanTrue);
-    
-    CFWriteStreamSetProperty(self._writeStream,
-                             kCFStreamPropertyShouldCloseNativeSocket,
-                             kCFBooleanTrue);
 }
 
 - (void)listen:(UInt16)port
@@ -170,9 +171,10 @@ static void _handleReadStream(CFReadStreamRef readStream, CFStreamEventType even
     if(self._serverSocket) {
         NSLog(@"Disconnecting server socket");
         CFRunLoopRemoveSource(CFRunLoopGetCurrent(), self._source, kCFRunLoopDefaultMode);
-        CFSocketInvalidate(self._serverSocket);
+        CFRunLoopSourceInvalidate(self._source);
         CFRelease(self._source);
         self._source = nil;
+        CFSocketInvalidate(self._serverSocket);
         CFRelease(self._serverSocket);
         self._serverSocket = nil;
         NSLog(@"Server socket disconnected");
@@ -181,7 +183,9 @@ static void _handleReadStream(CFReadStreamRef readStream, CFStreamEventType even
     if(self._clientSocket) {
         NSLog(@"Disconnecting client socket");
         if(self._readStream) {
-            CFReadStreamUnscheduleFromRunLoop(self._readStream, CFRunLoopGetCurrent(), kCFRunLoopCommonModes);
+            CFReadStreamUnscheduleFromRunLoop(self._readStream,
+                                              CFRunLoopGetCurrent(),
+                                              kCFRunLoopCommonModes);
             CFReadStreamClose(self._readStream);
             CFRelease(self._readStream);
             self._readStream = nil;
