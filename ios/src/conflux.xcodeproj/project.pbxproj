@@ -15,7 +15,7 @@
 		F160806C1AAD39B50019EC1F /* MockSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = F160806B1AAD39B50019EC1F /* MockSocket.m */; };
 		F1907EDD1A70A60E00182F78 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F1907EDC1A70A60E00182F78 /* main.m */; };
 		F1907EE01A70A60E00182F78 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F1907EDF1A70A60E00182F78 /* AppDelegate.m */; };
-		F1907EE31A70A60E00182F78 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F1907EE21A70A60E00182F78 /* ViewController.m */; };
+		F1907EE31A70A60E00182F78 /* TouchpadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F1907EE21A70A60E00182F78 /* TouchpadViewController.m */; };
 		F1907EE61A70A60E00182F78 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F1907EE41A70A60E00182F78 /* Main.storyboard */; };
 		F1907EE81A70A60E00182F78 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F1907EE71A70A60E00182F78 /* Images.xcassets */; };
 		F1907EEB1A70A60E00182F78 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = F1907EE91A70A60E00182F78 /* LaunchScreen.xib */; };
@@ -52,8 +52,8 @@
 		F1907EDC1A70A60E00182F78 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		F1907EDE1A70A60E00182F78 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		F1907EDF1A70A60E00182F78 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		F1907EE11A70A60E00182F78 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		F1907EE21A70A60E00182F78 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		F1907EE11A70A60E00182F78 /* TouchpadViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TouchpadViewController.h; sourceTree = "<group>"; };
+		F1907EE21A70A60E00182F78 /* TouchpadViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TouchpadViewController.m; sourceTree = "<group>"; };
 		F1907EE51A70A60E00182F78 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		F1907EE71A70A60E00182F78 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		F1907EEA1A70A60E00182F78 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -148,11 +148,11 @@
 				F14D428C1A9A8B950027C4C4 /* synergy */,
 				F1907EDE1A70A60E00182F78 /* AppDelegate.h */,
 				F1907EDF1A70A60E00182F78 /* AppDelegate.m */,
-				F1907EE11A70A60E00182F78 /* ViewController.h */,
-				F1907EE21A70A60E00182F78 /* ViewController.m */,
+				F1907EE11A70A60E00182F78 /* TouchpadViewController.h */,
+				F1907EE21A70A60E00182F78 /* TouchpadViewController.m */,
 				F1907EE41A70A60E00182F78 /* Main.storyboard */,
-				F1907EE71A70A60E00182F78 /* Images.xcassets */,
 				F1907EE91A70A60E00182F78 /* LaunchScreen.xib */,
+				F1907EE71A70A60E00182F78 /* Images.xcassets */,
 				F1907EDA1A70A60E00182F78 /* Supporting Files */,
 			);
 			path = conflux;
@@ -326,7 +326,7 @@
 				F14D42941A9AFFE20027C4C4 /* Point.m in Sources */,
 				F14D42891A9A8A270027C4C4 /* Protocol.m in Sources */,
 				F11F9F421AA6B4190088A456 /* Socket.m in Sources */,
-				F1907EE31A70A60E00182F78 /* ViewController.m in Sources */,
+				F1907EE31A70A60E00182F78 /* TouchpadViewController.m in Sources */,
 				F1907EE01A70A60E00182F78 /* AppDelegate.m in Sources */,
 				F14D42901A9AC42C0027C4C4 /* Synergy.m in Sources */,
 				F1907EDD1A70A60E00182F78 /* main.m in Sources */,

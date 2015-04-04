@@ -76,13 +76,15 @@
 
 - (void)unload
 {
-    [self._calvTimer invalidate];    
-    self._calvTimer = nil;
-    [self->_socket disconnect];
-    [self._protocol unload];
-    self._protocol = nil;
-    self->_socket = nil;
-    self->_loaded = NO;
+    if(self->_loaded) {
+        [self._calvTimer invalidate];
+        self._calvTimer = nil;
+        [self->_socket disconnect];
+        [self._protocol unload];
+        self._protocol = nil;
+        self->_socket = nil;
+        self->_loaded = NO;
+    }
 }
 
 - (void)changeOrientation
@@ -165,16 +167,21 @@
 
 - (void)_addClient:(id<CFXSocket>)clientSocket
 {
-    self._state = 0;
-    
     if(self._protocol != nil) {
+        NSLog(@"RELOADING PROTOCOL");
         [self._protocol unload];
     }
+    
+    self._state = 0;
+    
+    NSLog(@"INITIALIZING PROTOCOL");
     
     self._protocol = [[CFXProtocol alloc] initWithSocket: clientSocket
                                              andListener: self];
     
+    NSLog(@"HAILING FREQUENCIES OPEN");
     [self._protocol hail];
+    NSLog(@"DONE HAILING");
 }
 
 - (void)_processPacket:(UInt8*)buffer
@@ -187,7 +194,7 @@
         default:break;
     }
     
-    //NSLog(@"PPKT: type %u, state %u, nbytes: %u",type, self._state, numBytes);
+    NSLog(@"PPKT: type %u, state %u, nbytes: %lu",type, self._state, numBytes);
     
     // reply to client
     switch(self._state) {
@@ -252,7 +259,9 @@
 
 - (void)_keepAlive:(NSTimer*)timer
 {
-    [self._protocol calv];
+    if(self._protocol != nil) {
+        [self._protocol calv];
+    }
 }
 
 @end
