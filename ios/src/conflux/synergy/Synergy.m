@@ -27,8 +27,19 @@
     int _currentCursorX, _currentCursorY;
     int _dmmvSeq, _dmmvFilter;
     double _xProjection, _yProjection;
+    BOOL _loaded;
     
     id<CFXSocket> _socket;
+}
+
+- (id)init
+{
+    if(self = [super init]) {
+        self->_socket = nil;
+        return self;
+    } else {
+        return nil;
+    }
 }
 
 - (void)load:(CFXPoint *)sourceResolution
@@ -41,7 +52,6 @@
         with:(id<CFXSocket>)socket
 
 {
-    self->_socket = socket;
     self->_dmmvFilter = 1;
     self._calvTimer = nil;
     self->_sourceWidth = sourceResolution.x;
@@ -50,25 +60,40 @@
     self->_targetHeight = 800;
     self->_remoteCursorX = self->_remoteCursorY = 1;
     [self _updateProjection];
+    
+    self->_socket = socket;
     [self _setupSocket:self->_socket];
+    
+    self->_loaded = YES;
     
     NSLog(@"Initialized source res with: %d, %d", self->_sourceWidth, self->_sourceHeight);
 }
 
+- (void)finalize
+{
+    [self unload];
+}
+
 - (void)unload
 {
-    [self._calvTimer invalidate];
-    [self._protocol unload];
+    [self._calvTimer invalidate];    
+    self._calvTimer = nil;
     [self->_socket disconnect];
+    [self._protocol unload];
+    self._protocol = nil;
+    self->_socket = nil;
+    self->_loaded = NO;
 }
 
 - (void)changeOrientation
 {
-    NSLog(@"Orientation changed: %f, %f", self->_xProjection, self->_yProjection);
-    double tmp = self->_sourceWidth;
-    self->_sourceWidth = self->_sourceHeight;
-    self->_sourceHeight = tmp;
-    [self _updateProjection];
+    if(self->_loaded) {
+        NSLog(@"Orientation changed: %f, %f", self->_xProjection, self->_yProjection);
+        double tmp = self->_sourceWidth;
+        self->_sourceWidth = self->_sourceHeight;
+        self->_sourceHeight = tmp;
+        [self _updateProjection];
+    }
 }
 
 - (void)click:(CFXMouseButton)whichButton
