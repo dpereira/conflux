@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		EC6C7023EA5E18735C35F448 /* libPods-confluxTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 72EB220625794A3E5C680179 /* libPods-confluxTests.a */; };
 		F11F9F421AA6B4190088A456 /* Socket.m in Sources */ = {isa = PBXBuildFile; fileRef = F11F9F411AA6B4190088A456 /* Socket.m */; };
+		F13E66531AD3805A00330539 /* KeyboardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F13E66521AD3805A00330539 /* KeyboardViewController.m */; };
 		F14D42891A9A8A270027C4C4 /* Protocol.m in Sources */ = {isa = PBXBuildFile; fileRef = F14D42881A9A8A270027C4C4 /* Protocol.m */; };
 		F14D42901A9AC42C0027C4C4 /* Synergy.m in Sources */ = {isa = PBXBuildFile; fileRef = F14D428F1A9AC42C0027C4C4 /* Synergy.m */; };
 		F14D42941A9AFFE20027C4C4 /* Point.m in Sources */ = {isa = PBXBuildFile; fileRef = F14D42931A9AFFE20027C4C4 /* Point.m */; };
@@ -38,6 +39,8 @@
 		72EB220625794A3E5C680179 /* libPods-confluxTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-confluxTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F11F9F401AA6A8ED0088A456 /* Socket.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Socket.h; sourceTree = "<group>"; };
 		F11F9F411AA6B4190088A456 /* Socket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Socket.m; sourceTree = "<group>"; };
+		F13E66521AD3805A00330539 /* KeyboardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeyboardViewController.m; sourceTree = "<group>"; };
+		F13E66541AD3806E00330539 /* KeyboardViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KeyboardViewController.h; sourceTree = "<group>"; };
 		F14D42881A9A8A270027C4C4 /* Protocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Protocol.m; path = synergy/Protocol.m; sourceTree = "<group>"; };
 		F14D428B1A9A8B890027C4C4 /* Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Protocol.h; path = synergy/Protocol.h; sourceTree = "<group>"; };
 		F14D428E1A9AC42C0027C4C4 /* Synergy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Synergy.h; path = synergy/Synergy.h; sourceTree = "<group>"; };
@@ -148,6 +151,8 @@
 				F14D428C1A9A8B950027C4C4 /* synergy */,
 				F1907EDE1A70A60E00182F78 /* AppDelegate.h */,
 				F1907EDF1A70A60E00182F78 /* AppDelegate.m */,
+				F13E66541AD3806E00330539 /* KeyboardViewController.h */,
+				F13E66521AD3805A00330539 /* KeyboardViewController.m */,
 				F1907EE11A70A60E00182F78 /* TouchpadViewController.h */,
 				F1907EE21A70A60E00182F78 /* TouchpadViewController.m */,
 				F1907EE41A70A60E00182F78 /* Main.storyboard */,
@@ -326,6 +331,7 @@
 				F14D42941A9AFFE20027C4C4 /* Point.m in Sources */,
 				F14D42891A9A8A270027C4C4 /* Protocol.m in Sources */,
 				F11F9F421AA6B4190088A456 /* Socket.m in Sources */,
+				F13E66531AD3805A00330539 /* KeyboardViewController.m in Sources */,
 				F1907EE31A70A60E00182F78 /* TouchpadViewController.m in Sources */,
 				F1907EE01A70A60E00182F78 /* AppDelegate.m in Sources */,
 				F14D42901A9AC42C0027C4C4 /* Synergy.m in Sources */,
