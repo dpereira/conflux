@@ -94,6 +94,22 @@
     [self _writeRaw:cmd bytes:sizeof(cmd)];
 }
 
+-(void)dkdn:(UInt16) key {
+    NSLog(@"Key down: %c", key);
+    UInt8 keyHigh = key >> 8;
+    UInt8 keyLow = key & 0x00FF;
+    const UInt8 cmd[] = {'D', 'K', 'D', 'N', keyHigh, keyLow, 0x00, 0x00, keyHigh, keyLow};
+    [self _writeRaw:cmd bytes:sizeof(cmd)];
+}
+
+-(void)dkup:(UInt16) key {
+    NSLog(@"Key down: %c", key);
+    UInt8 keyHigh = key >> 8;
+    UInt8 keyLow = key & 0x00FF;
+    const UInt8 cmd[] = {'D', 'K', 'U', 'P', 0x00, 0x00, 0x00, 0x00, keyHigh, keyLow};
+    [self _writeRaw:cmd bytes:sizeof(cmd)];
+}
+
 -(void)_writeRaw:(const UInt8 *)bytes bytes:(int)howMany {
     UInt8 header[] = {0x00, 0x00, 0x00, howMany };
     UInt8 *buffer = malloc(sizeof(header) + howMany);

@@ -16,6 +16,8 @@
 
 - (void) unload;
 
+- (void) keyStroke:(UInt16)key;
+
 - (void) beginMouseMove:(CFXPoint*)coordinates;
 
 - (void) mouseMove:(CFXPoint*)coordinates;

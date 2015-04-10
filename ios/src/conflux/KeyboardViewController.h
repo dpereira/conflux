@@ -12,7 +12,7 @@
 #import <UIKit/UIKit.h>
 
 
-@interface KeyboardViewController : UIViewController
+@interface KeyboardViewController : UIViewController <UITextViewDelegate>
 
 
 @end

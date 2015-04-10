@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import "KeyboardViewController.h"
+#import "AppDelegate.h"
+#import "synergy/Synergy.h"
 
 @interface KeyboardViewController ()
 
@@ -15,10 +17,21 @@
 
 @implementation KeyboardViewController
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     // FIXME: there must be a less
     // hackish way to accomplish this.
-    [self.view.subviews[0] becomeFirstResponder];
+    UITextView *textArea = self.view.subviews[0];
+    textArea.delegate = self;
+    [textArea becomeFirstResponder];
+}
+
+- (void)textViewDidChange:(UITextView *)textView
+{
+    UITextView *textArea = self.view.subviews[0];
+    UInt16 c = [textArea.text characterAtIndex:textArea.text.length - 1];
+    AppDelegate* app = [[UIApplication sharedApplication] delegate];
+    [app._synergy keyStroke: c];
 }
 
 @end

@@ -98,6 +98,12 @@
     }
 }
 
+-(void)keyStroke:(UInt16)character
+{
+    [self._protocol dkdn: character];
+    [self._protocol dkup: character];
+}
+
 - (void)click:(CFXMouseButton)whichButton
 {
     [self._protocol dmdn: whichButton];
