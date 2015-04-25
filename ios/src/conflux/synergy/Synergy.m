@@ -174,20 +174,15 @@
 - (void)_addClient:(id<CFXSocket>)clientSocket
 {
     if(self._protocol != nil) {
-        NSLog(@"RELOADING PROTOCOL");
         [self._protocol unload];
     }
     
     self._state = 0;
     
-    NSLog(@"INITIALIZING PROTOCOL");
-    
     self._protocol = [[CFXProtocol alloc] initWithSocket: clientSocket
                                              andListener: self];
     
-    NSLog(@"HAILING FREQUENCIES OPEN");
     [self._protocol hail];
-    NSLog(@"DONE HAILING");
 }
 
 - (void)_processPacket:(UInt8*)buffer
