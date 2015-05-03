@@ -3,10 +3,16 @@
 #import "MockSocket.h"
 #import "Synergy.h"
 
+#ifdef __cplusplus
 extern "C" {
+#endif
+    
 #import <XCTest/XCTest.h>
 #import "OCMock.h"
+    
+#ifdef __cplusplus
 }
+#endif
 
 @interface CFXSynergy()
 
