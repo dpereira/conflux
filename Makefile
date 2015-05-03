@@ -1,3 +1,5 @@
+init:
+	git submodule update --init
 
-test:
+test: init
 	xctool -workspace ios/src/conflux.xcworkspace -scheme conflux -sdk iphonesimulator test
