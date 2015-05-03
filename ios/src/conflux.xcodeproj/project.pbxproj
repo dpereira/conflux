@@ -8,15 +8,23 @@
 
 /* Begin PBXBuildFile section */
 		EC6C7023EA5E18735C35F448 /* libPods-confluxTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 72EB220625794A3E5C680179 /* libPods-confluxTests.a */; };
-		F11F9F421AA6B4190088A456 /* Socket.m in Sources */ = {isa = PBXBuildFile; fileRef = F11F9F411AA6B4190088A456 /* Socket.m */; };
-		F13E66531AD3805A00330539 /* KeyboardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F13E66521AD3805A00330539 /* KeyboardViewController.m */; };
-		F14D42891A9A8A270027C4C4 /* Protocol.m in Sources */ = {isa = PBXBuildFile; fileRef = F14D42881A9A8A270027C4C4 /* Protocol.m */; };
-		F14D42901A9AC42C0027C4C4 /* Synergy.m in Sources */ = {isa = PBXBuildFile; fileRef = F14D428F1A9AC42C0027C4C4 /* Synergy.m */; };
-		F14D42941A9AFFE20027C4C4 /* Point.m in Sources */ = {isa = PBXBuildFile; fileRef = F14D42931A9AFFE20027C4C4 /* Point.m */; };
+		F11F9F421AA6B4190088A456 /* Socket.mm in Sources */ = {isa = PBXBuildFile; fileRef = F11F9F411AA6B4190088A456 /* Socket.mm */; };
+		F13E66531AD3805A00330539 /* KeyboardViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = F13E66521AD3805A00330539 /* KeyboardViewController.mm */; };
+		F14D42891A9A8A270027C4C4 /* Protocol.mm in Sources */ = {isa = PBXBuildFile; fileRef = F14D42881A9A8A270027C4C4 /* Protocol.mm */; };
+		F14D42901A9AC42C0027C4C4 /* Synergy.mm in Sources */ = {isa = PBXBuildFile; fileRef = F14D428F1A9AC42C0027C4C4 /* Synergy.mm */; };
+		F14D42941A9AFFE20027C4C4 /* Point.mm in Sources */ = {isa = PBXBuildFile; fileRef = F14D42931A9AFFE20027C4C4 /* Point.mm */; };
 		F160806C1AAD39B50019EC1F /* MockSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = F160806B1AAD39B50019EC1F /* MockSocket.m */; };
-		F1907EDD1A70A60E00182F78 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F1907EDC1A70A60E00182F78 /* main.m */; };
-		F1907EE01A70A60E00182F78 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F1907EDF1A70A60E00182F78 /* AppDelegate.m */; };
-		F1907EE31A70A60E00182F78 /* TouchpadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F1907EE21A70A60E00182F78 /* TouchpadViewController.m */; };
+		F187A9551AF6B60C0061CE4C /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F187A9541AF6B60C0061CE4C /* CoreData.framework */; };
+		F187A9581AF6B62B0061CE4C /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F187A9561AF6B62B0061CE4C /* CoreFoundation.framework */; };
+		F187A9591AF6B62B0061CE4C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F187A9571AF6B62B0061CE4C /* Foundation.framework */; };
+		F187A95C1AF6B6590061CE4C /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F187A95A1AF6B6590061CE4C /* libc++.dylib */; };
+		F187A95D1AF6B6590061CE4C /* libstdc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F187A95B1AF6B6590061CE4C /* libstdc++.dylib */; };
+		F187A95F1AF6B6750061CE4C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F187A95E1AF6B6750061CE4C /* UIKit.framework */; };
+		F187A9621AF6B75F0061CE4C /* libPods-confluxTests-OCMock.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F187A9601AF6B75F0061CE4C /* libPods-confluxTests-OCMock.a */; };
+		F187A9631AF6B75F0061CE4C /* libPods-confluxTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F187A9611AF6B75F0061CE4C /* libPods-confluxTests.a */; };
+		F1907EDD1A70A60E00182F78 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = F1907EDC1A70A60E00182F78 /* main.mm */; };
+		F1907EE01A70A60E00182F78 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = F1907EDF1A70A60E00182F78 /* AppDelegate.mm */; };
+		F1907EE31A70A60E00182F78 /* TouchpadViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = F1907EE21A70A60E00182F78 /* TouchpadViewController.mm */; };
 		F1907EE61A70A60E00182F78 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F1907EE41A70A60E00182F78 /* Main.storyboard */; };
 		F1907EE81A70A60E00182F78 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F1907EE71A70A60E00182F78 /* Images.xcassets */; };
 		F1907EEB1A70A60E00182F78 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = F1907EE91A70A60E00182F78 /* LaunchScreen.xib */; };
@@ -38,25 +46,33 @@
 		3115E18B281917DF2F074E23 /* Pods-confluxTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-confluxTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-confluxTests/Pods-confluxTests.release.xcconfig"; sourceTree = "<group>"; };
 		72EB220625794A3E5C680179 /* libPods-confluxTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-confluxTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F11F9F401AA6A8ED0088A456 /* Socket.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Socket.h; sourceTree = "<group>"; };
-		F11F9F411AA6B4190088A456 /* Socket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Socket.m; sourceTree = "<group>"; };
-		F13E66521AD3805A00330539 /* KeyboardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeyboardViewController.m; sourceTree = "<group>"; };
+		F11F9F411AA6B4190088A456 /* Socket.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Socket.mm; sourceTree = "<group>"; };
+		F13E66521AD3805A00330539 /* KeyboardViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = KeyboardViewController.mm; sourceTree = "<group>"; };
 		F13E66541AD3806E00330539 /* KeyboardViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KeyboardViewController.h; sourceTree = "<group>"; };
-		F14D42881A9A8A270027C4C4 /* Protocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Protocol.m; path = synergy/Protocol.m; sourceTree = "<group>"; };
+		F14D42881A9A8A270027C4C4 /* Protocol.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Protocol.mm; path = synergy/Protocol.mm; sourceTree = "<group>"; };
 		F14D428B1A9A8B890027C4C4 /* Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Protocol.h; path = synergy/Protocol.h; sourceTree = "<group>"; };
 		F14D428E1A9AC42C0027C4C4 /* Synergy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Synergy.h; path = synergy/Synergy.h; sourceTree = "<group>"; };
-		F14D428F1A9AC42C0027C4C4 /* Synergy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Synergy.m; path = synergy/Synergy.m; sourceTree = "<group>"; };
-		F14D42931A9AFFE20027C4C4 /* Point.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Point.m; path = synergy/Point.m; sourceTree = "<group>"; };
+		F14D428F1A9AC42C0027C4C4 /* Synergy.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Synergy.mm; path = synergy/Synergy.mm; sourceTree = "<group>"; };
+		F14D42931A9AFFE20027C4C4 /* Point.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Point.mm; path = synergy/Point.mm; sourceTree = "<group>"; };
 		F14D42951A9B0B4C0027C4C4 /* Point.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Point.h; path = synergy/Point.h; sourceTree = "<group>"; };
 		F14D42961A9B109A0027C4C4 /* Mouse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Mouse.h; path = synergy/Mouse.h; sourceTree = "<group>"; };
 		F160806A1AAD39720019EC1F /* MockSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockSocket.h; sourceTree = "<group>"; };
 		F160806B1AAD39B50019EC1F /* MockSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockSocket.m; sourceTree = "<group>"; };
+		F187A9541AF6B60C0061CE4C /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		F187A9561AF6B62B0061CE4C /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		F187A9571AF6B62B0061CE4C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		F187A95A1AF6B6590061CE4C /* libc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.dylib"; path = "usr/lib/libc++.dylib"; sourceTree = SDKROOT; };
+		F187A95B1AF6B6590061CE4C /* libstdc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.dylib"; path = "usr/lib/libstdc++.dylib"; sourceTree = SDKROOT; };
+		F187A95E1AF6B6750061CE4C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		F187A9601AF6B75F0061CE4C /* libPods-confluxTests-OCMock.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libPods-confluxTests-OCMock.a"; path = "Pods/../build/Debug-iphoneos/libPods-confluxTests-OCMock.a"; sourceTree = "<group>"; };
+		F187A9611AF6B75F0061CE4C /* libPods-confluxTests.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libPods-confluxTests.a"; path = "Pods/../build/Debug-iphoneos/libPods-confluxTests.a"; sourceTree = "<group>"; };
 		F1907ED71A70A60E00182F78 /* conflux.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = conflux.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1907EDB1A70A60E00182F78 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		F1907EDC1A70A60E00182F78 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		F1907EDC1A70A60E00182F78 /* main.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
 		F1907EDE1A70A60E00182F78 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		F1907EDF1A70A60E00182F78 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		F1907EDF1A70A60E00182F78 /* AppDelegate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = AppDelegate.mm; sourceTree = "<group>"; };
 		F1907EE11A70A60E00182F78 /* TouchpadViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TouchpadViewController.h; sourceTree = "<group>"; };
-		F1907EE21A70A60E00182F78 /* TouchpadViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TouchpadViewController.m; sourceTree = "<group>"; };
+		F1907EE21A70A60E00182F78 /* TouchpadViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = TouchpadViewController.mm; sourceTree = "<group>"; };
 		F1907EE51A70A60E00182F78 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		F1907EE71A70A60E00182F78 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		F1907EEA1A70A60E00182F78 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -70,6 +86,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F187A9621AF6B75F0061CE4C /* libPods-confluxTests-OCMock.a in Frameworks */,
+				F187A9631AF6B75F0061CE4C /* libPods-confluxTests.a in Frameworks */,
+				F187A95F1AF6B6750061CE4C /* UIKit.framework in Frameworks */,
+				F187A95C1AF6B6590061CE4C /* libc++.dylib in Frameworks */,
+				F187A95D1AF6B6590061CE4C /* libstdc++.dylib in Frameworks */,
+				F187A9581AF6B62B0061CE4C /* CoreFoundation.framework in Frameworks */,
+				F187A9591AF6B62B0061CE4C /* Foundation.framework in Frameworks */,
+				F187A9551AF6B60C0061CE4C /* CoreData.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -96,6 +120,14 @@
 		44995AF32C6F661206CF458A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F187A9601AF6B75F0061CE4C /* libPods-confluxTests-OCMock.a */,
+				F187A9611AF6B75F0061CE4C /* libPods-confluxTests.a */,
+				F187A95E1AF6B6750061CE4C /* UIKit.framework */,
+				F187A95A1AF6B6590061CE4C /* libc++.dylib */,
+				F187A95B1AF6B6590061CE4C /* libstdc++.dylib */,
+				F187A9561AF6B62B0061CE4C /* CoreFoundation.framework */,
+				F187A9571AF6B62B0061CE4C /* Foundation.framework */,
+				F187A9541AF6B60C0061CE4C /* CoreData.framework */,
 				72EB220625794A3E5C680179 /* libPods-confluxTests.a */,
 			);
 			name = Frameworks;
@@ -105,7 +137,7 @@
 			isa = PBXGroup;
 			children = (
 				F11F9F401AA6A8ED0088A456 /* Socket.h */,
-				F11F9F411AA6B4190088A456 /* Socket.m */,
+				F11F9F411AA6B4190088A456 /* Socket.mm */,
 			);
 			path = foundation;
 			sourceTree = "<group>";
@@ -116,10 +148,10 @@
 				F14D42961A9B109A0027C4C4 /* Mouse.h */,
 				F14D42951A9B0B4C0027C4C4 /* Point.h */,
 				F14D428E1A9AC42C0027C4C4 /* Synergy.h */,
-				F14D428F1A9AC42C0027C4C4 /* Synergy.m */,
-				F14D42881A9A8A270027C4C4 /* Protocol.m */,
+				F14D428F1A9AC42C0027C4C4 /* Synergy.mm */,
+				F14D42881A9A8A270027C4C4 /* Protocol.mm */,
 				F14D428B1A9A8B890027C4C4 /* Protocol.h */,
-				F14D42931A9AFFE20027C4C4 /* Point.m */,
+				F14D42931A9AFFE20027C4C4 /* Point.mm */,
 			);
 			name = synergy;
 			sourceTree = "<group>";
@@ -150,11 +182,11 @@
 				F11F9F3F1AA6A89B0088A456 /* foundation */,
 				F14D428C1A9A8B950027C4C4 /* synergy */,
 				F1907EDE1A70A60E00182F78 /* AppDelegate.h */,
-				F1907EDF1A70A60E00182F78 /* AppDelegate.m */,
+				F1907EDF1A70A60E00182F78 /* AppDelegate.mm */,
 				F13E66541AD3806E00330539 /* KeyboardViewController.h */,
-				F13E66521AD3805A00330539 /* KeyboardViewController.m */,
+				F13E66521AD3805A00330539 /* KeyboardViewController.mm */,
 				F1907EE11A70A60E00182F78 /* TouchpadViewController.h */,
-				F1907EE21A70A60E00182F78 /* TouchpadViewController.m */,
+				F1907EE21A70A60E00182F78 /* TouchpadViewController.mm */,
 				F1907EE41A70A60E00182F78 /* Main.storyboard */,
 				F1907EE91A70A60E00182F78 /* LaunchScreen.xib */,
 				F1907EE71A70A60E00182F78 /* Images.xcassets */,
@@ -167,7 +199,7 @@
 			isa = PBXGroup;
 			children = (
 				F1907EDB1A70A60E00182F78 /* Info.plist */,
-				F1907EDC1A70A60E00182F78 /* main.m */,
+				F1907EDC1A70A60E00182F78 /* main.mm */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -328,14 +360,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F14D42941A9AFFE20027C4C4 /* Point.m in Sources */,
-				F14D42891A9A8A270027C4C4 /* Protocol.m in Sources */,
-				F11F9F421AA6B4190088A456 /* Socket.m in Sources */,
-				F13E66531AD3805A00330539 /* KeyboardViewController.m in Sources */,
-				F1907EE31A70A60E00182F78 /* TouchpadViewController.m in Sources */,
-				F1907EE01A70A60E00182F78 /* AppDelegate.m in Sources */,
-				F14D42901A9AC42C0027C4C4 /* Synergy.m in Sources */,
-				F1907EDD1A70A60E00182F78 /* main.m in Sources */,
+				F14D42941A9AFFE20027C4C4 /* Point.mm in Sources */,
+				F14D42891A9A8A270027C4C4 /* Protocol.mm in Sources */,
+				F11F9F421AA6B4190088A456 /* Socket.mm in Sources */,
+				F13E66531AD3805A00330539 /* KeyboardViewController.mm in Sources */,
+				F1907EE31A70A60E00182F78 /* TouchpadViewController.mm in Sources */,
+				F1907EE01A70A60E00182F78 /* AppDelegate.mm in Sources */,
+				F14D42901A9AC42C0027C4C4 /* Synergy.mm in Sources */,
+				F1907EDD1A70A60E00182F78 /* main.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -382,8 +414,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "compiler-default";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
@@ -398,8 +430,9 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -416,11 +449,18 @@
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(PROJECT_DIR)/conflux_tests/include/",
+					"$(PROJECT_DIR)/external/synergy/src/lib",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				LINKER_DISPLAYS_MANGLED_NAMES = YES;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-lc++",
+				);
 				SDKROOT = iphoneos;
+				VALID_ARCHS = "armv7s arm64 armv7";
 			};
 			name = Debug;
 		};
@@ -428,8 +468,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "compiler-default";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
@@ -445,7 +485,8 @@
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -456,11 +497,19 @@
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(PROJECT_DIR)/conflux_tests/include/",
+					"$(PROJECT_DIR)/external/synergy/src/lib",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				LINKER_DISPLAYS_MANGLED_NAMES = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-lc++",
+				);
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
+				VALID_ARCHS = "armv7s arm64 armv7";
 			};
 			name = Release;
 		};
@@ -469,17 +518,29 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(PROJECT_DIR)/conflux_tests/include/",
+					"$(PROJECT_DIR)/external/synergy/src/lib",
 				);
 				INFOPLIST_FILE = conflux/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/build/Debug-iphoneos",
+				);
+				LINKER_DISPLAYS_MANGLED_NAMES = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-lc++",
+				);
 				PRODUCT_NAME = conflux;
 				PROVISIONING_PROFILE = "";
+				VALID_ARCHS = "armv7s armv7 arm64";
 			};
 			name = Debug;
 		};
@@ -488,6 +549,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
@@ -496,9 +558,19 @@
 				INFOPLIST_FILE = conflux/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/build/Debug-iphoneos",
+				);
+				LINKER_DISPLAYS_MANGLED_NAMES = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-lc++",
+				);
 				PRODUCT_NAME = conflux;
 				PROVISIONING_PROFILE = "";
+				VALID_ARCHS = "armv7s armv7 arm64";
 			};
 			name = Release;
 		};

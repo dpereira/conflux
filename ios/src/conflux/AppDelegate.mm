@@ -1,7 +1,8 @@
+
+#import "Mouse.h"
 #import "AppDelegate.h"
 #import "Point.h"
-#import "Mouse.h"
-
+    
 @interface AppDelegate ()
 
 @end
@@ -31,7 +32,7 @@
     UINavigationController * navigationController = (UINavigationController*)application.keyWindow.rootViewController;
     UIView * current = navigationController.visibleViewController.view;
     CFXPoint* sourceResolution = [[CFXPoint alloc] initWith:current.bounds.size.width
-                                                        and:current.bounds.size.height];
+                                                        andWith:current.bounds.size.height];
     [self ._synergy load:sourceResolution];
     NSLog(@"Became active");
 }

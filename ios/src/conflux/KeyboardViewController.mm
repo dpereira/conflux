@@ -10,7 +10,6 @@
 #import "KeyboardViewController.h"
 #import "AppDelegate.h"
 #import "synergy/Synergy.h"
-@import UIKit;
 
 @interface KeyboardViewController ()
 
@@ -31,7 +30,6 @@
     textArea.delegate = self;
     [textArea becomeFirstResponder];
     textArea.text = self._previousText;
-    textArea.frame = [[UIScreen mainScreen] bounds];
 }
 
 - (void)textViewDidChange:(UITextView *)textView

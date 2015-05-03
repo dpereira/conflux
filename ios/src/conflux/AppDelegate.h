@@ -1,3 +1,4 @@
+    
 #import <UIKit/UIKit.h>
 #import "synergy/Synergy.h"
 
@@ -8,4 +9,5 @@
 @property CFXSynergy *_synergy;
 
 @end
+
 

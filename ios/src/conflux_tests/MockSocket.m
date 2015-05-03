@@ -50,7 +50,7 @@
            bytes:(size_t)howMany
           offset:(int)index
 {
-    UInt8* bufferCopy = malloc(howMany);
+    UInt8* bufferCopy = (UInt8*)malloc(howMany);
     memcpy(bufferCopy, data, howMany);
     storage[index].buffer = bufferCopy;
     storage[index].bytes = howMany;

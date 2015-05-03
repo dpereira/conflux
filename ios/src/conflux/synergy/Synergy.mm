@@ -135,7 +135,7 @@
     
     
     CFXPoint* projected = [[CFXPoint alloc] initWith:projectedX > 0 ? projectedX : 0
-                                                 and:projectedY > 0 ? projectedY : 0];
+                                             andWith:projectedY > 0 ? projectedY : 0];
     
     NSLog(@"!! pd(%f, %f) rc(%d, %d) pj(%d, %d)", projectedDeltaX, projectedDeltaY,
           self->_remoteCursorX, self->_remoteCursorY, projected.x, projected.y);
@@ -223,7 +223,7 @@
             break;            
         case 2:
             [self._protocol cinn: [[CFXPoint alloc] initWith:self->_remoteCursorX
-                                                         and:self->_remoteCursorY]];
+                                                     andWith:self->_remoteCursorY]];
             self._state = 3;
             
             break;

@@ -13,7 +13,7 @@
 
     UITouch *touched = [[event allTouches] anyObject];
     CGPoint location = [touched locationInView:touched.view];
-    CFXPoint* p = [[CFXPoint alloc] initWith:location.x and:location.y];
+    CFXPoint* p = [[CFXPoint alloc] initWith:location.x andWith:location.y];
     
     AppDelegate* app = [[UIApplication sharedApplication] delegate];
     [app._synergy beginMouseMove: p];
@@ -24,7 +24,7 @@
 {
     UITouch *touched = [[event allTouches] anyObject];
     CGPoint location = [touched locationInView:touched.view];
-    CFXPoint* p = [[CFXPoint alloc] initWith:location.x and:location.y];
+    CFXPoint* p = [[CFXPoint alloc] initWith:location.x andWith:location.y];
     AppDelegate* app = [[UIApplication sharedApplication] delegate];
     [app._synergy mouseMove: p];
 }

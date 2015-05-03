@@ -1,13 +1,14 @@
 #import <Foundation/Foundation.h>
 #import "Point.h"
 
+extern "C" {
 @interface CFXPoint()
 @end
 
 @implementation CFXPoint
 
 -(id)initWith:(UInt16)x
-          and:(UInt16)y
+          andWith:(UInt16)y
 {
     if(self = [super init]) {
         self.x = x;
@@ -17,4 +18,7 @@
         return nil;
     }
 }
+
 @end
+    
+}

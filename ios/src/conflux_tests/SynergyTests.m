@@ -1,9 +1,12 @@
 #import <UIKit/UIKit.h>
-#import <XCTest/XCTest.h>
-#import "OCMock.h"
 #import "Socket.h"
 #import "MockSocket.h"
 #import "Synergy.h"
+
+extern "C" {
+#import <XCTest/XCTest.h>
+#import "OCMock.h"
+}
 
 @interface CFXSynergy()
 
@@ -30,7 +33,7 @@
 }
 
 - (void)testListening {
-    CFXPoint* resolution = [[CFXPoint alloc] initWith:320 and:240];
+    CFXPoint* resolution = [[CFXPoint alloc] initWith:320 andWith:240];
     [self.synergy load:resolution with:self.synergySocket];
     
     OCMVerify([self.synergySocket registerListener:[OCMArg isEqual:self.synergy]]);
@@ -59,7 +62,7 @@
     [self _record:"CNOP" in:clientSocket];
 
     // run test
-    CFXPoint* resolution = [[CFXPoint alloc] initWith:320 and:240];
+    CFXPoint* resolution = [[CFXPoint alloc] initWith:320 andWith:240];
     [self.synergy load:resolution with:self.synergySocket];
     
     
@@ -109,7 +112,7 @@
 - (void)_assertCommandIn:(CFXParameters*)p
                       is:(const char*)expected
 {
-    XCTAssertNotEqual(NULL, p);
+    XCTAssertNotEqual((long)NULL, (long)p);
     XCTAssertLessThanOrEqual(strlen(expected) + SYNERGY_HEADER_LEN, p->bytes);
     XCTAssertEqual(0, memcmp(expected, (p->buffer + SYNERGY_HEADER_LEN), strlen(expected)));
 }

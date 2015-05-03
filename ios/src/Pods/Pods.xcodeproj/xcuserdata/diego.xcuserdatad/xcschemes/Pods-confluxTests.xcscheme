@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0510"
+   LastUpgradeVersion = "0640"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "34779F21DDE77C3436922C7D"
+               BlueprintIdentifier = "5A3577F34AEF5A39DDD066DA"
                BuildableName = "libPods-confluxTests.a"
                BlueprintName = "Pods-confluxTests"
                ReferencedContainer = "container:Pods.xcodeproj">
