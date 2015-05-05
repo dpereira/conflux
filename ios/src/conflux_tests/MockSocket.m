@@ -58,7 +58,7 @@
 }
 
 -(void)recordWithHeader:(const UInt8 *)bytes bytes:(int)howMany {
-    UInt8 header[] = {0x00, 0x00, 0x00, howMany };
+    UInt8 header[] = {0x00, 0x00, 0x00, static_cast<UInt8>(howMany) };
     [self record:header bytes:sizeof(header)];
     [self record:bytes bytes:howMany];
 }

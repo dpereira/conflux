@@ -105,10 +105,10 @@ extern "C" {
              in:(CFXMockSocket*)recorder
 {
     UInt8 header[] = {
-        (bytes >> 24) & 0x00FF,
-        (bytes >> 16) & 0x00FF,
-        (bytes >> 8) & 0x00FF,
-        bytes & 0x00FF
+        static_cast<UInt8>((bytes >> 24) & 0x00FF),
+        static_cast<UInt8>((bytes >> 16) & 0x00FF),
+        static_cast<UInt8>((bytes >> 8) & 0x00FF),
+        static_cast<UInt8>(bytes & 0x00FF)
     };
 
     [recorder record:header bytes:sizeof(header)];

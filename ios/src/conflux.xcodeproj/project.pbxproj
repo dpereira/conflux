@@ -29,6 +29,7 @@
 		F1907EE81A70A60E00182F78 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F1907EE71A70A60E00182F78 /* Images.xcassets */; };
 		F1907EEB1A70A60E00182F78 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = F1907EE91A70A60E00182F78 /* LaunchScreen.xib */; };
 		F1907EF71A70A60E00182F78 /* SynergyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F1907EF61A70A60E00182F78 /* SynergyTests.m */; };
+		F1B7C8DB1AF6EB4100DBE5B3 /* KeyMapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = F1B7C8DA1AF6EB4100DBE5B3 /* KeyMapper.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -79,6 +80,8 @@
 		F1907EF01A70A60E00182F78 /* confluxTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = confluxTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1907EF51A70A60E00182F78 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F1907EF61A70A60E00182F78 /* SynergyTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SynergyTests.m; sourceTree = "<group>"; };
+		F1B7C8DA1AF6EB4100DBE5B3 /* KeyMapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = KeyMapper.mm; path = synergy/KeyMapper.mm; sourceTree = "<group>"; };
+		F1B7C8DC1AF6EB7B00DBE5B3 /* KeyMapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = KeyMapper.h; path = synergy/KeyMapper.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -152,6 +155,8 @@
 				F14D42881A9A8A270027C4C4 /* Protocol.mm */,
 				F14D428B1A9A8B890027C4C4 /* Protocol.h */,
 				F14D42931A9AFFE20027C4C4 /* Point.mm */,
+				F1B7C8DA1AF6EB4100DBE5B3 /* KeyMapper.mm */,
+				F1B7C8DC1AF6EB7B00DBE5B3 /* KeyMapper.h */,
 			);
 			name = synergy;
 			sourceTree = "<group>";
@@ -361,6 +366,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F14D42941A9AFFE20027C4C4 /* Point.mm in Sources */,
+				F1B7C8DB1AF6EB4100DBE5B3 /* KeyMapper.mm in Sources */,
 				F14D42891A9A8A270027C4C4 /* Protocol.mm in Sources */,
 				F11F9F421AA6B4190088A456 /* Socket.mm in Sources */,
 				F13E66531AD3805A00330539 /* KeyboardViewController.mm in Sources */,
@@ -414,7 +420,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_CXX_LIBRARY = "compiler-default";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -468,7 +474,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_CXX_LIBRARY = "compiler-default";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -517,6 +523,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
 				HEADER_SEARCH_PATHS = (
@@ -548,6 +555,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
 				HEADER_SEARCH_PATHS = (

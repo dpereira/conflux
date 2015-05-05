@@ -97,15 +97,14 @@
 
 -(void)dkdn:(UInt16) key {
     NSLog(@"Key down: %02x |%c|", key, key);
-    UInt8 keyHigh;
-    UInt8 keyLow;
+    
     if(key == 10) {
-        keyHigh = 0xEF;
-        keyLow = 0x0D;
-    } else {
-        keyHigh = key >> 8;
-        keyLow = key & 0x00FF;
+        key = kKeyReturn;
     }
+        
+    UInt8 keyHigh = key >> 8;
+    UInt8 keyLow = key & 0x00FF;
+
     const UInt8 cmd[] = {'D', 'K', 'D', 'N', keyHigh, keyLow, 0x00, 0x00, keyHigh, keyLow};
     [self _writeRaw:cmd bytes:sizeof(cmd)];
 }
