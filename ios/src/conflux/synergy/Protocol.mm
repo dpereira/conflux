@@ -4,6 +4,7 @@
 //
 
 #import "Protocol.h"
+#import "KeyMapper.h"
 #import <Foundation/Foundation.h>
 #import <sys/socket.h>
 #import <arpa/inet.h>
@@ -17,6 +18,7 @@
 {
     id<CFXSocket> _socket;
     id<CFXProtocolListener>  _listener;
+    KeyMapper* _mapper;
 }
 
 
@@ -28,6 +30,7 @@
         
         self->_socket = socket;
         self->_listener = listener;
+        self->_mapper = [[KeyMapper alloc] init];
         
         [socket open];
         
@@ -98,10 +101,8 @@
 -(void)dkdn:(UInt16) key {
     NSLog(@"Key down: %02x |%c|", key, key);
     
-    if(key == 10) {
-        key = kKeyReturn;
-    }
-        
+    key = [self->_mapper translate:key];
+            
     UInt8 keyHigh = key >> 8;
     UInt8 keyLow = key & 0x00FF;
 

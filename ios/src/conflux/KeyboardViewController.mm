@@ -13,7 +13,7 @@
 
 @interface KeyboardViewController ()
 
-@property NSString *_previousText;
+@property NSString *_placeholder;
 
 @end
 
@@ -23,32 +23,30 @@
 {
     [super viewDidLoad];
     
-    self._previousText = @">";
-    // FIXME: there must be a less
-    // hackish way to accomplish this.
-    UITextView *textArea = self.view.subviews[0];
+    self._placeholder = @">";
+    
+    UITextView *textArea = [self _textArea];
     textArea.delegate = self;
     [textArea becomeFirstResponder];
-    textArea.text = self._previousText;
+    textArea.text = self._placeholder;
 }
 
 - (void)textViewDidChange:(UITextView *)textView
 {
-    UITextView *textArea = self.view.subviews[0];
-    UInt16 c = [textArea.text characterAtIndex:textArea.text.length - 1];
+    UITextView *textArea = [self _textArea];
+    NSString *text = textArea.text;
+    NSUInteger len = text.length;
+    textArea.text = self._placeholder;
+
     AppDelegate* app = [[UIApplication sharedApplication] delegate];
-    [app._synergy keyStroke: c];
+    [app._synergy keyStroke: len > 1 ? [text characterAtIndex:len - 1] : '\b'];
 }
 
-- (NSString*)_textAreaDelta
+- (UITextView*)_textArea
 {
-    UITextView *textArea = self.view.subviews[0];
-    NSString *currentText = textArea.text;
-    if(currentText.length > 1) {
-        return [currentText stringByReplacingOccurrencesOfString:self._previousText withString:@""];
-    } else {
-        return NULL;
-    }
+    // FIXME: there must be a less
+    // hackish way to accomplish this.
+    return self.view.subviews[0];
 }
 
 @end

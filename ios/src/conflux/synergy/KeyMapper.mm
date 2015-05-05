@@ -6,18 +6,39 @@
 //  Copyright (c) 2015 Conflux. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
 #import <map>
+#import <Foundation/Foundation.h>
 #import "KeyMapper.h"
+#import "synergy/key_types.h"
 
 @interface KeyMapper()
 
 @end
 
-@implementation KeyMapper
+@implementation KeyMapper {
+}
+
+- (id)init {
+    if(self = [super init]) {
+        return self;
+    } else {
+        return nil;
+    }
+}
 
 - (UInt16)translate:(UInt16)asciiCodepoint {
-    return 0;
+    static const std::map<UInt16, KeyID> _mapping = {
+        {'\n', kKeyReturn},
+        {'\b', kKeyBackSpace}
+    };
+    
+    std::map<UInt16, KeyID>::const_iterator i =_mapping.find(asciiCodepoint);
+    
+    if(i != _mapping.end()) {
+        return (UInt16)i->second;
+    } else {
+        return asciiCodepoint;
+    }
 }
 
 @end
