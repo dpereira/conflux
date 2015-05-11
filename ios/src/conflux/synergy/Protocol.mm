@@ -4,9 +4,11 @@
 //
 
 #import "Protocol.h"
+#import "KeyMapper.h"
 #import <Foundation/Foundation.h>
 #import <sys/socket.h>
 #import <arpa/inet.h>
+#import <synergy/key_types.h>
 
 @interface  CFXProtocol()
 @end
@@ -16,6 +18,7 @@
 {
     id<CFXSocket> _socket;
     id<CFXProtocolListener>  _listener;
+    KeyMapper* _mapper;
 }
 
 
@@ -27,6 +30,7 @@
         
         self->_socket = socket;
         self->_listener = listener;
+        self->_mapper = [[KeyMapper alloc] init];
         
         [socket open];
         
@@ -70,7 +74,7 @@
     NSLog(@"Entering screen");
     UInt16 x = coordinates.x;
     UInt16 y = coordinates.y;
-    const UInt8 cmd[] = {(UInt8)'C', (UInt8)'I', (UInt8)'N', (UInt8)'N', x >> 8, x & 0x00FF, y >> 8, y & 0x00FF };
+    const UInt8 cmd[] = {'C', 'I', 'N', 'N', (UInt8)(x >> 8), (UInt8)(x & 0x00FF), (UInt8)(y >> 8), (UInt8)(y & 0x00FF) };
     [self _writeRaw:cmd bytes:sizeof(cmd)];
     
 }
@@ -78,25 +82,50 @@
 -(void)dmov:(const CFXPoint *)coordinates {
     UInt16 x = coordinates.x;
     UInt16 y = coordinates.y;
-    const UInt8 cmd[] = {'D','M','M','V', x >> 8, x & 0x00FF, y >> 8, y & 0x00FF};
+    const UInt8 cmd[] = {'D','M','M','V', (UInt8)(x >> 8), (UInt8)(x & 0x00FF), (UInt8)(y >> 8), (UInt8)(y & 0x00FF)};
     [self _writeRaw:cmd bytes:sizeof(cmd)];
 }
 
 -(void)dmdn:(CFXMouseButton)whichButton {
     NSLog(@"Mouse down: %02x", whichButton);
-    const UInt8 cmd[] = {'D','M','D','N', whichButton };
+    const UInt8 cmd[] = {'D','M','D','N', (UInt8)whichButton };
     [self _writeRaw:cmd bytes:sizeof(cmd)];
 }
 
 -(void)dmup:(CFXMouseButton)whichButton {
     NSLog(@"Mouse up: %02x", whichButton);    
-    const UInt8 cmd[] = {'D','M','U','P', whichButton };
+    const UInt8 cmd[] = {'D','M','U','P', (UInt8)whichButton };
+    [self _writeRaw:cmd bytes:sizeof(cmd)];
+}
+
+-(void)dkdn:(UInt16) key {
+    NSLog(@"Key down: %02x |%c| <> ||", key, key);
+    
+    key = [self->_mapper translate:key];
+    
+    UInt16 modifierMask = [self->_mapper getKeyModifier:key];
+    
+    UInt8 modifierHigh = modifierMask >> 8;
+    UInt8 modifierLow = modifierMask & 0x00FF;
+            
+    UInt8 keyHigh = key >> 8;
+    UInt8 keyLow = key & 0x00FF;
+
+    const UInt8 cmd[] = {'D', 'K', 'D', 'N', keyHigh, keyLow, modifierHigh, modifierLow, keyHigh, keyLow};
+    [self _writeRaw:cmd bytes:sizeof(cmd)];
+}
+
+-(void)dkup:(UInt16) key {
+    NSLog(@"Key up: %02x |%c|", key, key);
+    UInt8 keyHigh = key >> 8;
+    UInt8 keyLow = key & 0x00FF;
+    const UInt8 cmd[] = {'D', 'K', 'U', 'P', 0x00, 0x00, 0x00, 0x00, keyHigh, keyLow};
     [self _writeRaw:cmd bytes:sizeof(cmd)];
 }
 
 -(void)_writeRaw:(const UInt8 *)bytes bytes:(int)howMany {
-    UInt8 header[] = {0x00, 0x00, 0x00, howMany };
-    UInt8 *buffer = malloc(sizeof(header) + howMany);
+    UInt8 header[] = {0x00, 0x00, 0x00, (UInt8) howMany };
+    UInt8 *buffer = (UInt8*)malloc(sizeof(header) + howMany);
     memcpy(buffer, header, sizeof(header));
     memcpy(buffer + sizeof(header), bytes, howMany);
     

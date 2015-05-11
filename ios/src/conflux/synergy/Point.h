@@ -3,13 +3,15 @@
 
 #import <CoreFoundation/CoreFoundation.h>
 
+
+extern "C" {
 @interface CFXPoint: NSObject
 
 @property UInt16 x;
 @property UInt16 y;
 
 -(id)initWith:(UInt16) x
-          and:(UInt16) y;
+          andWith:(UInt16) y;
 @end
-
+}
 #endif

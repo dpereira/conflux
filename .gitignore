@@ -20,6 +20,7 @@ DerivedData
 *.p12
 *.mobileprovision
 *.swp
+**/Pods/Headers/Private/
 xcuserdata
 # CocoaPods
 #

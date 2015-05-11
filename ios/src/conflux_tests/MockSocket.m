@@ -50,7 +50,7 @@
            bytes:(size_t)howMany
           offset:(int)index
 {
-    UInt8* bufferCopy = malloc(howMany);
+    UInt8* bufferCopy = (UInt8*)malloc(howMany);
     memcpy(bufferCopy, data, howMany);
     storage[index].buffer = bufferCopy;
     storage[index].bytes = howMany;
@@ -58,7 +58,7 @@
 }
 
 -(void)recordWithHeader:(const UInt8 *)bytes bytes:(int)howMany {
-    UInt8 header[] = {0x00, 0x00, 0x00, howMany };
+    UInt8 header[] = {0x00, 0x00, 0x00, static_cast<UInt8>(howMany) };
     [self record:header bytes:sizeof(header)];
     [self record:bytes bytes:howMany];
 }

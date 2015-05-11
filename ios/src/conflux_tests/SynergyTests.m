@@ -1,9 +1,18 @@
 #import <UIKit/UIKit.h>
-#import <XCTest/XCTest.h>
-#import "OCMock.h"
 #import "Socket.h"
 #import "MockSocket.h"
 #import "Synergy.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+    
+#import <XCTest/XCTest.h>
+#import "OCMock.h"
+    
+#ifdef __cplusplus
+}
+#endif
 
 @interface CFXSynergy()
 
@@ -30,7 +39,7 @@
 }
 
 - (void)testListening {
-    CFXPoint* resolution = [[CFXPoint alloc] initWith:320 and:240];
+    CFXPoint* resolution = [[CFXPoint alloc] initWith:320 andWith:240];
     [self.synergy load:resolution with:self.synergySocket];
     
     OCMVerify([self.synergySocket registerListener:[OCMArg isEqual:self.synergy]]);
@@ -59,7 +68,7 @@
     [self _record:"CNOP" in:clientSocket];
 
     // run test
-    CFXPoint* resolution = [[CFXPoint alloc] initWith:320 and:240];
+    CFXPoint* resolution = [[CFXPoint alloc] initWith:320 andWith:240];
     [self.synergy load:resolution with:self.synergySocket];
     
     
@@ -96,10 +105,10 @@
              in:(CFXMockSocket*)recorder
 {
     UInt8 header[] = {
-        (bytes >> 24) & 0x00FF,
-        (bytes >> 16) & 0x00FF,
-        (bytes >> 8) & 0x00FF,
-        bytes & 0x00FF
+        static_cast<UInt8>((bytes >> 24) & 0x00FF),
+        static_cast<UInt8>((bytes >> 16) & 0x00FF),
+        static_cast<UInt8>((bytes >> 8) & 0x00FF),
+        static_cast<UInt8>(bytes & 0x00FF)
     };
 
     [recorder record:header bytes:sizeof(header)];
@@ -109,7 +118,7 @@
 - (void)_assertCommandIn:(CFXParameters*)p
                       is:(const char*)expected
 {
-    XCTAssertNotEqual(NULL, p);
+    XCTAssertNotEqual((long)NULL, (long)p);
     XCTAssertLessThanOrEqual(strlen(expected) + SYNERGY_HEADER_LEN, p->bytes);
     XCTAssertEqual(0, memcmp(expected, (p->buffer + SYNERGY_HEADER_LEN), strlen(expected)));
 }
