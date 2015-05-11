@@ -7,9 +7,10 @@
 //
 
 #import <map>
+#import <vector>
+#import <algorithm>
 #import <Foundation/Foundation.h>
 #import "KeyMapper.h"
-#import "synergy/key_types.h"
 
 @interface KeyMapper()
 
@@ -27,18 +28,46 @@
 }
 
 - (UInt16)translate:(UInt16)asciiCodepoint {
-    static const std::map<UInt16, KeyID> _mapping = {
+    static const std::map<UInt16, KeyID> mapping = {
         {'\n', kKeyReturn},
-        {'\b', kKeyBackSpace}
+        {'\b', kKeyBackSpace},
+        {'\t', kKeyTab},
+        {' ', kKeyKP_Space }
     };
     
-    std::map<UInt16, KeyID>::const_iterator i =_mapping.find(asciiCodepoint);
+    std::map<UInt16, KeyID>::const_iterator i = mapping.find(asciiCodepoint);
     
-    if(i != _mapping.end()) {
+    if(i != mapping.end()) {
         return (UInt16)i->second;
     } else {
         return asciiCodepoint;
     }
+}
+
+- (KeyModifierMask)getKeyModifier:(UInt16)key
+{
+    static const std::vector<UInt16> upperCaseKeys = {
+        '>', '$', '%', '&', '/', '(', ')',
+        '*', '^', '_', '!', '?', ':', '"', '='
+    };
+    
+    static const std::vector<UInt16> optionKeys = {
+        '@', '#',
+    };
+    
+    KeyModifierMask mask = 0;
+    
+    if((key >= 'A' && key <= 'Z')) {
+        mask |= KeyModifierShift;
+    } else if(std::find(upperCaseKeys.begin(), upperCaseKeys.end(), key) != upperCaseKeys.end()) {
+        mask |= KeyModifierShift;
+    }
+    
+    if(std::find(optionKeys.begin(), optionKeys.end(), key) != optionKeys.end()) {
+        mask |= KeyModifierAlt;
+    }
+    
+    return mask;
 }
 
 @end

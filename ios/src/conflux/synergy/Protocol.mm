@@ -99,14 +99,19 @@
 }
 
 -(void)dkdn:(UInt16) key {
-    NSLog(@"Key down: %02x |%c|", key, key);
+    NSLog(@"Key down: %02x |%c| <> ||", key, key);
     
     key = [self->_mapper translate:key];
+    
+    UInt16 modifierMask = [self->_mapper getKeyModifier:key];
+    
+    UInt8 modifierHigh = modifierMask >> 8;
+    UInt8 modifierLow = modifierMask & 0x00FF;
             
     UInt8 keyHigh = key >> 8;
     UInt8 keyLow = key & 0x00FF;
 
-    const UInt8 cmd[] = {'D', 'K', 'D', 'N', keyHigh, keyLow, 0x00, 0x00, keyHigh, keyLow};
+    const UInt8 cmd[] = {'D', 'K', 'D', 'N', keyHigh, keyLow, modifierHigh, modifierLow, keyHigh, keyLow};
     [self _writeRaw:cmd bytes:sizeof(cmd)];
 }
 
