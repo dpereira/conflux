@@ -48,11 +48,13 @@
 {
     static const std::vector<UInt16> upperCaseKeys = {
         '>', '$', '%', '&', '/', '(', ')',
-        '*', '^', '_', '!', '?', ':', '"', '='
+        '*', '^', '_', '!', '?', ':', '"',
+        '=', '@', '#', '[', ']', '{', '}',
+        '|', '~'
     };
     
     static const std::vector<UInt16> optionKeys = {
-        '@', '#',
+        
     };
     
     KeyModifierMask mask = 0;
