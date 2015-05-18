@@ -160,15 +160,6 @@ id<CFXSocketListener> _listener;
 - (void)disconnect
 {
     self->_disconnecting = YES;
-    if(self->_serverSocket) {
-        NSLog(@"Disconnecting server socket");
-        CFRunLoopRemoveSource(CFRunLoopGetCurrent(), self->_source, kCFRunLoopDefaultMode);
-        CFRunLoopSourceInvalidate(self->_source);
-        self->_source = nil;
-        CFSocketInvalidate(self->_serverSocket);
-        self->_serverSocket = nil;
-        NSLog(@"Server socket disconnected");
-    }
     
     if(self->_clientSocket) {
         NSLog(@"Disconnecting client socket");
@@ -191,6 +182,16 @@ id<CFXSocketListener> _listener;
 
         NSLog(@"Client socket disconnected");
     }
+    
+    if(self->_serverSocket) {
+        NSLog(@"Disconnecting server socket");
+        CFRunLoopRemoveSource(CFRunLoopGetCurrent(), self->_source, kCFRunLoopDefaultMode);
+        CFRunLoopSourceInvalidate(self->_source);
+        self->_source = nil;
+        CFSocketInvalidate(self->_serverSocket);
+        self->_serverSocket = nil;
+        NSLog(@"Server socket disconnected");
+    }
 }
 
 - (void)_scheduleReadStreamRead:(CFReadStreamRef)readStream
@@ -203,6 +204,10 @@ id<CFXSocketListener> _listener;
 
 - (void)_handleConnect:(CFSocketNativeHandle *)clientSocket
 {
+    if(self->_disconnecting) {
+        return;
+    }
+    
     id<CFXSocket> socket = [[CFXFoundationSocket alloc] initWith:clientSocket];
     
     [self->_listener receive:kCFXSocketConnected
