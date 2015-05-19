@@ -168,11 +168,13 @@ id<CFXSocketListener> _listener;
                                               CFRunLoopGetCurrent(),
                                               kCFRunLoopCommonModes);
             CFReadStreamClose(self->_readStream);
+            CFRelease(self->_readStream);
             self->_readStream = nil;
             NSLog(@"Read stream released");
         }
         if(self->_writeStream) {
             CFWriteStreamClose(self->_writeStream);
+            CFRelease(self->_writeStream);            
             self->_writeStream = nil;
             NSLog(@"Write stream released");            
         }
@@ -187,8 +189,10 @@ id<CFXSocketListener> _listener;
         NSLog(@"Disconnecting server socket");
         CFRunLoopRemoveSource(CFRunLoopGetCurrent(), self->_source, kCFRunLoopDefaultMode);
         CFRunLoopSourceInvalidate(self->_source);
+        CFRelease(self->_source);
         self->_source = nil;
         CFSocketInvalidate(self->_serverSocket);
+        CFRelease(self->_serverSocket);
         self->_serverSocket = nil;
         NSLog(@"Server socket disconnected");
     }
