@@ -34,12 +34,14 @@
     CFXPoint* sourceResolution = [[CFXPoint alloc] initWith:current.bounds.size.width
                                                         andWith:current.bounds.size.height];
     [self ._synergy load:sourceResolution];
+    application.idleTimerDisabled = YES;
     NSLog(@"Became active");
 }
 
 - (void) applicationWillResignActive:(UIApplication *)application
 {
     NSLog(@"Will resign");
+    application.idleTimerDisabled = NO;
     [self._synergy unload];
 }
 
