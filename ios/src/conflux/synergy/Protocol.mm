@@ -46,6 +46,7 @@
 }
 
 -(void)hail {
+    NSLog(@"PROTOCOL: SENDING HAIL");
     UInt8 hail[] = {0x53, 0x79, 0x6e, 0x65, 0x72, 0x67, 0x79, 0x00, 0x01, 0x00, 0x05};
     [self _writeRaw:hail bytes:sizeof(hail)];
 }
@@ -139,9 +140,11 @@
 }
 
 - (UInt32) peek {
+    NSLog(@"PEEKING");
     UInt8 headerBuffer[SYNERGY_HEADER_LEN];
     memset(headerBuffer, 0, sizeof(headerBuffer));
     [self->_socket recv:headerBuffer bytes:sizeof(headerBuffer)];
+    NSLog(@"PEEKED");
     return [self _fromQuartetTo32Bits:headerBuffer];
 }
 
@@ -209,10 +212,12 @@
      fromSender:(id<CFXSocket>)socket
     withPayload:(void *)data
 {
+    NSLog(@"RECEIVING (protocol here)");
     size_t howMany = [self peek];
     UInt8 cmd[howMany < SYNERGY_PKTLEN_MAX ? howMany : SYNERGY_PKTLEN_MAX];
     CFXCommand type = [self waitCommand:cmd bytes:howMany];
     [self processCmd:cmd ofType:type bytes:howMany];
+    NSLog(@"DONE RECEIVING (protocol here)");    
 }
 
 @end

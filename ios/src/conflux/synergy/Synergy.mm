@@ -160,8 +160,10 @@
     withPayload:(void *)data
 {
     if(event == kCFXSocketConnected) {
+        NSLog(@"SYNERGY: got socket connected event");
         id<CFXSocket> client = (__bridge id<CFXSocket>)data;
         [self _addClient:client];
+        NSLog(@"SYNERGY: DONE client connecting");
     }
 }
 

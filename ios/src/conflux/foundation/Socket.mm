@@ -11,6 +11,9 @@
 #import <sys/socket.h>
 #import <netinet/in.h>
 #import <arpa/inet.h>
+#import <pthread.h>
+#import <errno.h>
+#import <string.h>
 
 @interface CFXFoundationSocket()
 
@@ -21,6 +24,36 @@
 -(void)_handleReadStream;
 
 @end
+
+typedef struct {
+    char* canary;
+    CFSocketRef socket;
+    CFXFoundationSocket* confluxSocket;
+} CFXConnectionParameters;
+
+static void* _posixHandleConnect(void *args) {
+    CFXConnectionParameters *params = (CFXConnectionParameters*)args;
+    CFSocketNativeHandle handle = CFSocketGetNative((CFSocketRef)params->socket);
+    
+    
+    if(listen(handle, 10) < 0) {
+        NSLog(@"FAILED TO LISTEN -> ERROR WAS: %s", strerror(errno));
+        return NULL;
+    }
+    
+    sockaddr_in clientAddress;
+    socklen_t addressLength = sizeof(clientAddress);
+    CFSocketNativeHandle clientSocket;
+    while((clientSocket = (CFSocketNativeHandle)accept(handle, (sockaddr*)&clientAddress, &addressLength)) > 0) {
+        int* s = (int*)malloc(sizeof(int));
+        NSLog(@"CONNECTION RECEIVED");
+        *s = clientSocket;
+        [params->confluxSocket _handleConnect:s];
+    }
+    NSLog(@"THREAD HAS BEEN EXITED: %d", clientSocket);
+    NSLog(@"ERROR WAS: %s", strerror(errno));
+    return NULL;
+}
 
 static void _handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataRef address, const void* data, void* info)
 {
@@ -110,6 +143,21 @@ id<CFXSocketListener> _listener;
     
 }
 
+- (void)listenPosix:(CFSocketRef)serverSocket
+{
+    CFXConnectionParameters *params = (CFXConnectionParameters*)malloc(sizeof(CFXConnectionParameters));
+    params->socket = serverSocket;
+    params->confluxSocket = self;
+    pthread_t thread;
+    pthread_attr_t attributes;
+    
+    if(pthread_attr_init(&attributes) != 0) {
+        NSLog(@"Failed to initalize thread attributes");
+    }
+    
+    pthread_create(&thread, &attributes, &_posixHandleConnect, params);
+}
+
 - (void)listen:(UInt16)port
 {
     CFSocketContext ctx = {0, (__bridge void*)self, NULL, NULL, NULL};
@@ -134,6 +182,8 @@ id<CFXSocketListener> _listener;
     CFSocketSetAddress(self->_serverSocket, sincfd);
     CFRelease(sincfd);
     
+    [self listenPosix:self->_serverSocket];
+    /*
     self->_source = CFSocketCreateRunLoopSource(kCFAllocatorDefault,
                                                 self->_serverSocket,
                                                 0);
@@ -145,6 +195,7 @@ id<CFXSocketListener> _listener;
                        kCFRunLoopDefaultMode);
     
     NSLog(@"Registered into run loop");
+     */
 }
 
 - (size_t)send:(const UInt8 *)buffer bytes:(size_t)howMany
@@ -208,6 +259,7 @@ id<CFXSocketListener> _listener;
 
 - (void)_handleConnect:(CFSocketNativeHandle *)clientSocket
 {
+    NSLog(@"HANDLING CONNECT");
     if(self->_disconnecting) {
         return;
     }
@@ -217,6 +269,7 @@ id<CFXSocketListener> _listener;
     [self->_listener receive:kCFXSocketConnected
                   fromSender:self
                  withPayload:(__bridge void*)socket];
+    NSLog(@"DONE HANDLING");
 }
 
 - (void)_handleReadStream
