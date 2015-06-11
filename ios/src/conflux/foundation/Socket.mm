@@ -9,6 +9,7 @@
 #import "Socket.h"
 #import <Foundation/Foundation.h>
 #import <sys/socket.h>
+#import <sys/select.h>
 #import <netinet/in.h>
 #import <arpa/inet.h>
 #import <pthread.h>
@@ -26,10 +27,14 @@
 @end
 
 typedef struct {
-    char* canary;
     CFSocketRef socket;
-    CFXFoundationSocket* confluxSocket;
+    void* confluxSocket;
 } CFXConnectionParameters;
+
+typedef struct {
+    CFSocketNativeHandle* socket;
+    void* confluxSocket;
+} CFXReadParameters;
 
 static void* _posixHandleConnect(void *args) {
     CFXConnectionParameters *params = (CFXConnectionParameters*)args;
@@ -48,7 +53,7 @@ static void* _posixHandleConnect(void *args) {
         int* s = (int*)malloc(sizeof(int));
         NSLog(@"CONNECTION RECEIVED");
         *s = clientSocket;
-        [params->confluxSocket _handleConnect:s];
+        [(__bridge CFXFoundationSocket*)params->confluxSocket _handleConnect:s];
     }
     NSLog(@"THREAD HAS BEEN EXITED: %d", clientSocket);
     NSLog(@"ERROR WAS: %s", strerror(errno));
@@ -61,6 +66,30 @@ static void _handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFData
         CFXFoundationSocket* socket = (__bridge CFXFoundationSocket*)info;
         [socket _handleConnect:(CFSocketNativeHandle*)data];
     }
+}
+
+static void* _posixHandleReadStream(void* args) {
+    CFXReadParameters *params = (CFXReadParameters*)args;
+    int socket = *(params->socket);
+    
+    fd_set nothing, socketSet, errorSet;
+    FD_ZERO(&nothing);
+    FD_SET(socket, &socketSet);
+    FD_SET(socket, &errorSet);
+    
+    int result = 0;
+    
+    NSLog(@"READ HANDLER INITIALIZED");
+    
+    while((result = select(socket + 1, &socketSet, &nothing, &errorSet, NULL)) > 0) {
+        NSLog(@"SELECT returned %d, notifying socket instance.", result);
+        [(__bridge CFXFoundationSocket*)params->confluxSocket _handleReadStream];
+        NSLog(@"READ STREAM HANDLED.");
+    }
+    
+    NSLog(@"READ LOOP COMPROMISED: exiting with %d", result);
+    
+    return NULL;
 }
 
 static void _handleReadStream(CFReadStreamRef readStream, CFStreamEventType eventType, void *ctx)
@@ -111,8 +140,25 @@ id<CFXSocketListener> _listener;
     self->_listener = listener;
 }
 
+- (void)posixOpen
+{
+    CFXReadParameters *params = (CFXReadParameters*)malloc(sizeof(CFXReadParameters));
+    params->socket = self->_clientSocket;
+    params->confluxSocket = (__bridge void*)self;
+    pthread_t thread;
+    pthread_attr_t attributes;
+    
+    if(pthread_attr_init(&attributes) != 0) {
+        NSLog(@"Failed to initalize thread attributes");
+    }
+    
+    pthread_create(&thread, &attributes, &_posixHandleReadStream, params);
+}
+
 - (void)open
 {
+    [self posixOpen];
+    /*
     CFReadStreamRef readStream;
     CFWriteStreamRef writeStream;
     CFStreamCreatePairWithSocket(kCFAllocatorDefault,
@@ -140,14 +186,14 @@ id<CFXSocketListener> _listener;
     if(!CFWriteStreamOpen(self->_writeStream)) {
         NSLog(@"Failed to open write stream");
     }
-    
+    */
 }
 
-- (void)listenPosix:(CFSocketRef)serverSocket
+- (void)posixListen:(CFSocketRef)serverSocket
 {
     CFXConnectionParameters *params = (CFXConnectionParameters*)malloc(sizeof(CFXConnectionParameters));
     params->socket = serverSocket;
-    params->confluxSocket = self;
+    params->confluxSocket = (__bridge void*)self;
     pthread_t thread;
     pthread_attr_t attributes;
     
@@ -182,7 +228,7 @@ id<CFXSocketListener> _listener;
     CFSocketSetAddress(self->_serverSocket, sincfd);
     CFRelease(sincfd);
     
-    [self listenPosix:self->_serverSocket];
+    [self posixListen:self->_serverSocket];
     /*
     self->_source = CFSocketCreateRunLoopSource(kCFAllocatorDefault,
                                                 self->_serverSocket,
@@ -200,12 +246,14 @@ id<CFXSocketListener> _listener;
 
 - (size_t)send:(const UInt8 *)buffer bytes:(size_t)howMany
 {
-    return CFWriteStreamWrite(self->_writeStream, buffer, howMany);
+    return send(*(self->_clientSocket), buffer, howMany, 0);
+//    return CFWriteStreamWrite(self->_writeStream, buffer, howMany);
 }
 
 -(size_t)recv:(UInt8 *)buffer bytes:(size_t)howMany
 {
-    return CFReadStreamRead(self->_readStream, buffer, howMany);
+    return recv(*(self->_clientSocket), buffer, howMany, 0);
+//    return CFReadStreamRead(self->_readStream, buffer, howMany);
 }
 
 - (void)disconnect
@@ -274,11 +322,13 @@ id<CFXSocketListener> _listener;
 
 - (void)_handleReadStream
 {
+    NSLog(@"HANDLING READ");
     if(!self->_disconnecting) {
         [self->_listener receive:kCFXSocketReceivedData
                       fromSender:self
                      withPayload:NULL];
     }
+    NSLog(@"DONE HANDLING");    
 }
 
 @end
