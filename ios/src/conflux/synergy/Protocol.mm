@@ -140,11 +140,9 @@
 }
 
 - (UInt32) peek {
-    NSLog(@"PEEKING");
     UInt8 headerBuffer[SYNERGY_HEADER_LEN];
     memset(headerBuffer, 0, sizeof(headerBuffer));
     [self->_socket recv:headerBuffer bytes:sizeof(headerBuffer)];
-    NSLog(@"PEEKED");
     return [self _fromQuartetTo32Bits:headerBuffer];
 }
 
@@ -212,12 +210,10 @@
      fromSender:(id<CFXSocket>)socket
     withPayload:(void *)data
 {
-    NSLog(@"RECEIVING (protocol here)");
     size_t howMany = [self peek];
     UInt8 cmd[howMany < SYNERGY_PKTLEN_MAX ? howMany : SYNERGY_PKTLEN_MAX];
     CFXCommand type = [self waitCommand:cmd bytes:howMany];
     [self processCmd:cmd ofType:type bytes:howMany];
-    NSLog(@"DONE RECEIVING (protocol here)");    
 }
 
 @end

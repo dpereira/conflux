@@ -82,9 +82,9 @@ static void* _posixHandleReadStream(void* args) {
     NSLog(@"READ HANDLER INITIALIZED");
     
     while((result = select(socket + 1, &socketSet, &nothing, &errorSet, NULL)) > 0) {
-        NSLog(@"SELECT returned %d, notifying socket instance.", result);
+//        NSLog(@"SELECT returned %d, notifying socket instance.", result);
         [(__bridge CFXFoundationSocket*)params->confluxSocket _handleReadStream];
-        NSLog(@"READ STREAM HANDLED.");
+//        NSLog(@"READ STREAM HANDLED.");
     }
     
     NSLog(@"READ LOOP COMPROMISED: exiting with %d", result);
@@ -261,6 +261,18 @@ id<CFXSocketListener> _listener;
     self->_disconnecting = YES;
     
     if(self->_clientSocket) {
+        close(*(self->_clientSocket));
+        NSLog(@"Client socket disconnected");
+    }
+    
+    if(self->_serverSocket) {
+        CFSocketInvalidate(self->_serverSocket);
+        CFRelease(self->_serverSocket);
+        self->_serverSocket = nil;
+        NSLog(@"Server socket disconnected");
+    }
+/*
+    if(self->_clientSocket) {
         NSLog(@"Disconnecting client socket");
         if(self->_readStream) {
             CFReadStreamUnscheduleFromRunLoop(self->_readStream,
@@ -295,6 +307,7 @@ id<CFXSocketListener> _listener;
         self->_serverSocket = nil;
         NSLog(@"Server socket disconnected");
     }
+ */
 }
 
 - (void)_scheduleReadStreamRead:(CFReadStreamRef)readStream
@@ -307,7 +320,7 @@ id<CFXSocketListener> _listener;
 
 - (void)_handleConnect:(CFSocketNativeHandle *)clientSocket
 {
-    NSLog(@"HANDLING CONNECT");
+//    NSLog(@"HANDLING CONNECT");
     if(self->_disconnecting) {
         return;
     }
@@ -317,18 +330,18 @@ id<CFXSocketListener> _listener;
     [self->_listener receive:kCFXSocketConnected
                   fromSender:self
                  withPayload:(__bridge void*)socket];
-    NSLog(@"DONE HANDLING");
+//    NSLog(@"DONE HANDLING");
 }
 
 - (void)_handleReadStream
 {
-    NSLog(@"HANDLING READ");
+//    NSLog(@"HANDLING READ");
     if(!self->_disconnecting) {
         [self->_listener receive:kCFXSocketReceivedData
                       fromSender:self
                      withPayload:NULL];
     }
-    NSLog(@"DONE HANDLING");    
+//    NSLog(@"DONE HANDLING");
 }
 
 @end
