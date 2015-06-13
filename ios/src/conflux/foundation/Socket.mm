@@ -266,7 +266,8 @@ id<CFXSocketListener> _listener;
     }
     
     if(self->_serverSocket) {
-        CFSocketInvalidate(self->_serverSocket);
+        close(CFSocketGetNative(self->_serverSocket));
+//        CFSocketInvalidate(self->_serverSocket);
         CFRelease(self->_serverSocket);
         self->_serverSocket = nil;
         NSLog(@"Server socket disconnected");
