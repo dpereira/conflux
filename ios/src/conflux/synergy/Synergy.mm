@@ -1,9 +1,12 @@
 #import <sys/socket.h>
+#import <unistd.h>
 #import <netinet/in.h>
+#import <pthread.h>
 #import "Foundation/Foundation.h"
 #import "Synergy.h"
 #import "Protocol.h"
 #import "Mouse.h"
+
 
 @interface CFXSynergy()
 
@@ -18,6 +21,19 @@
 - (void)_setupSocket:(id<CFXSocket>)socket;
 
 @end
+
+static void* _timerLoop(void* s)
+{
+    CFXSynergy* synergy = (__bridge CFXSynergy*)s;
+    
+    while(synergy._protocol != nil) {
+        NSLog(@"SENDING CALV");
+        [synergy._protocol calv];
+        sleep(2);
+    }
+    
+    return NULL;
+}
 
 @implementation CFXSynergy
 {
@@ -79,8 +95,8 @@
     if(self->_loaded) {
         [self._calvTimer invalidate];
         self._calvTimer = nil;
-        [self->_socket disconnect];
         [self._protocol unload];
+        [self->_socket disconnect];        
         self._protocol = nil;
         self->_socket = nil;
         self->_loaded = NO;
@@ -217,11 +233,12 @@
             
             self._state = 2;
             
-            self._calvTimer = [NSTimer scheduledTimerWithTimeInterval:2.0f
+            /*self._calvTimer = [NSTimer scheduledTimerWithTimeInterval:2.0f
                                                                target:self
                                                              selector:@selector(_keepAlive:)
                                                              userInfo:nil repeats:YES
-                               ];
+                               ];*/
+            [self _runTimer];
             break;            
         case 2:
             [self._protocol cinn: [[CFXPoint alloc] initWith:self->_remoteCursorX
@@ -263,8 +280,22 @@
 - (void)_keepAlive:(NSTimer*)timer
 {
     if(self._protocol != nil) {
+        NSLog(@"CALV called");
         [self._protocol calv];
     }
+}
+
+- (void)_runTimer
+{
+    pthread_t thread;
+    pthread_attr_t attributes;
+    
+    if(pthread_attr_init(&attributes) != 0) {
+        NSLog(@"Failed to initalize thread attributes");
+    }
+    
+    pthread_create(&thread, &attributes, &_timerLoop, (__bridge void*)self);
+
 }
 
 @end
