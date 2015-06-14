@@ -27,7 +27,6 @@ static void* _timerLoop(void* s)
     CFXSynergy* synergy = (__bridge CFXSynergy*)s;
     
     while(synergy._protocol != nil) {
-        NSLog(@"SENDING CALV");
         [synergy._protocol calv];
         sleep(2);
     }
@@ -82,7 +81,7 @@ static void* _timerLoop(void* s)
     
     self->_loaded = YES;
     
-    NSLog(@"Initialized source res with: %d, %d", self->_sourceWidth, self->_sourceHeight);
+    NSLog(@"II SYNERGY LOAD: initialized source res with: %d, %d", self->_sourceWidth, self->_sourceHeight);
 }
 
 - (void)finalize
@@ -106,7 +105,7 @@ static void* _timerLoop(void* s)
 - (void)changeOrientation
 {
     if(self->_loaded) {
-        NSLog(@"Orientation changed: %f, %f", self->_xProjection, self->_yProjection);
+        NSLog(@"II SYNERGY CHANGEORIENTATION %f, %f", self->_xProjection, self->_yProjection);
         double tmp = self->_sourceWidth;
         self->_sourceWidth = self->_sourceHeight;
         self->_sourceHeight = tmp;
@@ -153,7 +152,7 @@ static void* _timerLoop(void* s)
     CFXPoint* projected = [[CFXPoint alloc] initWith:projectedX > 0 ? projectedX : 0
                                              andWith:projectedY > 0 ? projectedY : 0];
     
-    NSLog(@"!! pd(%f, %f) rc(%d, %d) pj(%d, %d)", projectedDeltaX, projectedDeltaY,
+    NSLog(@"II SYNERGY MOUSEMOVE: (%f, %f) rc(%d, %d) pj(%d, %d)", projectedDeltaX, projectedDeltaY,
           self->_remoteCursorX, self->_remoteCursorY, projected.x, projected.y);
     
     [self._protocol dmov: projected];
@@ -176,10 +175,9 @@ static void* _timerLoop(void* s)
     withPayload:(void *)data
 {
     if(event == kCFXSocketConnected) {
-        NSLog(@"SYNERGY: got socket connected event");
+        NSLog(@"II SYNERGY: got socket connected event");
         id<CFXSocket> client = (__bridge id<CFXSocket>)data;
         [self _addClient:client];
-        NSLog(@"SYNERGY: DONE client connecting");
     }
 }
 
@@ -213,7 +211,7 @@ static void* _timerLoop(void* s)
         default:break;
     }
     
-    NSLog(@"PPKT: type %u, state %u, nbytes: %lu",type, self._state, numBytes);
+    NSLog(@"II: SYNERGY PROCESSPACKET: type %u, state %u, nbytes: %lu",type, self._state, numBytes);
     
     // reply to client
     switch(self._state) {
@@ -232,12 +230,6 @@ static void* _timerLoop(void* s)
             [self._protocol dsop];
             
             self._state = 2;
-            
-            /*self._calvTimer = [NSTimer scheduledTimerWithTimeInterval:2.0f
-                                                               target:self
-                                                             selector:@selector(_keepAlive:)
-                                                             userInfo:nil repeats:YES
-                               ];*/
             [self _runTimer];
             break;            
         case 2:
@@ -280,7 +272,6 @@ static void* _timerLoop(void* s)
 - (void)_keepAlive:(NSTimer*)timer
 {
     if(self._protocol != nil) {
-        NSLog(@"CALV called");
         [self._protocol calv];
     }
 }
@@ -291,7 +282,7 @@ static void* _timerLoop(void* s)
     pthread_attr_t attributes;
     
     if(pthread_attr_init(&attributes) != 0) {
-        NSLog(@"Failed to initalize thread attributes");
+        NSLog(@"EE Failed to initalize thread attributes");
     }
     
     pthread_create(&thread, &attributes, &_timerLoop, (__bridge void*)self);
