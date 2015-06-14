@@ -148,6 +148,11 @@
     return bytes;
 }
 
+- (void)setSocket:(int)socket
+{
+    NSLog(@"Set socket interceptor: with socket fd %d", socket);
+}
+
 
 - (void)disconnect
 {
