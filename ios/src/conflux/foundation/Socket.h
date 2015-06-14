@@ -37,6 +37,8 @@ typedef enum {
 
 - (void)disconnect;
 
+- (void)setSocket:(int)socket;
+
 @end
 
 @interface CFXFoundationSocket : NSObject <CFXSocket>
