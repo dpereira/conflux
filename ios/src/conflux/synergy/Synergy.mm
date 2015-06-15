@@ -1,9 +1,12 @@
 #import <sys/socket.h>
+#import <unistd.h>
 #import <netinet/in.h>
+#import <pthread.h>
 #import "Foundation/Foundation.h"
 #import "Synergy.h"
 #import "Protocol.h"
 #import "Mouse.h"
+
 
 @interface CFXSynergy()
 
@@ -17,7 +20,25 @@
 
 - (void)_setupSocket:(id<CFXSocket>)socket;
 
+- (bool)_loaded;
+
+- (bool)_timerLoaded;
+
 @end
+
+static void* _timerLoop(void* s)
+{
+    CFXSynergy* synergy = (__bridge CFXSynergy*)s;
+    
+    while(synergy._protocol != nil && [synergy _loaded] && [synergy _timerLoaded]) {
+        [synergy._protocol calv];
+        sleep(2);
+    }
+    
+    NSLog(@"II TIMERLOOP: exiting.");
+    
+    return NULL;
+}
 
 @implementation CFXSynergy
 {
@@ -27,7 +48,8 @@
     int _currentCursorX, _currentCursorY;
     int _dmmvSeq, _dmmvFilter;
     double _xProjection, _yProjection;
-    BOOL _loaded;
+    BOOL _loaded, _noTimer;
+    pthread_t* _timerThread;
     
     id<CFXSocket> _socket;
 }
@@ -66,7 +88,7 @@
     
     self->_loaded = YES;
     
-    NSLog(@"Initialized source res with: %d, %d", self->_sourceWidth, self->_sourceHeight);
+    NSLog(@"II SYNERGY LOAD: initialized source res with: %d, %d", self->_sourceWidth, self->_sourceHeight);
 }
 
 - (void)finalize
@@ -77,20 +99,48 @@
 - (void)unload
 {
     if(self->_loaded) {
-        [self._calvTimer invalidate];
-        self._calvTimer = nil;
-        [self->_socket disconnect];
+        [self unloadTimer];
+        self->_loaded = NO;
         [self._protocol unload];
+        [self->_socket disconnect];        
         self._protocol = nil;
         self->_socket = nil;
-        self->_loaded = NO;
+
     }
+}
+
+// Convenience method used to disable
+// timer in situations where we don't want
+// it to run, such as unit testing.
+- (void)unloadTimer
+{
+    if(self->_timerThread) {
+        pthread_t timerThread = *self->_timerThread;
+        free(self->_timerThread);
+        self->_timerThread = NULL;
+        pthread_join(timerThread, NULL);
+    }
+}
+
+- (void) disableCalvTimer
+{
+    self->_noTimer = true;
+}
+
+- (bool)_timerLoaded
+{
+    return self->_timerThread != NULL;
+}
+
+- (bool)_loaded
+{
+    return self->_loaded;
 }
 
 - (void)changeOrientation
 {
     if(self->_loaded) {
-        NSLog(@"Orientation changed: %f, %f", self->_xProjection, self->_yProjection);
+        NSLog(@"II SYNERGY CHANGEORIENTATION %f, %f", self->_xProjection, self->_yProjection);
         double tmp = self->_sourceWidth;
         self->_sourceWidth = self->_sourceHeight;
         self->_sourceHeight = tmp;
@@ -100,30 +150,46 @@
 
 -(void)keyStroke:(UInt16)character
 {
+    if(!self->_loaded) {
+        return;
+    }
     [self._protocol dkdn: character];
     [self._protocol dkup: character];
 }
 
 - (void)click:(CFXMouseButton)whichButton
 {
+    if(!self->_loaded) {
+        return;
+    }
     [self._protocol dmdn: whichButton];
     [self._protocol dmup: whichButton];
 }
 
 - (void)doubleClick:(CFXMouseButton)whichButton
 {
+    if(!self->_loaded) {
+        return;
+    }
     [self click: whichButton];
     [self click: whichButton];
 }
 
 - (void)beginMouseMove:(CFXPoint *)coordinates
 {
+    if(!self->_loaded) {
+        return;
+    }
     self->_currentCursorX = coordinates.x;
     self->_currentCursorY = coordinates.y;
 }
 
 - (void)mouseMove:(CFXPoint*)coordinates
 {
+    if(!self->_loaded) {
+        return;
+    }
+    
     if(self->_dmmvSeq++ % self->_dmmvFilter) {
         // this is done to avoid flooding client.
         return;
@@ -137,7 +203,7 @@
     CFXPoint* projected = [[CFXPoint alloc] initWith:projectedX > 0 ? projectedX : 0
                                              andWith:projectedY > 0 ? projectedY : 0];
     
-    NSLog(@"!! pd(%f, %f) rc(%d, %d) pj(%d, %d)", projectedDeltaX, projectedDeltaY,
+    NSLog(@"II SYNERGY MOUSEMOVE: (%f, %f) rc(%d, %d) pj(%d, %d)", projectedDeltaX, projectedDeltaY,
           self->_remoteCursorX, self->_remoteCursorY, projected.x, projected.y);
     
     [self._protocol dmov: projected];
@@ -152,6 +218,10 @@
          ofType:(CFXCommand)type
      withLength:(size_t)length
 {
+    if(!self->_loaded) {
+        return;
+    }
+    
     [self _processPacket:cmd ofType:type bytes:length];
 }
 
@@ -159,7 +229,12 @@
      fromSender:(id<CFXSocket>)socket
     withPayload:(void *)data
 {
+    if(!self->_loaded) {
+        return;
+    }
+    
     if(event == kCFXSocketConnected) {
+        NSLog(@"II SYNERGY: got socket connected event");
         id<CFXSocket> client = (__bridge id<CFXSocket>)data;
         [self _addClient:client];
     }
@@ -195,7 +270,7 @@
         default:break;
     }
     
-    NSLog(@"PPKT: type %u, state %u, nbytes: %lu",type, self._state, numBytes);
+    NSLog(@"II: SYNERGY PROCESSPACKET: type %u, state %u, nbytes: %lu",type, self._state, numBytes);
     
     // reply to client
     switch(self._state) {
@@ -214,12 +289,7 @@
             [self._protocol dsop];
             
             self._state = 2;
-            
-            self._calvTimer = [NSTimer scheduledTimerWithTimeInterval:2.0f
-                                                               target:self
-                                                             selector:@selector(_keepAlive:)
-                                                             userInfo:nil repeats:YES
-                               ];
+            [self _runTimer];
             break;            
         case 2:
             [self._protocol cinn: [[CFXPoint alloc] initWith:self->_remoteCursorX
@@ -263,6 +333,24 @@
     if(self._protocol != nil) {
         [self._protocol calv];
     }
+}
+
+- (void)_runTimer
+{
+    if(self->_noTimer) {
+        return;
+    }
+    
+    pthread_t thread;
+    pthread_attr_t attributes;
+    
+    if(pthread_attr_init(&attributes) != 0) {
+        NSLog(@"EE Failed to initalize thread attributes");
+    }
+    
+    pthread_create(&thread, &attributes, &_timerLoop, (__bridge void*)self);
+    self->_timerThread = (pthread_t*)malloc(sizeof(thread));
+    memcpy(self->_timerThread, &thread, sizeof(thread));
 }
 
 @end
