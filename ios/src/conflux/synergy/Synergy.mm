@@ -14,8 +14,6 @@
 
 @property int _state;
 
-@property NSTimer* _calvTimer;
-
 - (void)_addClient:(id<CFXSocket>)clientSocket;
 
 - (void)_setupSocket:(id<CFXSocket>)socket;
@@ -75,7 +73,6 @@ static void* _timerLoop(void* s)
 
 {
     self->_dmmvFilter = 1;
-    self._calvTimer = nil;
     self->_sourceWidth = sourceResolution.x;
     self->_sourceHeight = sourceResolution.y;
     self->_targetWidth = 1280;
@@ -275,10 +272,6 @@ static void* _timerLoop(void* s)
     // reply to client
     switch(self._state) {
         case 0:
-            if(self._calvTimer != nil) {
-                [self._calvTimer invalidate];
-                self._calvTimer = nil;
-            }
             self._state = 1;
             
             [self._protocol qinf];
