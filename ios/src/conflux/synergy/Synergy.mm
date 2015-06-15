@@ -20,16 +20,22 @@
 
 - (void)_setupSocket:(id<CFXSocket>)socket;
 
+- (bool)_loaded;
+
+- (bool)_timerLoaded;
+
 @end
 
 static void* _timerLoop(void* s)
 {
     CFXSynergy* synergy = (__bridge CFXSynergy*)s;
     
-    while(synergy._protocol != nil) {
+    while(synergy._protocol != nil && [synergy _loaded] && [synergy _timerLoaded]) {
         [synergy._protocol calv];
         sleep(2);
     }
+    
+    NSLog(@"II TIMERLOOP: exiting.");
     
     return NULL;
 }
@@ -42,7 +48,8 @@ static void* _timerLoop(void* s)
     int _currentCursorX, _currentCursorY;
     int _dmmvSeq, _dmmvFilter;
     double _xProjection, _yProjection;
-    BOOL _loaded;
+    BOOL _loaded, _noTimer;
+    pthread_t* _timerThread;
     
     id<CFXSocket> _socket;
 }
@@ -92,14 +99,42 @@ static void* _timerLoop(void* s)
 - (void)unload
 {
     if(self->_loaded) {
-        [self._calvTimer invalidate];
-        self._calvTimer = nil;
+        [self unloadTimer];
+        self->_loaded = NO;
         [self._protocol unload];
         [self->_socket disconnect];        
         self._protocol = nil;
         self->_socket = nil;
-        self->_loaded = NO;
+
     }
+}
+
+// Convenience method used to disable
+// timer in situations where we don't want
+// it to run, such as unit testing.
+- (void)unloadTimer
+{
+    if(self->_timerThread) {
+        pthread_t timerThread = *self->_timerThread;
+        free(self->_timerThread);
+        self->_timerThread = NULL;
+        pthread_join(timerThread, NULL);
+    }
+}
+
+- (void) disableCalvTimer
+{
+    self->_noTimer = true;
+}
+
+- (bool)_timerLoaded
+{
+    return self->_timerThread != NULL;
+}
+
+- (bool)_loaded
+{
+    return self->_loaded;
 }
 
 - (void)changeOrientation
@@ -115,30 +150,46 @@ static void* _timerLoop(void* s)
 
 -(void)keyStroke:(UInt16)character
 {
+    if(!self->_loaded) {
+        return;
+    }
     [self._protocol dkdn: character];
     [self._protocol dkup: character];
 }
 
 - (void)click:(CFXMouseButton)whichButton
 {
+    if(!self->_loaded) {
+        return;
+    }
     [self._protocol dmdn: whichButton];
     [self._protocol dmup: whichButton];
 }
 
 - (void)doubleClick:(CFXMouseButton)whichButton
 {
+    if(!self->_loaded) {
+        return;
+    }
     [self click: whichButton];
     [self click: whichButton];
 }
 
 - (void)beginMouseMove:(CFXPoint *)coordinates
 {
+    if(!self->_loaded) {
+        return;
+    }
     self->_currentCursorX = coordinates.x;
     self->_currentCursorY = coordinates.y;
 }
 
 - (void)mouseMove:(CFXPoint*)coordinates
 {
+    if(!self->_loaded) {
+        return;
+    }
+    
     if(self->_dmmvSeq++ % self->_dmmvFilter) {
         // this is done to avoid flooding client.
         return;
@@ -167,6 +218,10 @@ static void* _timerLoop(void* s)
          ofType:(CFXCommand)type
      withLength:(size_t)length
 {
+    if(!self->_loaded) {
+        return;
+    }
+    
     [self _processPacket:cmd ofType:type bytes:length];
 }
 
@@ -174,6 +229,10 @@ static void* _timerLoop(void* s)
      fromSender:(id<CFXSocket>)socket
     withPayload:(void *)data
 {
+    if(!self->_loaded) {
+        return;
+    }
+    
     if(event == kCFXSocketConnected) {
         NSLog(@"II SYNERGY: got socket connected event");
         id<CFXSocket> client = (__bridge id<CFXSocket>)data;
@@ -278,6 +337,10 @@ static void* _timerLoop(void* s)
 
 - (void)_runTimer
 {
+    if(self->_noTimer) {
+        return;
+    }
+    
     pthread_t thread;
     pthread_attr_t attributes;
     
@@ -286,7 +349,8 @@ static void* _timerLoop(void* s)
     }
     
     pthread_create(&thread, &attributes, &_timerLoop, (__bridge void*)self);
-
+    self->_timerThread = (pthread_t*)malloc(sizeof(thread));
+    memcpy(self->_timerThread, &thread, sizeof(thread));
 }
 
 @end

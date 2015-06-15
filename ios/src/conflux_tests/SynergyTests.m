@@ -71,6 +71,9 @@ extern "C" {
     CFXPoint* resolution = [[CFXPoint alloc] initWith:320 andWith:240];
     [self.synergy load:resolution with:self.synergySocket];
     
+    // avoid reading CALV packets in the socket,
+    // as they make testing harder.
+    [self.synergy disableCalvTimer];
     
     [self.synergy receive:kCFXSocketConnected
                fromSender:self.synergySocket
@@ -118,6 +121,7 @@ extern "C" {
 - (void)_assertCommandIn:(CFXParameters*)p
                       is:(const char*)expected
 {
+    NSLog(@"Expected is: %s", expected);
     XCTAssertNotEqual((long)NULL, (long)p);
     XCTAssertLessThanOrEqual(strlen(expected) + SYNERGY_HEADER_LEN, p->bytes);
     XCTAssertEqual(0, memcmp(expected, (p->buffer + SYNERGY_HEADER_LEN), strlen(expected)));

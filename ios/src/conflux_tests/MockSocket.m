@@ -21,11 +21,7 @@
 {
     if(self = [super init]) {
         self->_listener = nil;
-        self->_sentCount = 0;
-        self->_rcvdCount = 0;
-        self->_poppedCount = 0;
-        memset(self->_sent, 0, sizeof(self->_sent));
-        memset(self->_rcvd, 0, sizeof(self->_rcvd));
+        [self resetRecorder];
         return self;
     } else {
         return nil;
@@ -95,6 +91,15 @@
     CFXParameters* popped = &self->_sent[self->_poppedCount];
     self->_poppedCount += 1;
     return popped;
+}
+
+- (void)resetRecorder
+{
+    self->_sentCount = 0;
+    self->_rcvdCount = 0;
+    self->_poppedCount = 0;
+    memset(self->_sent, 0, sizeof(self->_sent));
+    memset(self->_rcvd, 0, sizeof(self->_rcvd));    
 }
 
 // mocked methods

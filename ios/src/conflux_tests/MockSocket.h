@@ -9,6 +9,7 @@
 #define conflux_MockSocket_h
 
 #import "Socket.h"
+#import <vector>
 
 typedef struct
 {
@@ -29,6 +30,8 @@ typedef struct
 - (id)init;
 
 - (CFXParameters*)popSent;
+
+- (void) resetRecorder;
 
 @end
 

@@ -16,6 +16,8 @@
 
 - (void) unload;
 
+- (void) unloadTimer; // interrupts CALV timer.
+
 - (void) keyStroke:(UInt16)key;
 
 - (void) beginMouseMove:(CFXPoint*)coordinates;
@@ -27,6 +29,8 @@
 - (void) click:(CFXMouseButton)whichButton;
 
 - (void) changeOrientation;
+
+- (void) disableCalvTimer; // avoids CALV timer altogether.
 
 @end
 
