@@ -1,3 +1,4 @@
+#import <map>
 #import <sys/socket.h>
 #import <unistd.h>
 #import <netinet/in.h>
@@ -7,10 +8,20 @@
 #import "Protocol.h"
 #import "Mouse.h"
 
+typedef struct {
+    int _targetWidth, _targetHeight;
+    int _remoteCursorX, _remoteCursorY;
+    int _currentCursorX, _currentCursorY;
+    int _dmmvSeq, _dmmvFilter;
+    double _xProjection, _yProjection;
+} CFXClientContext;
 
 @interface CFXSynergy()
 
-@property CFXProtocol* _protocol;
+/**
+ Holds the currently active client.
+ */
+@property CFXProtocol* _active;
 
 @property int _state;
 
@@ -28,8 +39,8 @@ static void* _timerLoop(void* s)
 {
     CFXSynergy* synergy = (__bridge CFXSynergy*)s;
     
-    while(synergy._protocol != nil && [synergy _loaded] && [synergy _timerLoaded]) {
-        [synergy._protocol calv];
+    while(synergy._active != nil && [synergy _loaded] && [synergy _timerLoaded]) {
+        [synergy._active calv];
         sleep(2);
     }
     
@@ -40,12 +51,8 @@ static void* _timerLoop(void* s)
 
 @implementation CFXSynergy
 {
+    std::map<CFXProtocol*, CFXClientContext*> _clients;
     int _sourceWidth, _sourceHeight;
-    int _targetWidth, _targetHeight;
-    int _remoteCursorX, _remoteCursorY;
-    int _currentCursorX, _currentCursorY;
-    int _dmmvSeq, _dmmvFilter;
-    double _xProjection, _yProjection;
     BOOL _loaded, _noTimer;
     pthread_t* _timerThread;
     
@@ -72,13 +79,8 @@ static void* _timerLoop(void* s)
         with:(id<CFXSocket>)socket
 
 {
-    self->_dmmvFilter = 1;
     self->_sourceWidth = sourceResolution.x;
     self->_sourceHeight = sourceResolution.y;
-    self->_targetWidth = 1280;
-    self->_targetHeight = 800;
-    self->_remoteCursorX = self->_remoteCursorY = 1;
-    [self _updateProjection];
     
     self->_socket = socket;
     [self _setupSocket:self->_socket];
@@ -98,9 +100,9 @@ static void* _timerLoop(void* s)
     if(self->_loaded) {
         [self unloadTimer];
         self->_loaded = NO;
-        [self._protocol unload];
+        [self._active unload];
         [self->_socket disconnect];        
-        self._protocol = nil;
+        self._active = nil;
         self->_socket = nil;
 
     }
@@ -136,8 +138,10 @@ static void* _timerLoop(void* s)
 
 - (void)changeOrientation
 {
+    CFXClientContext* ctx = [self _getActiveCtx];
+    
     if(self->_loaded) {
-        NSLog(@"II SYNERGY CHANGEORIENTATION %f, %f", self->_xProjection, self->_yProjection);
+        NSLog(@"II SYNERGY CHANGEORIENTATION %f, %f", ctx->_xProjection, ctx->_yProjection);
         double tmp = self->_sourceWidth;
         self->_sourceWidth = self->_sourceHeight;
         self->_sourceHeight = tmp;
@@ -150,8 +154,8 @@ static void* _timerLoop(void* s)
     if(!self->_loaded) {
         return;
     }
-    [self._protocol dkdn: character];
-    [self._protocol dkup: character];
+    [self._active dkdn: character];
+    [self._active dkup: character];
 }
 
 - (void)click:(CFXMouseButton)whichButton
@@ -159,8 +163,8 @@ static void* _timerLoop(void* s)
     if(!self->_loaded) {
         return;
     }
-    [self._protocol dmdn: whichButton];
-    [self._protocol dmup: whichButton];
+    [self._active dmdn: whichButton];
+    [self._active dmup: whichButton];
 }
 
 - (void)doubleClick:(CFXMouseButton)whichButton
@@ -177,8 +181,10 @@ static void* _timerLoop(void* s)
     if(!self->_loaded) {
         return;
     }
-    self->_currentCursorX = coordinates.x;
-    self->_currentCursorY = coordinates.y;
+    
+    CFXClientContext* ctx = [self _getActiveCtx];
+    ctx->_currentCursorX = coordinates.x;
+    ctx->_currentCursorY = coordinates.y;
 }
 
 - (void)mouseMove:(CFXPoint*)coordinates
@@ -187,32 +193,33 @@ static void* _timerLoop(void* s)
         return;
     }
     
-    if(self->_dmmvSeq++ % self->_dmmvFilter) {
+    CFXClientContext* ctx = [self _getActiveCtx];
+    
+    if(ctx->_dmmvSeq++ % ctx->_dmmvFilter) {
         // this is done to avoid flooding client.
         return;
     }
-    double projectedDeltaX = (coordinates.x - self->_currentCursorX) * self->_xProjection;
-    double projectedDeltaY = (coordinates.y - self->_currentCursorY) * self->_yProjection;
-    double projectedX = self->_remoteCursorX + projectedDeltaX;
-    double projectedY =self->_remoteCursorY + projectedDeltaY;
+    double projectedDeltaX = (coordinates.x - ctx->_currentCursorX) * ctx->_xProjection;
+    double projectedDeltaY = (coordinates.y - ctx->_currentCursorY) * ctx->_yProjection;
+    double projectedX = ctx->_remoteCursorX + projectedDeltaX;
+    double projectedY = ctx->_remoteCursorY + projectedDeltaY;
     
     
     CFXPoint* projected = [[CFXPoint alloc] initWith:projectedX > 0 ? projectedX : 0
                                              andWith:projectedY > 0 ? projectedY : 0];
     
     NSLog(@"II SYNERGY MOUSEMOVE: (%f, %f) rc(%d, %d) pj(%d, %d)", projectedDeltaX, projectedDeltaY,
-          self->_remoteCursorX, self->_remoteCursorY, projected.x, projected.y);
+          ctx->_remoteCursorX, ctx->_remoteCursorY, projected.x, projected.y);
     
-    [self._protocol dmov: projected];
+    [self._active dmov: projected];
     
-    self->_remoteCursorX = projected.x;
-    self->_remoteCursorY = projected.y;
-    self->_currentCursorX = coordinates.x;
-    self->_currentCursorY = coordinates.y;
+    ctx->_remoteCursorX = projected.x;
+    ctx->_remoteCursorY = projected.y;
+    ctx->_currentCursorX = coordinates.x;
+    ctx->_currentCursorY = coordinates.y;
 }
 
 - (void)receive:(UInt8*)cmd
-     fromSender:(CFXProtocol*)source
          ofType:(CFXCommand)type
      withLength:(size_t)length
 {
@@ -220,7 +227,7 @@ static void* _timerLoop(void* s)
         return;
     }
     
-    [self _processPacket:cmd ofType:type bytes:length fromSender:source];
+    [self _processPacket:cmd ofType:type bytes:length];
 }
 
 - (void)receive:(CFXSocketEvent)event
@@ -238,30 +245,44 @@ static void* _timerLoop(void* s)
     }
 }
 
+- (CFXClientContext*)getActiveContext
+{
+    return self->_clients[self._active];
+}
+
 - (void)_updateProjection
 {
-    self->_xProjection = (double)self->_targetWidth / (double)self->_sourceWidth;
-    self->_yProjection = (double)self->_targetHeight / (double)self->_sourceHeight;
+    CFXClientContext* ctx = [self _getActiveCtx];
+    ctx->_xProjection = (double)ctx->_targetWidth / (double)self->_sourceWidth;
+    ctx->_yProjection = (double)ctx->_targetHeight / (double)self->_sourceHeight;
 }
 
 - (void)_addClient:(id<CFXSocket>)clientSocket
 {
-    if(self._protocol != nil) {
-        [self._protocol unload];
-    }
-    
     self._state = 0;
     
-    self._protocol = [[CFXProtocol alloc] initWithSocket: clientSocket
-                                             andListener: self];
+    CFXProtocol* _protocol = [[CFXProtocol alloc] initWithSocket: clientSocket
+                                                     andListener: self];
     
-    [self._protocol hail];
+    CFXClientContext* ctx = (CFXClientContext*)malloc(sizeof(CFXClientContext));
+    ctx->_dmmvFilter = 1;
+    ctx->_targetWidth = 1280;
+    ctx->_targetHeight = 800;
+    ctx->_remoteCursorX = ctx->_remoteCursorY = 1;
+    
+    self->_clients[_protocol] = ctx;
+    
+    [_protocol hail];
+    
+    if(!self._active) {
+        self._active = _protocol;
+        [self _updateProjection];
+    }
 }
 
 - (void)_processPacket:(UInt8*)buffer
                 ofType:(CFXCommand)type
                  bytes:(size_t)numBytes
-            fromSender:(CFXProtocol*)source
 {
     // process packet data
     switch(type) {
@@ -276,22 +297,25 @@ static void* _timerLoop(void* s)
         case 0:
             self._state = 1;
             
-            [self._protocol qinf];
+            [self._active qinf];
             break;
         case 1:
-            [self._protocol ciak];
-            [self._protocol crop];
-            [self._protocol dsop];
+            [self._active ciak];
+            [self._active crop];
+            [self._active dsop];
             
             self._state = 2;
             [self _runTimer];
             break;            
         case 2:
-            [self._protocol cinn: [[CFXPoint alloc] initWith:self->_remoteCursorX
-                                                     andWith:self->_remoteCursorY]];
+        {
+            CFXClientContext* ctx = [self _getActiveCtx];
+            [self._active cinn: [[CFXPoint alloc] initWith:ctx->_remoteCursorX
+                                                   andWith:ctx->_remoteCursorY]];
             self._state = 3;
             
             break;
+        }
         default: break;
     }
 }
@@ -304,6 +328,8 @@ static void* _timerLoop(void* s)
         return;
     }
     
+    CFXClientContext* ctx = [self _getActiveCtx];
+    
     // client info response
     UInt16 targetWidth = (buffer[8] << 8)+ buffer[9];
     UInt16 targetHeight = (buffer[10] << 8) + buffer[11];
@@ -311,10 +337,10 @@ static void* _timerLoop(void* s)
     UInt16 remoteCursorY = (buffer[16] << 8) + buffer[17];
     NSLog(@"!! Info received: tX: %d, tY: %d, cX: %d, cy: %d",
            targetWidth, targetHeight, remoteCursorX, remoteCursorY);
-    self->_targetWidth = targetWidth;
-    self->_targetHeight = targetHeight;
-    self->_remoteCursorX = remoteCursorX;
-    self->_remoteCursorY = remoteCursorY;
+    ctx->_targetWidth = targetWidth;
+    ctx->_targetHeight = targetHeight;
+    ctx->_remoteCursorX = remoteCursorX;
+    ctx->_remoteCursorY = remoteCursorY;
 }
 
 - (void)_setupSocket:(id<CFXSocket>)socket
@@ -325,8 +351,8 @@ static void* _timerLoop(void* s)
 
 - (void)_keepAlive:(NSTimer*)timer
 {
-    if(self._protocol != nil) {
-        [self._protocol calv];
+    if(self._active != nil) {
+        [self._active calv];
     }
 }
 
@@ -348,4 +374,8 @@ static void* _timerLoop(void* s)
     memcpy(self->_timerThread, &thread, sizeof(thread));
 }
 
+-(CFXClientContext*)_getActiveCtx
+{
+    return self->_clients[self._active];
+}
 @end
