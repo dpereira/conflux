@@ -150,7 +150,7 @@ id<CFXSocketListener> _listener;
     self->_listener = listener;
 }
 
-- (void)posixOpen
+- (void)open
 {
     CFXReadParameters *params = (CFXReadParameters*)malloc(sizeof(CFXReadParameters));
     params->socket = self->_clientSocket;
@@ -165,12 +165,7 @@ id<CFXSocketListener> _listener;
     pthread_create(&thread, &attributes, &_posixHandleReadStream, params);
 }
 
-- (void)open
-{
-    [self posixOpen];
-}
-
-- (void)posixListen:(uint16_t)port
+- (void)listen:(uint16_t)port
 {
     CFXConnectionParameters *params = (CFXConnectionParameters*)malloc(sizeof(CFXConnectionParameters));
     params->port = port;
@@ -183,11 +178,6 @@ id<CFXSocketListener> _listener;
     }
     
     pthread_create(&thread, &attributes, &_posixHandleConnect, params);
-}
-
-- (void)listen:(UInt16)port
-{
-    [self posixListen:port];
 }
 
 - (size_t)send:(const UInt8 *)buffer bytes:(size_t)howMany

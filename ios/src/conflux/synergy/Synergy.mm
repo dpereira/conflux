@@ -212,6 +212,7 @@ static void* _timerLoop(void* s)
 }
 
 - (void)receive:(UInt8*)cmd
+     fromSender:(CFXProtocol*)source
          ofType:(CFXCommand)type
      withLength:(size_t)length
 {
@@ -219,7 +220,7 @@ static void* _timerLoop(void* s)
         return;
     }
     
-    [self _processPacket:cmd ofType:type bytes:length];
+    [self _processPacket:cmd ofType:type bytes:length fromSender:source];
 }
 
 - (void)receive:(CFXSocketEvent)event
@@ -260,6 +261,7 @@ static void* _timerLoop(void* s)
 - (void)_processPacket:(UInt8*)buffer
                 ofType:(CFXCommand)type
                  bytes:(size_t)numBytes
+            fromSender:(CFXProtocol*)source
 {
     // process packet data
     switch(type) {
