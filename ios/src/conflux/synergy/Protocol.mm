@@ -9,16 +9,40 @@
 #import <sys/socket.h>
 #import <arpa/inet.h>
 #import <synergy/key_types.h>
+#import <pthread.h>
 
 @interface  CFXProtocol()
+
+-(bool)_loaded;
+
+-(bool)_timerLoaded;
+
+- (void) unloadTimer; // interrupts CALV timer.
+
 @end
 
+static void* _timerLoop(void* p)
+{
+    CFXProtocol* protocol = (__bridge CFXProtocol*)p;
+    
+    while([protocol _loaded] && [protocol _timerLoaded]) {
+        [protocol calv];
+        sleep(2);
+    }
+    
+    NSLog(@"II TIMERLOOP: exiting.");
+    
+    return NULL;
+}
 
 @implementation CFXProtocol
 {
     id<CFXSocket> _socket;
     id<CFXProtocolListener>  _listener;
     KeyMapper* _mapper;
+    int _state;
+    bool _loaded;
+    pthread_t* _timerThread;
 }
 
 
@@ -34,6 +58,8 @@
         
         [socket open];
         
+        self->_loaded = true;
+        
         return self;
     } else {
         return nil;
@@ -43,7 +69,48 @@
 - (void)unload
 {
     [self->_socket disconnect];
+    [self unloadTimer];
+    self->_loaded = false;
 }
+
+// Convenience method used to disable
+// timer in situations where we don't want
+// it to run, such as unit testing.
+- (void)unloadTimer
+{
+    if(self->_timerThread) {
+        pthread_t timerThread = *self->_timerThread;
+        free(self->_timerThread);
+        self->_timerThread = NULL;
+        pthread_join(timerThread, NULL);
+    }
+}
+
+- (bool)_timerLoaded
+{
+    return self->_timerThread != NULL;
+}
+
+- (bool)_loaded
+{
+    return self->_loaded;
+}
+
+- (void)runTimer
+{
+    pthread_t thread;
+    pthread_attr_t attributes;
+    
+    if(pthread_attr_init(&attributes) != 0) {
+        NSLog(@"EE Failed to initalize thread attributes");
+    }
+    
+    pthread_create(&thread, &attributes, &_timerLoop, (__bridge void*)self);
+    self->_timerThread = (pthread_t*)malloc(sizeof(thread));
+    memcpy(self->_timerThread, &thread, sizeof(thread));
+}
+
+
 
 -(void)hail {
     NSLog(@"PROTOCOL: SENDING HAIL");
@@ -203,7 +270,7 @@
             ofType:(CFXCommand)type
              bytes:(size_t)length
 {
-    [self->_listener receive:cmd ofType:type withLength: length];
+    [self->_listener receive:cmd ofType:type withLength: length from:self];
 }
 
 - (void)receive:(CFXSocketEvent)event

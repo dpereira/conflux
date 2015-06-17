@@ -2,13 +2,13 @@
 #import <sys/socket.h>
 #import <unistd.h>
 #import <netinet/in.h>
-#import <pthread.h>
 #import "Foundation/Foundation.h"
 #import "Synergy.h"
 #import "Protocol.h"
 #import "Mouse.h"
 
 typedef struct {
+    int _state;
     int _targetWidth, _targetHeight;
     int _remoteCursorX, _remoteCursorY;
     int _currentCursorX, _currentCursorY;
@@ -23,38 +23,19 @@ typedef struct {
  */
 @property CFXProtocol* _active;
 
-@property int _state;
-
 - (void)_addClient:(id<CFXSocket>)clientSocket;
 
 - (void)_setupSocket:(id<CFXSocket>)socket;
 
 - (bool)_loaded;
 
-- (bool)_timerLoaded;
-
 @end
-
-static void* _timerLoop(void* s)
-{
-    CFXSynergy* synergy = (__bridge CFXSynergy*)s;
-    
-    while(synergy._active != nil && [synergy _loaded] && [synergy _timerLoaded]) {
-        [synergy._active calv];
-        sleep(2);
-    }
-    
-    NSLog(@"II TIMERLOOP: exiting.");
-    
-    return NULL;
-}
 
 @implementation CFXSynergy
 {
     std::map<CFXProtocol*, CFXClientContext*> _clients;
     int _sourceWidth, _sourceHeight;
     BOOL _loaded, _noTimer;
-    pthread_t* _timerThread;
     
     id<CFXSocket> _socket;
 }
@@ -98,9 +79,12 @@ static void* _timerLoop(void* s)
 - (void)unload
 {
     if(self->_loaded) {
-        [self unloadTimer];
+
         self->_loaded = NO;
-        [self._active unload];
+        for(std::map<CFXProtocol*, CFXClientContext*>::iterator i = self->_clients.begin(); i != self->_clients.end(); i++) {
+            [i->first unload];
+            free(i->second);
+        }
         [self->_socket disconnect];        
         self._active = nil;
         self->_socket = nil;
@@ -108,27 +92,9 @@ static void* _timerLoop(void* s)
     }
 }
 
-// Convenience method used to disable
-// timer in situations where we don't want
-// it to run, such as unit testing.
-- (void)unloadTimer
-{
-    if(self->_timerThread) {
-        pthread_t timerThread = *self->_timerThread;
-        free(self->_timerThread);
-        self->_timerThread = NULL;
-        pthread_join(timerThread, NULL);
-    }
-}
-
 - (void) disableCalvTimer
 {
     self->_noTimer = true;
-}
-
-- (bool)_timerLoaded
-{
-    return self->_timerThread != NULL;
 }
 
 - (bool)_loaded
@@ -222,12 +188,13 @@ static void* _timerLoop(void* s)
 - (void)receive:(UInt8*)cmd
          ofType:(CFXCommand)type
      withLength:(size_t)length
+     from:(CFXProtocol *)sender
 {
     if(!self->_loaded) {
         return;
     }
     
-    [self _processPacket:cmd ofType:type bytes:length];
+    [self _processPacket:cmd ofType:type bytes:length from:sender];
 }
 
 - (void)receive:(CFXSocketEvent)event
@@ -259,12 +226,12 @@ static void* _timerLoop(void* s)
 
 - (void)_addClient:(id<CFXSocket>)clientSocket
 {
-    self._state = 0;
     
     CFXProtocol* _protocol = [[CFXProtocol alloc] initWithSocket: clientSocket
                                                      andListener: self];
     
     CFXClientContext* ctx = (CFXClientContext*)malloc(sizeof(CFXClientContext));
+    ctx->_state = 0;
     ctx->_dmmvFilter = 1;
     ctx->_targetWidth = 1280;
     ctx->_targetHeight = 800;
@@ -283,37 +250,40 @@ static void* _timerLoop(void* s)
 - (void)_processPacket:(UInt8*)buffer
                 ofType:(CFXCommand)type
                  bytes:(size_t)numBytes
+                  from:(CFXProtocol*)sender
 {
+    CFXClientContext* ctx = self->_clients[sender];
+    
     // process packet data
     switch(type) {
-        case DINF: [self _processDinf: buffer bytes:numBytes]; break;
+        case DINF: [self _processDinf: buffer bytes:numBytes context:ctx]; break;
         default:break;
     }
     
-    NSLog(@"II: SYNERGY PROCESSPACKET: type %u, state %u, nbytes: %lu",type, self._state, numBytes);
+    NSLog(@"II: SYNERGY PROCESSPACKET: type %u, state %u, nbytes: %lu",type, ctx->_state, numBytes);
     
     // reply to client
-    switch(self._state) {
+    switch(ctx->_state) {
         case 0:
-            self._state = 1;
+            ctx->_state = 1;
             
-            [self._active qinf];
+            [sender qinf];
             break;
         case 1:
-            [self._active ciak];
-            [self._active crop];
-            [self._active dsop];
+            [sender ciak];
+            [sender crop];
+            [sender dsop];
             
-            self._state = 2;
-            [self _runTimer];
-            break;            
+            ctx->_state = 2;
+            if(!self->_noTimer) {
+                [sender runTimer];
+            }
+            break;
         case 2:
         {
-            CFXClientContext* ctx = [self _getActiveCtx];
-            [self._active cinn: [[CFXPoint alloc] initWith:ctx->_remoteCursorX
+            [sender cinn: [[CFXPoint alloc] initWith:ctx->_remoteCursorX
                                                    andWith:ctx->_remoteCursorY]];
-            self._state = 3;
-            
+            ctx->_state = 3;
             break;
         }
         default: break;
@@ -322,13 +292,12 @@ static void* _timerLoop(void* s)
 
 - (void)_processDinf:(UInt8 *)buffer
                 bytes:(size_t)numBytes
+             context:(CFXClientContext*)ctx
 {
     if(numBytes < 18) {
         NSLog(@"EE DINF response expected at least 18 bytes. Got %zu. Skipping packet.", numBytes);
         return;
     }
-    
-    CFXClientContext* ctx = [self _getActiveCtx];
     
     // client info response
     UInt16 targetWidth = (buffer[8] << 8)+ buffer[9];
@@ -349,30 +318,6 @@ static void* _timerLoop(void* s)
     [socket listen:24800];
 }
 
-- (void)_keepAlive:(NSTimer*)timer
-{
-    if(self._active != nil) {
-        [self._active calv];
-    }
-}
-
-- (void)_runTimer
-{
-    if(self->_noTimer) {
-        return;
-    }
-    
-    pthread_t thread;
-    pthread_attr_t attributes;
-    
-    if(pthread_attr_init(&attributes) != 0) {
-        NSLog(@"EE Failed to initalize thread attributes");
-    }
-    
-    pthread_create(&thread, &attributes, &_timerLoop, (__bridge void*)self);
-    self->_timerThread = (pthread_t*)malloc(sizeof(thread));
-    memcpy(self->_timerThread, &thread, sizeof(thread));
-}
 
 -(CFXClientContext*)_getActiveCtx
 {

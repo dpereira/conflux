@@ -16,8 +16,6 @@
 
 - (void) unload;
 
-- (void) unloadTimer; // interrupts CALV timer.
-
 - (void) keyStroke:(UInt16)key;
 
 - (void) beginMouseMove:(CFXPoint*)coordinates;
@@ -30,7 +28,7 @@
 
 - (void) changeOrientation;
 
-- (void) disableCalvTimer; // avoids CALV timer altogether.
+- (void) disableCalvTimer; // avoids CALV timer loading altogether (for ALL clients).
 
 @end
 
