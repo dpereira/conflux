@@ -92,6 +92,35 @@ extern "C" {
     [self _assertCommandIn:[clientSocket popSent] is:"CINN"];
 }
 
+/**
+ Tests whether synergy instances accept multiple
+ client connections concurrently.
+ */
+- (void)testMultipleConnections
+{
+    CFXMockSocket* clientSocket1 = [[CFXMockSocket alloc] init];
+    CFXMockSocket* clientSocket2 = [[CFXMockSocket alloc] init];
+    CFXPoint* resolution = [[CFXPoint alloc] initWith:320 andWith:240];
+    [self.synergy load:resolution with:self.synergySocket];
+    
+
+    [self.synergy disableCalvTimer];
+    
+    [self.synergy receive:kCFXSocketConnected
+               fromSender:self.synergySocket
+              withPayload:(__bridge void*)clientSocket1];
+    [self.synergy disableCalvTimer];
+    
+    [self.synergy receive:kCFXSocketConnected
+               fromSender:self.synergySocket
+              withPayload:(__bridge void*)clientSocket2];
+
+    [self _assertCommandIn:[clientSocket1 popSent] is:"Synergy"];
+    [self _assertCommandIn:[clientSocket2 popSent] is:"Synergy"];
+    XCTAssertEqual(nil, [clientSocket1 popSent]);
+    XCTAssertEqual(nil, [clientSocket2 popSent]);
+}
+
 // auxiliary
 
 - (void)_record:(const char*)message

@@ -86,7 +86,7 @@
 - (CFXParameters*)popSent
 {
     if(self->_poppedCount >= self->_sentCount) {
-        return NULL;
+        return nil;
     }
     CFXParameters* popped = &self->_sent[self->_poppedCount];
     self->_poppedCount += 1;
