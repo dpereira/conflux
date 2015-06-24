@@ -2,6 +2,7 @@
 #import <sys/socket.h>
 #import <unistd.h>
 #import <netinet/in.h>
+#import <pthread.h>
 #import "Foundation/Foundation.h"
 #import "Synergy.h"
 #import "Protocol.h"
@@ -34,16 +35,17 @@ typedef struct {
 @implementation CFXSynergy
 {
     std::map<CFXProtocol*, CFXClientContext*> _clients;
+    pthread_mutex_t _initializationLock;
+    id<CFXSocket> _socket;
     int _sourceWidth, _sourceHeight;
     BOOL _loaded, _noTimer;
-    
-    id<CFXSocket> _socket;
 }
 
 - (id)init
 {
     if(self = [super init]) {
         self->_socket = nil;
+        self->_initializationLock = PTHREAD_MUTEX_INITIALIZER;
         return self;
     } else {
         return nil;
@@ -74,6 +76,7 @@ typedef struct {
 - (void)finalize
 {
     [self unload];
+    pthread_mutex_destroy(&self->_initializationLock);
 }
 
 - (void)unload
@@ -106,7 +109,7 @@ typedef struct {
 {
     CFXClientContext* ctx = [self _getActiveCtx];
     
-    if(self->_loaded) {
+    if(self->_loaded && ctx) {
         NSLog(@"II SYNERGY CHANGEORIENTATION %f, %f", ctx->_xProjection, ctx->_yProjection);
         double tmp = self->_sourceWidth;
         self->_sourceWidth = self->_sourceHeight;
@@ -237,14 +240,17 @@ typedef struct {
     ctx->_targetHeight = 800;
     ctx->_remoteCursorX = ctx->_remoteCursorY = 1;
     
+    pthread_mutex_lock(&self->_initializationLock);
     self->_clients[_protocol] = ctx;
-    
-    [_protocol hail];
+    pthread_mutex_unlock(&self->_initializationLock);
     
     if(!self._active) {
+        NSLog(@"Protocol now active");
         self._active = _protocol;
         [self _updateProjection];
     }
+    
+    [_protocol hail];
 }
 
 - (void)_processPacket:(UInt8*)buffer
@@ -252,6 +258,7 @@ typedef struct {
                  bytes:(size_t)numBytes
                   from:(CFXProtocol*)sender
 {
+    //NSLog(@"(%d) II: SYNERGY PROCESSPACKET: IN", [sender idTag]);
     CFXClientContext* ctx = self->_clients[sender];
     
     // process packet data
@@ -260,7 +267,7 @@ typedef struct {
         default:break;
     }
     
-    NSLog(@"II: SYNERGY PROCESSPACKET: type %u, state %u, nbytes: %lu",type, ctx->_state, numBytes);
+    NSLog(@"(%d) II: SYNERGY PROCESSPACKET: type %u, state %u, nbytes: %lu", [sender idTag], type, ctx->_state, numBytes);
     
     // reply to client
     switch(ctx->_state) {
@@ -288,6 +295,8 @@ typedef struct {
         }
         default: break;
     }
+    
+    //NSLog(@"(%d) II: SYNERGY PROCESSPACKET: OUT", [sender idTag]);
 }
 
 - (void)_processDinf:(UInt8 *)buffer

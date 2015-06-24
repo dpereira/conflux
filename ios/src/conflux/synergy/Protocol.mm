@@ -21,6 +21,8 @@
 
 @end
 
+static int globalInstanceCounter = 0;
+
 static void* _timerLoop(void* p)
 {
     CFXProtocol* protocol = (__bridge CFXProtocol*)p;
@@ -40,7 +42,7 @@ static void* _timerLoop(void* p)
     id<CFXSocket> _socket;
     id<CFXProtocolListener>  _listener;
     KeyMapper* _mapper;
-    int _state;
+    int _state, _id;
     bool _loaded;
     pthread_t* _timerThread;
 }
@@ -55,6 +57,7 @@ static void* _timerLoop(void* p)
         self->_socket = socket;
         self->_listener = listener;
         self->_mapper = [[KeyMapper alloc] init];
+        self->_id = globalInstanceCounter++;
         
         [socket open];
         
@@ -96,6 +99,11 @@ static void* _timerLoop(void* p)
     return self->_loaded;
 }
 
+- (int)idTag
+{
+    return self->_id;
+}
+
 - (void)runTimer
 {
     pthread_t thread;
@@ -113,7 +121,7 @@ static void* _timerLoop(void* p)
 
 
 -(void)hail {
-    NSLog(@"PROTOCOL: SENDING HAIL");
+    NSLog(@"(%d) PROTOCOL: SENDING HAIL", self->_id);
     UInt8 hail[] = {0x53, 0x79, 0x6e, 0x65, 0x72, 0x67, 0x79, 0x00, 0x01, 0x00, 0x05};
     [self _writeRaw:hail bytes:sizeof(hail)];
 }
@@ -202,7 +210,7 @@ static void* _timerLoop(void* p)
 }
 
 -(void)_writeSimple:(const char *)payload {
-    NSLog(@"-> %s", payload);
+    NSLog(@"(%d) -> %s", self->_id, payload);
     [self _writeRaw:(const UInt8 *)payload bytes:(int)strlen(payload)];
 }
 
@@ -254,14 +262,14 @@ static void* _timerLoop(void* p)
     
     for(int i = 0; i < sizeof(commandIds) / sizeof(char*); i++) {
         if(strcmp(identifier, commandIds[i]) == 0) {
-            NSLog(@"<- %s", identifier);
+            NSLog(@"(%d) <- %s", self->_id, identifier);
             return (CFXCommand)i;
         } else if(strcmp(identifier, "Syne"/*rgy*/) == 0) { // cheating
             return HAIL;
         }
     }
     
-    NSLog(@"!! unable to classify: %s", identifier);
+    NSLog(@"!! (%d) unable to classify: %s", self->_id, identifier);
     
     return NONE;
 }

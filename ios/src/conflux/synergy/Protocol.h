@@ -35,6 +35,8 @@ typedef enum
 
 - (void)unload;
 
+- (int)idTag;
+
 - (void)runTimer;
 
 - (void)hail; // not a cmd per se, but a handshake sequence
