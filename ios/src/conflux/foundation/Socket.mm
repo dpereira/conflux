@@ -101,13 +101,6 @@ static void* _posixHandleReadStream(void* args) {
     return NULL;
 }
 
-static void _handleReadStream(CFReadStreamRef readStream, CFStreamEventType eventType, void *ctx)
-{
-    CFXFoundationSocket* socket = (__bridge CFXFoundationSocket*)ctx;
-    [socket _handleReadStream];
-}
-
-
 @implementation CFXFoundationSocket {
 
 bool _disconnecting;
@@ -182,11 +175,13 @@ id<CFXSocketListener> _listener;
 
 - (size_t)send:(const UInt8 *)buffer bytes:(size_t)howMany
 {
+    //NSLog(@"X DD: socket %d getting %lu bytes sent to", self->_clientSocket, howMany);
     return send(self->_clientSocket, buffer, howMany, 0);
 }
 
 -(size_t)recv:(UInt8 *)buffer bytes:(size_t)howMany
 {
+    //NSLog(@"X DD: socket %d getting %lu bytes received from", self->_clientSocket, howMany);
     return recv(self->_clientSocket, buffer, howMany, 0);
 }
 
@@ -206,14 +201,6 @@ id<CFXSocketListener> _listener;
         NSLog(@"Server socket disconnected");
     }
 }
-
-- (void)_scheduleReadStreamRead:(CFReadStreamRef)readStream
-{
-    CFStreamClientContext ctx = {0, (__bridge void*)self, NULL, NULL, NULL};
-    CFReadStreamSetClient(readStream, kCFStreamEventHasBytesAvailable, _handleReadStream, &ctx);
-    CFReadStreamScheduleWithRunLoop(readStream, CFRunLoopGetCurrent(), kCFRunLoopCommonModes);
-}
-
 
 - (void)_handleConnect:(int)clientSocket
 {
