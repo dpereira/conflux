@@ -10,7 +10,8 @@
 
 typedef enum {
     kCFXSocketConnected,
-    kCFXSocketReceivedData
+    kCFXSocketReceivedData,
+    kCFXSocketDisconnected
 } CFXSocketEvent;
 
 @protocol CFXSocket;
@@ -26,6 +27,8 @@ typedef enum {
 - (void)listen:(UInt16)port;
 
 - (void)open;
+
+- (size_t)peek;
 
 - (size_t)recv:(UInt8*)buffer
          bytes:(size_t)howMany;

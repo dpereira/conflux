@@ -285,10 +285,15 @@ static void* _timerLoop(void* p)
      fromSender:(id<CFXSocket>)socket
     withPayload:(void *)data
 {
-    size_t howMany = [self peek];
-    UInt8 cmd[howMany < SYNERGY_PKTLEN_MAX ? howMany : SYNERGY_PKTLEN_MAX];
-    CFXCommand type = [self waitCommand:cmd bytes:howMany];
-    [self processCmd:cmd ofType:type bytes:howMany];
+    if(event == kCFXSocketReceivedData) {
+        size_t howMany = [self peek];
+        UInt8 cmd[howMany < SYNERGY_PKTLEN_MAX ? howMany : SYNERGY_PKTLEN_MAX];
+        CFXCommand type = [self waitCommand:cmd bytes:howMany];
+        [self processCmd:cmd ofType:type bytes:howMany];
+    } else {
+        [self unloadTimer];
+        self->_loaded = false;
+    }
 }
 
 @end

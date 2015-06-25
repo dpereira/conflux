@@ -15,6 +15,7 @@
 #import <pthread.h>
 #import <errno.h>
 #import <string.h>
+#import <fcntl.h>
 
 @interface CFXFoundationSocket()
 
@@ -23,6 +24,8 @@
 -(void)_handleConnect:(int)clientSocket;
 
 -(void)_handleReadStream;
+
+-(bool)_hasBytesAvailable;
 
 @end
 
@@ -86,14 +89,30 @@ static void* _posixHandleReadStream(void* args) {
     int socket = params->socket;
     
     fd_set nothing, socketSet, errorSet;
+    
+    int result = 0;
+
     FD_ZERO(&nothing);
     FD_SET(socket, &socketSet);
     FD_SET(socket, &errorSet);
-    
-    int result = 0;
-    
+
     while((result = select(socket + 1, &socketSet, &nothing, &errorSet, NULL)) > 0) {
-        [(__bridge CFXFoundationSocket*)params->confluxSocket _handleReadStream];
+        if(FD_ISSET(socket, &socketSet)) {
+            CFXFoundationSocket* confluxSocket = (__bridge CFXFoundationSocket*)params->confluxSocket;
+            if([confluxSocket _hasBytesAvailable]) {
+                [confluxSocket _handleReadStream];
+            } else {
+                [confluxSocket disconnect];
+                break;
+            }
+        } else if(FD_ISSET(socket, &errorSet)) {
+            break;
+        }
+        
+        // reinitialize fd_sets
+        FD_ZERO(&nothing);
+        FD_SET(socket, &socketSet);
+        FD_SET(socket, &errorSet);
     }
     
     NSLog(@"READ LOOP COMPROMISED: exiting with %d", result);
@@ -185,8 +204,16 @@ id<CFXSocketListener> _listener;
     return recv(self->_clientSocket, buffer, howMany, 0);
 }
 
+-(size_t)peek
+{
+    UInt8 buffer[1];
+    return recv(self->_clientSocket, buffer, sizeof(buffer), MSG_PEEK);
+}
+
 - (void)disconnect
 {
+    [self->_listener receive:kCFXSocketDisconnected fromSender:self withPayload:NULL];
+    
     self->_disconnecting = YES;
     
     if(self->_clientSocket) {
@@ -200,6 +227,11 @@ id<CFXSocketListener> _listener;
         self->_serverSocket = 0;
         NSLog(@"Server socket disconnected");
     }
+}
+
+- (bool)_hasBytesAvailable
+{
+    return [self peek] > 0;
 }
 
 - (void)_handleConnect:(int)clientSocket
