@@ -10,6 +10,8 @@
 #import <arpa/inet.h>
 #import <synergy/key_types.h>
 #import <pthread.h>
+#import <map>
+#import <string>
 
 @interface  CFXProtocol()
 
@@ -239,36 +241,27 @@ static void* _timerLoop(void* p)
 }
 
 - (CFXCommand) _classify:(UInt8*) cmd {
-    // Always make this match the CFXCommand
-    // enum or this method will stop working properly.
-    const char* commandIds[] = {
-        "NONE",
-        "HAIL",
-        "CNOP",
-        "QINF",
-        "DINF",
-        "CALV",
-        "CIAK",
-        "DSOP",
-        "CROP",
-        "CINN",
-        "DMOV",
-        "DMDN",
-        "DMUP"
+    typedef const std::map<const std::string, CFXCommand> CFXCommandMap;
+    static CFXCommandMap commandIds = {
+        {"NONE", NONE}, {"HAIL", HAIL}, {"CNOP", CNOP}, {"QINF", QINF},
+        {"DINF", DINF}, {"CALV", CALV}, {"CIAK", CIAK}, {"DSOP", DSOP},
+        {"CROP", CROP}, {"CINN", CINN}, {"DMOV", DMOV}, {"DMDN", DMDN},
+        {"DMUP", DMUP}
     };
     
     char identifier[5]; identifier[4] = 0;
     strncpy(identifier, (const char*)cmd, 4);
     
-    for(int i = 0; i < sizeof(commandIds) / sizeof(char*); i++) {
-        if(strcmp(identifier, commandIds[i]) == 0) {
-            NSLog(@"(%d) <- %s", self->_id, identifier);
-            return (CFXCommand)i;
-        } else if(strcmp(identifier, "Syne"/*rgy*/) == 0) { // cheating
-            return HAIL;
-        }
-    }
+    CFXCommandMap::const_iterator i = commandIds.find(identifier);
     
+    if(i != commandIds.end()) {
+        NSLog(@"(%d) <- %s", self->_id, identifier);
+        return i->second;
+    } else if(strcmp(identifier, "Syne"/*rgy*/) == 0) { // cheating
+        NSLog(@"(%d) <- HAIL", self->_id);
+        return HAIL;
+    }
+
     NSLog(@"!! (%d) unable to classify: %s", self->_id, identifier);
     
     return NONE;
@@ -290,9 +283,13 @@ static void* _timerLoop(void* p)
         UInt8 cmd[howMany < SYNERGY_PKTLEN_MAX ? howMany : SYNERGY_PKTLEN_MAX];
         CFXCommand type = [self waitCommand:cmd bytes:howMany];
         [self processCmd:cmd ofType:type bytes:howMany];
-    } else {
+    } else if(kCFXSocketDisconnected){
         [self unloadTimer];
         self->_loaded = false;
+        
+        if(self->_listener) {
+            [self->_listener receive:NULL ofType:TERM withLength:0 from:self];
+        }
     }
 }
 

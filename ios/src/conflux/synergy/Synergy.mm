@@ -15,6 +15,7 @@ typedef struct {
     int _currentCursorX, _currentCursorY;
     int _dmmvSeq, _dmmvFilter;
     double _xProjection, _yProjection;
+    char name[256];
 } CFXClientContext;
 
 @interface CFXSynergy()
@@ -32,11 +33,14 @@ typedef struct {
 
 @end
 
+typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
+
 @implementation CFXSynergy
 {
-    std::map<CFXProtocol*, CFXClientContext*> _clients;
+    CFXClients _clients;
     pthread_mutex_t _initializationLock;
     id<CFXSocket> _socket;
+    id<CFXSynergyListener> _listener;
     int _sourceWidth, _sourceHeight;
     BOOL _loaded, _noTimer;
 }
@@ -44,16 +48,37 @@ typedef struct {
 - (id)init
 {
     if(self = [super init]) {
+        self->_clients.clear();
         self->_socket = nil;
         self->_initializationLock = PTHREAD_MUTEX_INITIALIZER;
+        NSLog(@"Upon init, clients map has %lu elements", self->_clients.size());
         return self;
     } else {
         return nil;
     }
 }
 
+- (void)activate:(const char *)screenName
+{
+    pthread_mutex_lock(&self->_initializationLock);
+    for(CFXClients::iterator i = self->_clients.begin(); i != self->_clients.end(); i++) {
+        if(strcmp(screenName, i->second->name) == 0) {
+            self._active = i->first;
+            NSLog(@"%s ACTIVATED", screenName);
+            break;
+        }
+    }
+    pthread_mutex_unlock(&self->_initializationLock);
+}
+
+- (void)inspect
+{
+    NSLog(@">>> Total elements in clients is %lu", self->_clients.size());
+}
+
 - (void)load:(CFXPoint *)sourceResolution
 {
+    NSLog(@"II SYNERGY LOAD: upon loading, clients map has %lu elements", self->_clients.size());
     [self load:sourceResolution
           with:[[CFXFoundationSocket alloc] init]];
 }
@@ -71,6 +96,7 @@ typedef struct {
     self->_loaded = YES;
     
     NSLog(@"II SYNERGY LOAD: initialized source res with: %d, %d", self->_sourceWidth, self->_sourceHeight);
+    NSLog(@"II SYNERGY LOAD: after init, clients map has %lu elements", self->_clients.size());
 }
 
 - (void)finalize
@@ -217,7 +243,7 @@ typedef struct {
 
 - (CFXClientContext*)getActiveContext
 {
-    return self->_clients[self._active];
+    return [self _getActiveCtx];
 }
 
 - (void)_updateProjection
@@ -241,11 +267,15 @@ typedef struct {
     ctx->_remoteCursorX = ctx->_remoteCursorY = 1;
     
     pthread_mutex_lock(&self->_initializationLock);
+    if(!self._active) {
+        self->_clients.clear();
+    }
+    NSLog(@"ADDING CLIENT: %lu / %d", self->_clients.size(), [_protocol idTag]);
     self->_clients[_protocol] = ctx;
+    NSLog(@"CLIENT ADDED: %lu / %d", self->_clients.size(), [_protocol idTag]);
     pthread_mutex_unlock(&self->_initializationLock);
     
     if(!self._active) {
-        NSLog(@"Protocol now active");
         self._active = _protocol;
         [self _updateProjection];
     }
@@ -263,7 +293,35 @@ typedef struct {
     
     // process packet data
     switch(type) {
+        case HAIL: [self _processHailResponse:buffer bytes:numBytes context:ctx]; break;
         case DINF: [self _processDinf: buffer bytes:numBytes context:ctx]; break;
+        case TERM: {
+            NSLog(@"(%d) TERMINATING", [sender idTag]);
+            pthread_mutex_lock(&self->_initializationLock);
+            std::map<CFXProtocol*, CFXClientContext*>::const_iterator i = self->_clients.find(sender);
+            if(i != self->_clients.end()) {
+                NSLog(@"%lu total clients left. P is %d.", self->_clients.size(), [i->first idTag]);
+                self->_clients.erase(i);
+
+                if(self._active == sender) {
+                    if(self->_clients.size() > 0) {
+                        CFXProtocol* p = self->_clients.begin()->first;
+                        NSLog(@"%lu total clients left. P is %d.", self->_clients.size(), [p idTag]);
+                        self._active = p;
+                        NSLog(@"(%d) ACTIVATED", [self._active idTag]);
+                        CFXClientContext* ctx = [self _getActiveCtxUnsafe];
+                        [self._active cinn: [[CFXPoint alloc] initWith:ctx->_remoteCursorX
+                                                               andWith:ctx->_remoteCursorY]];
+                    } else {
+                        self._active = nil;
+                    }
+                }
+            }
+            pthread_mutex_unlock(&self->_initializationLock);
+            [self->_listener receive:kCFXSynergyScreenLost with:ctx->name];
+            free(ctx);
+            return;
+        }
         default:break;
     }
     
@@ -299,6 +357,19 @@ typedef struct {
     //NSLog(@"(%d) II: SYNERGY PROCESSPACKET: OUT", [sender idTag]);
 }
 
+- (void)_processHailResponse:(UInt8 *)buffer
+                       bytes:(size_t)numBytes
+                     context:(CFXClientContext*)ctx
+{
+    NSLog(@"Received hail response: %lu bytes", numBytes);
+    memset(ctx->name, 0, sizeof(ctx->name));
+    strncpy(ctx->name, (const char*)buffer + 15, numBytes - 15);
+    
+    if(self->_listener) {
+        [self->_listener receive:kCFXSynergyNewScreen with:ctx->name];
+    }
+}
+
 - (void)_processDinf:(UInt8 *)buffer
                 bytes:(size_t)numBytes
              context:(CFXClientContext*)ctx
@@ -321,15 +392,27 @@ typedef struct {
     ctx->_remoteCursorY = remoteCursorY;
 }
 
+- (void)registerListener:(id<CFXSynergyListener>)listener
+{
+    self->_listener = listener;
+}
+
 - (void)_setupSocket:(id<CFXSocket>)socket
 {
     [socket registerListener:self];
     [socket listen:24800];
 }
 
+-(CFXClientContext*)_getActiveCtxUnsafe
+{
+    return self->_clients[self._active];
+}
 
 -(CFXClientContext*)_getActiveCtx
 {
-    return self->_clients[self._active];
+    pthread_mutex_lock(&self->_initializationLock);
+    CFXClientContext* ctx = [self _getActiveCtxUnsafe];
+    pthread_mutex_unlock(&self->_initializationLock);
+    return ctx;
 }
 @end

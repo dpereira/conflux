@@ -12,28 +12,22 @@
 - (id)init
 {
     if(self = [super init]) {
-        self._synergy = [CFXSynergy new];
         return self;
     } else {
         return nil;
     }
 }
 
-- (BOOL)application:(UIApplication *)application
-        withOptions:(NSDictionary *)launchOptions
-{
-    return YES;
-}
-
-
-
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
+    NSLog(@"APPLICATION ACTIVE");
+
     UINavigationController * navigationController = (UINavigationController*)application.keyWindow.rootViewController;
     UIView * current = navigationController.visibleViewController.view;
     CFXPoint* sourceResolution = [[CFXPoint alloc] initWith:current.bounds.size.width
                                                         andWith:current.bounds.size.height];
-    [self ._synergy load:sourceResolution];
+    [self._synergy load:sourceResolution];
+
     application.idleTimerDisabled = YES;
     NSLog(@"Became active");
 }
@@ -62,6 +56,10 @@
            selector:@selector(_orientationChanged:)
                name:UIDeviceOrientationDidChangeNotification
              object:device];
+   
+    NSLog(@"Finish launching");
+    self._synergy = [[CFXSynergy alloc] init];
+    NSLog(@"DONE Finish launching");
     
     return YES;
 }

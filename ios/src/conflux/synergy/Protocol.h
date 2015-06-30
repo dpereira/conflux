@@ -23,7 +23,8 @@ typedef enum
     CINN,
     DMOV,
     DMDN,
-    DMUP
+    DMUP,
+    TERM
 } CFXCommand;
 
 @protocol CFXProtocolListener;
