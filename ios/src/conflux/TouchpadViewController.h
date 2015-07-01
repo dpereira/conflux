@@ -4,6 +4,7 @@
 @interface TouchpadViewController : UIViewController<UIPickerViewDataSource, UIPickerViewDelegate, CFXSynergyListener>
 @property (weak, nonatomic) IBOutlet UIPickerView *picker;
 
+- (void)resetScreens;
 
 @end
 

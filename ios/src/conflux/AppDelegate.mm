@@ -2,6 +2,7 @@
 #import "Mouse.h"
 #import "AppDelegate.h"
 #import "Point.h"
+#import "TouchpadViewController.h"
     
 @interface AppDelegate ()
 
@@ -20,28 +21,25 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-    NSLog(@"APPLICATION ACTIVE");
-
     UINavigationController * navigationController = (UINavigationController*)application.keyWindow.rootViewController;
     UIView * current = navigationController.visibleViewController.view;
     CFXPoint* sourceResolution = [[CFXPoint alloc] initWith:current.bounds.size.width
                                                         andWith:current.bounds.size.height];
     [self._synergy load:sourceResolution];
+    
+    [(TouchpadViewController*)current.nextResponder resetScreens];
 
     application.idleTimerDisabled = YES;
-    NSLog(@"Became active");
 }
 
 - (void) applicationWillResignActive:(UIApplication *)application
 {
-    NSLog(@"Will resign");
     application.idleTimerDisabled = NO;
     [self._synergy unload];
 }
 
 - (void) applicationWillTerminate:(UIApplication *)application
 {
-    NSLog(@"Will terminate");
     [self._synergy unload];
 }
 
@@ -57,9 +55,7 @@
                name:UIDeviceOrientationDidChangeNotification
              object:device];
    
-    NSLog(@"Finish launching");
     self._synergy = [[CFXSynergy alloc] init];
-    NSLog(@"DONE Finish launching");
     
     return YES;
 }

@@ -53,23 +53,23 @@ static void* _posixHandleConnect(void *args) {
     int yes = 1;
     
     if(setsockopt(s, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) < 0) {
-        NSLog(@"FAILED TO SET SOCKET OPTIONS -> ERROR WAS %s", strerror(errno));
+        NSLog(@"EE SYNERGY FAILED TO SET SOCKET OPTIONS -> ERROR WAS %s", strerror(errno));
     }
     
     [(__bridge CFXFoundationSocket*)params->confluxSocket setSocket:s];
     
     if(s <= 0) {
-        NSLog(@"FAILED TO CREATE SOCKET -> ERROR WAS: %s", strerror(errno));
+        NSLog(@"EE SYNERGY FAILED TO CREATE SOCKET -> ERROR WAS: %s", strerror(errno));
         return NULL;
     }
     
     if(bind(s, (struct sockaddr*)&sin, sizeof(sin)) < 0) {
-        NSLog(@"FAILED TO BIND SOCKET -> ERROR WAS: %s", strerror(errno));
+        NSLog(@"EE SYNERGY FAILED TO BIND SOCKET -> ERROR WAS: %s", strerror(errno));
         return NULL;
     }
     
     if(listen(s, 10) < 0) {
-        NSLog(@"FAILED TO LISTEN -> ERROR WAS: %s", strerror(errno));
+        NSLog(@"EE SYNERGY FAILED TO LISTEN -> ERROR WAS: %s", strerror(errno));
         return NULL;
     }
     
@@ -79,8 +79,8 @@ static void* _posixHandleConnect(void *args) {
     while((clientSocket = accept(s, (sockaddr*)&clientAddress, &addressLength)) > 0) {
         [(__bridge CFXFoundationSocket*)params->confluxSocket _handleConnect:clientSocket];
     }
-    NSLog(@"THREAD HAS BEEN EXITED: %d", clientSocket);
-    NSLog(@"ERROR WAS: %s", strerror(errno));
+
+    NSLog(@"II SYNERGY Listening thread has exited with: %s", strerror(errno));
     return NULL;
 }
 
@@ -115,7 +115,7 @@ static void* _posixHandleReadStream(void* args) {
         FD_SET(socket, &errorSet);
     }
     
-    NSLog(@"READ LOOP COMPROMISED: exiting with %d", result);
+    NSLog(@"WW Read loop compromised; exiting with %d", result);
     
     return NULL;
 }
@@ -171,7 +171,7 @@ id<CFXSocketListener> _listener;
     pthread_attr_t attributes;
     
     if(pthread_attr_init(&attributes) != 0) {
-        NSLog(@"Failed to initalize thread attributes");
+        NSLog(@"EE SYNERGY OPEN: Failed to initalize thread attributes");
     }
     
     pthread_create(&thread, &attributes, &_posixHandleReadStream, params);
@@ -186,7 +186,7 @@ id<CFXSocketListener> _listener;
     pthread_attr_t attributes;
     
     if(pthread_attr_init(&attributes) != 0) {
-        NSLog(@"Failed to initalize thread attributes");
+        NSLog(@"EE SYNERGY LISTEN: Failed to initalize thread attributes");
     }
     
     pthread_create(&thread, &attributes, &_posixHandleConnect, params);
@@ -219,13 +219,13 @@ id<CFXSocketListener> _listener;
     if(self->_clientSocket) {
         close(self->_clientSocket);
         self->_clientSocket = 0;
-        NSLog(@"Client socket disconnected");
+        NSLog(@"II SYNERGY DISCONNECT: Client socket disconnected");
     }
     
     if(self->_serverSocket) {
         close(self->_serverSocket);
         self->_serverSocket = 0;
-        NSLog(@"Server socket disconnected");
+        NSLog(@"II SYNERGY DISCONNECT: Server socket disconnected");
     }
 }
 

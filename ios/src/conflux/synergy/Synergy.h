@@ -44,8 +44,6 @@ typedef enum {
 
 - (void) registerListener:(id<CFXSynergyListener>)listener;
 
-- (void) inspect;
-
 - (void) activate:(const char*)screenName;
 
 @end

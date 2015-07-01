@@ -19,33 +19,23 @@ typedef std::vector<std::string> CFXScreenNames;
 
 - (void)viewDidLoad
 {
-    NSLog(@"TOUCHPAD LOADING");
-    self->_waitingForScreensLabel = "Waiting for screens ...";
-    
     [super viewDidLoad];
     
     AppDelegate* app = [[UIApplication sharedApplication] delegate];
     self->_synergy = app._synergy;
-    self->_screenCount = 0;
-    self->_screenNames.clear();
-    self->_screenNames.push_back(self->_waitingForScreensLabel);
     
     self.picker.delegate = self;
     self.picker.dataSource = self;
     
-    [self updateAvailableScreens];
-    
-    if(!app._synergy) {
-        NSLog(@"Synergy object NOT INITIALIZED!!!");
-    }
-    if(!self->_synergy) {
-        NSLog(@"Synergy object NOT INITIALIZED!!!");
-    }
-    
-    [self->_synergy inspect];
-    
     [self->_synergy registerListener:self];
-    NSLog(@"TOUCHPAD LOADED"); 
+}
+
+- (void)resetScreens
+{
+    self->_screenCount = 0;
+    self->_screenNames.clear();
+    self->_screenNames.push_back(self->_waitingForScreensLabel);
+    [self updateAvailableScreens];
 }
 
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
@@ -72,7 +62,6 @@ typedef std::vector<std::string> CFXScreenNames;
 
 - (void)addScreen:(const char*)name
 {
-    NSLog(@"WILL ADD SCREEN: %s", name);
     if(self->_screenCount == 0) {
         self->_screenNames[0] = std::string(name);
     } else {
@@ -86,19 +75,14 @@ typedef std::vector<std::string> CFXScreenNames;
 
 - (void)removeScreen:(const char *)name
 {
-    NSLog(@"Looking for screen");
     CFXScreenNames::const_iterator i = std::find(self->_screenNames.begin(), self->_screenNames.end(), name);
     
-    NSLog(@"Searching for %s", name);
-
     if(i != self->_screenNames.end()) {
-        NSLog(@"Will remove %s", name);
         self->_screenNames.erase(i);
         self->_screenCount--;
         if(self->_screenCount == 0) {
             self->_screenNames.push_back(self->_waitingForScreensLabel);
         }
-        NSLog(@"Done removing");
     }
     
     [self updateAvailableScreens];
@@ -108,7 +92,6 @@ typedef std::vector<std::string> CFXScreenNames;
            withEvent:(UIEvent *)event
 {
 
-    NSLog(@"TBEGAN");
     UITouch *touched = [[event allTouches] anyObject];
     CGPoint location = [touched locationInView:touched.view];
     CFXPoint* p = [[CFXPoint alloc] initWith:location.x andWith:location.y];
@@ -119,7 +102,6 @@ typedef std::vector<std::string> CFXScreenNames;
 - (void)touchesMoved:(NSSet *)touches
            withEvent:(UIEvent *)event
 {
-    NSLog(@"TMOVED");
     UITouch *touched = [[event allTouches] anyObject];
     CGPoint location = [touched locationInView:touched.view];
     CFXPoint* p = [[CFXPoint alloc] initWith:location.x andWith:location.y];
@@ -130,7 +112,6 @@ typedef std::vector<std::string> CFXScreenNames;
 - (void)touchesEnded:(NSSet *)touches
            withEvent:(UIEvent *)event
 {
-    NSLog(@"TENDED");
     for (UITouch *aTouch in touches) {
         if (aTouch.tapCount >= 2) {
             [self->_synergy doubleClick: kCFXRight];
@@ -152,10 +133,8 @@ typedef std::vector<std::string> CFXScreenNames;
 
 - (void)updateAvailableScreens
 {
-    NSLog(@"WIll reload components");
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.picker reloadAllComponents];
-        NSLog(@"Reloaded components");
     });
 }
 

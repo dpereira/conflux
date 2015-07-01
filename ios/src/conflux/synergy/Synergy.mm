@@ -51,7 +51,6 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
         self->_clients.clear();
         self->_socket = nil;
         self->_initializationLock = PTHREAD_MUTEX_INITIALIZER;
-        NSLog(@"Upon init, clients map has %lu elements", self->_clients.size());
         return self;
     } else {
         return nil;
@@ -64,16 +63,11 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
     for(CFXClients::iterator i = self->_clients.begin(); i != self->_clients.end(); i++) {
         if(strcmp(screenName, i->second->name) == 0) {
             self._active = i->first;
-            NSLog(@"%s ACTIVATED", screenName);
+            NSLog(@"II SYNERGY ACTIVATE: %s ACTIVATED", screenName);
             break;
         }
     }
     pthread_mutex_unlock(&self->_initializationLock);
-}
-
-- (void)inspect
-{
-    NSLog(@">>> Total elements in clients is %lu", self->_clients.size());
 }
 
 - (void)load:(CFXPoint *)sourceResolution
@@ -235,7 +229,7 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
     }
     
     if(event == kCFXSocketConnected) {
-        NSLog(@"II SYNERGY: got socket connected event");
+        NSLog(@"II SYNERGY RECEIVE: got socket connected event");
         id<CFXSocket> client = (__bridge id<CFXSocket>)data;
         [self _addClient:client];
     }
@@ -267,12 +261,15 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
     ctx->_remoteCursorX = ctx->_remoteCursorY = 1;
     
     pthread_mutex_lock(&self->_initializationLock);
+    
+    // FIXME: this is a hack to avoid
+    // a stray client getting added.
     if(!self._active) {
         self->_clients.clear();
     }
-    NSLog(@"ADDING CLIENT: %lu / %d", self->_clients.size(), [_protocol idTag]);
+    
+    NSLog(@"II SYNERGY ADDCLIENT: %lu / %d", self->_clients.size(), [_protocol idTag]);
     self->_clients[_protocol] = ctx;
-    NSLog(@"CLIENT ADDED: %lu / %d", self->_clients.size(), [_protocol idTag]);
     pthread_mutex_unlock(&self->_initializationLock);
     
     if(!self._active) {
