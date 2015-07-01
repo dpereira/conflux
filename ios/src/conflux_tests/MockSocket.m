@@ -158,6 +158,10 @@
     NSLog(@"Set socket interceptor: with socket fd %d", socket);
 }
 
+-(size_t)peek
+{
+    return self->_rcvd[self->_rcvdCount].bytes;
+}
 
 - (void)disconnect
 {
