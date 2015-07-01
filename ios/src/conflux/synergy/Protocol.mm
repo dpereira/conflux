@@ -9,16 +9,44 @@
 #import <sys/socket.h>
 #import <arpa/inet.h>
 #import <synergy/key_types.h>
+#import <pthread.h>
+#import <map>
+#import <string>
 
 @interface  CFXProtocol()
+
+-(bool)_loaded;
+
+-(bool)_timerLoaded;
+
+- (void) unloadTimer; // interrupts CALV timer.
+
 @end
 
+static int globalInstanceCounter = 0;
+
+static void* _timerLoop(void* p)
+{
+    CFXProtocol* protocol = (__bridge CFXProtocol*)p;
+    
+    while([protocol _loaded] && [protocol _timerLoaded]) {
+        [protocol calv];
+        sleep(2);
+    }
+    
+    NSLog(@"II TIMERLOOP: exiting.");
+    
+    return NULL;
+}
 
 @implementation CFXProtocol
 {
     id<CFXSocket> _socket;
     id<CFXProtocolListener>  _listener;
     KeyMapper* _mapper;
+    int _state, _id;
+    bool _loaded;
+    pthread_t* _timerThread;
 }
 
 
@@ -31,8 +59,11 @@
         self->_socket = socket;
         self->_listener = listener;
         self->_mapper = [[KeyMapper alloc] init];
+        self->_id = globalInstanceCounter++;
         
         [socket open];
+        
+        self->_loaded = true;
         
         return self;
     } else {
@@ -43,10 +74,56 @@
 - (void)unload
 {
     [self->_socket disconnect];
+    [self unloadTimer];
+    self->_loaded = false;
 }
 
+// Convenience method used to disable
+// timer in situations where we don't want
+// it to run, such as unit testing.
+- (void)unloadTimer
+{
+    if(self->_timerThread) {
+        pthread_t timerThread = *self->_timerThread;
+        free(self->_timerThread);
+        self->_timerThread = NULL;
+        pthread_join(timerThread, NULL);
+    }
+}
+
+- (bool)_timerLoaded
+{
+    return self->_timerThread != NULL;
+}
+
+- (bool)_loaded
+{
+    return self->_loaded;
+}
+
+- (int)idTag
+{
+    return self->_id;
+}
+
+- (void)runTimer
+{
+    pthread_t thread;
+    pthread_attr_t attributes;
+    
+    if(pthread_attr_init(&attributes) != 0) {
+        NSLog(@"EE Failed to initalize thread attributes");
+    }
+    
+    pthread_create(&thread, &attributes, &_timerLoop, (__bridge void*)self);
+    self->_timerThread = (pthread_t*)malloc(sizeof(thread));
+    memcpy(self->_timerThread, &thread, sizeof(thread));
+}
+
+
+
 -(void)hail {
-    NSLog(@"PROTOCOL: SENDING HAIL");
+    NSLog(@"(%d) PROTOCOL: SENDING HAIL", self->_id);
     UInt8 hail[] = {0x53, 0x79, 0x6e, 0x65, 0x72, 0x67, 0x79, 0x00, 0x01, 0x00, 0x05};
     [self _writeRaw:hail bytes:sizeof(hail)];
 }
@@ -135,7 +212,7 @@
 }
 
 -(void)_writeSimple:(const char *)payload {
-    NSLog(@"-> %s", payload);
+    NSLog(@"(%d) -> %s", self->_id, payload);
     [self _writeRaw:(const UInt8 *)payload bytes:(int)strlen(payload)];
 }
 
@@ -164,37 +241,28 @@
 }
 
 - (CFXCommand) _classify:(UInt8*) cmd {
-    // Always make this match the CFXCommand
-    // enum or this method will stop working properly.
-    const char* commandIds[] = {
-        "NONE",
-        "HAIL",
-        "CNOP",
-        "QINF",
-        "DINF",
-        "CALV",
-        "CIAK",
-        "DSOP",
-        "CROP",
-        "CINN",
-        "DMOV",
-        "DMDN",
-        "DMUP"
+    typedef const std::map<const std::string, CFXCommand> CFXCommandMap;
+    static CFXCommandMap commandIds = {
+        {"NONE", NONE}, {"HAIL", HAIL}, {"CNOP", CNOP}, {"QINF", QINF},
+        {"DINF", DINF}, {"CALV", CALV}, {"CIAK", CIAK}, {"DSOP", DSOP},
+        {"CROP", CROP}, {"CINN", CINN}, {"DMOV", DMOV}, {"DMDN", DMDN},
+        {"DMUP", DMUP}
     };
     
     char identifier[5]; identifier[4] = 0;
     strncpy(identifier, (const char*)cmd, 4);
     
-    for(int i = 0; i < sizeof(commandIds) / sizeof(char*); i++) {
-        if(strcmp(identifier, commandIds[i]) == 0) {
-            NSLog(@"<- %s", identifier);
-            return (CFXCommand)i;
-        } else if(strcmp(identifier, "Syne"/*rgy*/) == 0) { // cheating
-            return HAIL;
-        }
-    }
+    CFXCommandMap::const_iterator i = commandIds.find(identifier);
     
-    NSLog(@"!! unable to classify: %s", identifier);
+    if(i != commandIds.end()) {
+        NSLog(@"(%d) <- %s", self->_id, identifier);
+        return i->second;
+    } else if(strcmp(identifier, "Syne"/*rgy*/) == 0) { // cheating
+        NSLog(@"(%d) <- HAIL", self->_id);
+        return HAIL;
+    }
+
+    NSLog(@"!! (%d) unable to classify: %s", self->_id, identifier);
     
     return NONE;
 }
@@ -203,17 +271,26 @@
             ofType:(CFXCommand)type
              bytes:(size_t)length
 {
-    [self->_listener receive:cmd ofType:type withLength: length];
+    [self->_listener receive:cmd ofType:type withLength: length from:self];
 }
 
 - (void)receive:(CFXSocketEvent)event
      fromSender:(id<CFXSocket>)socket
     withPayload:(void *)data
 {
-    size_t howMany = [self peek];
-    UInt8 cmd[howMany < SYNERGY_PKTLEN_MAX ? howMany : SYNERGY_PKTLEN_MAX];
-    CFXCommand type = [self waitCommand:cmd bytes:howMany];
-    [self processCmd:cmd ofType:type bytes:howMany];
+    if(event == kCFXSocketReceivedData) {
+        size_t howMany = [self peek];
+        UInt8 cmd[howMany < SYNERGY_PKTLEN_MAX ? howMany : SYNERGY_PKTLEN_MAX];
+        CFXCommand type = [self waitCommand:cmd bytes:howMany];
+        [self processCmd:cmd ofType:type bytes:howMany];
+    } else if(kCFXSocketDisconnected){
+        [self unloadTimer];
+        self->_loaded = false;
+        
+        if(self->_listener) {
+            [self->_listener receive:NULL ofType:TERM withLength:0 from:self];
+        }
+    }
 }
 
 @end

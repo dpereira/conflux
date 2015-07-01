@@ -7,6 +7,18 @@
 #import "Protocol.h"
 #import "Socket.h"
 
+typedef enum {
+    kCFXSynergyNewScreen,
+    kCFXSynergyScreenLost
+} CFXSynergyEvent;
+
+@protocol CFXSynergyListener <NSObject>
+
+- (void)receive:(CFXSynergyEvent)event
+           with:(const void*)payload;
+
+@end
+
 @interface CFXSynergy: NSObject <CFXProtocolListener, CFXSocketListener>
 
 - (void) load:(CFXPoint*)sourceResolution;
@@ -15,8 +27,6 @@
          with:(id<CFXSocket>)socket;
 
 - (void) unload;
-
-- (void) unloadTimer; // interrupts CALV timer.
 
 - (void) keyStroke:(UInt16)key;
 
@@ -30,7 +40,11 @@
 
 - (void) changeOrientation;
 
-- (void) disableCalvTimer; // avoids CALV timer altogether.
+- (void) disableCalvTimer; // avoids CALV timer loading altogether (for ALL clients).
+
+- (void) registerListener:(id<CFXSynergyListener>)listener;
+
+- (void) activate:(const char*)screenName;
 
 @end
 

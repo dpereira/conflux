@@ -15,6 +15,7 @@
 #import <pthread.h>
 #import <errno.h>
 #import <string.h>
+#import <fcntl.h>
 
 @interface CFXFoundationSocket()
 
@@ -23,6 +24,8 @@
 -(void)_handleConnect:(int)clientSocket;
 
 -(void)_handleReadStream;
+
+-(bool)_hasBytesAvailable;
 
 @end
 
@@ -50,23 +53,23 @@ static void* _posixHandleConnect(void *args) {
     int yes = 1;
     
     if(setsockopt(s, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) < 0) {
-        NSLog(@"FAILED TO SET SOCKET OPTIONS -> ERROR WAS %s", strerror(errno));
+        NSLog(@"EE SYNERGY FAILED TO SET SOCKET OPTIONS -> ERROR WAS %s", strerror(errno));
     }
     
     [(__bridge CFXFoundationSocket*)params->confluxSocket setSocket:s];
     
     if(s <= 0) {
-        NSLog(@"FAILED TO CREATE SOCKET -> ERROR WAS: %s", strerror(errno));
+        NSLog(@"EE SYNERGY FAILED TO CREATE SOCKET -> ERROR WAS: %s", strerror(errno));
         return NULL;
     }
     
     if(bind(s, (struct sockaddr*)&sin, sizeof(sin)) < 0) {
-        NSLog(@"FAILED TO BIND SOCKET -> ERROR WAS: %s", strerror(errno));
+        NSLog(@"EE SYNERGY FAILED TO BIND SOCKET -> ERROR WAS: %s", strerror(errno));
         return NULL;
     }
     
     if(listen(s, 10) < 0) {
-        NSLog(@"FAILED TO LISTEN -> ERROR WAS: %s", strerror(errno));
+        NSLog(@"EE SYNERGY FAILED TO LISTEN -> ERROR WAS: %s", strerror(errno));
         return NULL;
     }
     
@@ -76,8 +79,8 @@ static void* _posixHandleConnect(void *args) {
     while((clientSocket = accept(s, (sockaddr*)&clientAddress, &addressLength)) > 0) {
         [(__bridge CFXFoundationSocket*)params->confluxSocket _handleConnect:clientSocket];
     }
-    NSLog(@"THREAD HAS BEEN EXITED: %d", clientSocket);
-    NSLog(@"ERROR WAS: %s", strerror(errno));
+
+    NSLog(@"II SYNERGY Listening thread has exited with: %s", strerror(errno));
     return NULL;
 }
 
@@ -86,27 +89,36 @@ static void* _posixHandleReadStream(void* args) {
     int socket = params->socket;
     
     fd_set nothing, socketSet, errorSet;
+    
+    int result = 0;
+
     FD_ZERO(&nothing);
     FD_SET(socket, &socketSet);
     FD_SET(socket, &errorSet);
-    
-    int result = 0;
-    
+
     while((result = select(socket + 1, &socketSet, &nothing, &errorSet, NULL)) > 0) {
-        [(__bridge CFXFoundationSocket*)params->confluxSocket _handleReadStream];
+        if(FD_ISSET(socket, &socketSet)) {
+            CFXFoundationSocket* confluxSocket = (__bridge CFXFoundationSocket*)params->confluxSocket;
+            if([confluxSocket _hasBytesAvailable]) {
+                [confluxSocket _handleReadStream];
+            } else {
+                [confluxSocket disconnect];
+                break;
+            }
+        } else if(FD_ISSET(socket, &errorSet)) {
+            break;
+        }
+        
+        // reinitialize fd_sets
+        FD_ZERO(&nothing);
+        FD_SET(socket, &socketSet);
+        FD_SET(socket, &errorSet);
     }
     
-    NSLog(@"READ LOOP COMPROMISED: exiting with %d", result);
+    NSLog(@"WW Read loop compromised; exiting with %d", result);
     
     return NULL;
 }
-
-static void _handleReadStream(CFReadStreamRef readStream, CFStreamEventType eventType, void *ctx)
-{
-    CFXFoundationSocket* socket = (__bridge CFXFoundationSocket*)ctx;
-    [socket _handleReadStream];
-}
-
 
 @implementation CFXFoundationSocket {
 
@@ -150,7 +162,7 @@ id<CFXSocketListener> _listener;
     self->_listener = listener;
 }
 
-- (void)posixOpen
+- (void)open
 {
     CFXReadParameters *params = (CFXReadParameters*)malloc(sizeof(CFXReadParameters));
     params->socket = self->_clientSocket;
@@ -159,18 +171,13 @@ id<CFXSocketListener> _listener;
     pthread_attr_t attributes;
     
     if(pthread_attr_init(&attributes) != 0) {
-        NSLog(@"Failed to initalize thread attributes");
+        NSLog(@"EE SYNERGY OPEN: Failed to initalize thread attributes");
     }
     
     pthread_create(&thread, &attributes, &_posixHandleReadStream, params);
 }
 
-- (void)open
-{
-    [self posixOpen];
-}
-
-- (void)posixListen:(uint16_t)port
+- (void)listen:(uint16_t)port
 {
     CFXConnectionParameters *params = (CFXConnectionParameters*)malloc(sizeof(CFXConnectionParameters));
     params->port = port;
@@ -179,51 +186,53 @@ id<CFXSocketListener> _listener;
     pthread_attr_t attributes;
     
     if(pthread_attr_init(&attributes) != 0) {
-        NSLog(@"Failed to initalize thread attributes");
+        NSLog(@"EE SYNERGY LISTEN: Failed to initalize thread attributes");
     }
     
     pthread_create(&thread, &attributes, &_posixHandleConnect, params);
 }
 
-- (void)listen:(UInt16)port
-{
-    [self posixListen:port];
-}
-
 - (size_t)send:(const UInt8 *)buffer bytes:(size_t)howMany
 {
+    //NSLog(@"X DD: socket %d getting %lu bytes sent to", self->_clientSocket, howMany);
     return send(self->_clientSocket, buffer, howMany, 0);
 }
 
 -(size_t)recv:(UInt8 *)buffer bytes:(size_t)howMany
 {
+    //NSLog(@"X DD: socket %d getting %lu bytes received from", self->_clientSocket, howMany);
     return recv(self->_clientSocket, buffer, howMany, 0);
+}
+
+-(size_t)peek
+{
+    UInt8 buffer[1];
+    return recv(self->_clientSocket, buffer, sizeof(buffer), MSG_PEEK);
 }
 
 - (void)disconnect
 {
+    [self->_listener receive:kCFXSocketDisconnected fromSender:self withPayload:NULL];
+    
     self->_disconnecting = YES;
     
     if(self->_clientSocket) {
         close(self->_clientSocket);
         self->_clientSocket = 0;
-        NSLog(@"Client socket disconnected");
+        NSLog(@"II SYNERGY DISCONNECT: Client socket disconnected");
     }
     
     if(self->_serverSocket) {
         close(self->_serverSocket);
         self->_serverSocket = 0;
-        NSLog(@"Server socket disconnected");
+        NSLog(@"II SYNERGY DISCONNECT: Server socket disconnected");
     }
 }
 
-- (void)_scheduleReadStreamRead:(CFReadStreamRef)readStream
+- (bool)_hasBytesAvailable
 {
-    CFStreamClientContext ctx = {0, (__bridge void*)self, NULL, NULL, NULL};
-    CFReadStreamSetClient(readStream, kCFStreamEventHasBytesAvailable, _handleReadStream, &ctx);
-    CFReadStreamScheduleWithRunLoop(readStream, CFRunLoopGetCurrent(), kCFRunLoopCommonModes);
+    return [self peek] > 0;
 }
-
 
 - (void)_handleConnect:(int)clientSocket
 {

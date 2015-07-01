@@ -86,7 +86,7 @@
 - (CFXParameters*)popSent
 {
     if(self->_poppedCount >= self->_sentCount) {
-        return NULL;
+        return nil;
     }
     CFXParameters* popped = &self->_sent[self->_poppedCount];
     self->_poppedCount += 1;
@@ -158,6 +158,10 @@
     NSLog(@"Set socket interceptor: with socket fd %d", socket);
 }
 
+-(size_t)peek
+{
+    return self->_rcvd[self->_rcvdCount].bytes;
+}
 
 - (void)disconnect
 {

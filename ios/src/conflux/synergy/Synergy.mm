@@ -1,3 +1,4 @@
+#import <map>
 #import <sys/socket.h>
 #import <unistd.h>
 #import <netinet/in.h>
@@ -7,12 +8,22 @@
 #import "Protocol.h"
 #import "Mouse.h"
 
+typedef struct {
+    int _state;
+    int _targetWidth, _targetHeight;
+    int _remoteCursorX, _remoteCursorY;
+    int _currentCursorX, _currentCursorY;
+    int _dmmvSeq, _dmmvFilter;
+    double _xProjection, _yProjection;
+    char name[256];
+} CFXClientContext;
 
 @interface CFXSynergy()
 
-@property CFXProtocol* _protocol;
-
-@property int _state;
+/**
+ Holds the currently active client.
+ */
+@property CFXProtocol* _active;
 
 - (void)_addClient:(id<CFXSocket>)clientSocket;
 
@@ -20,50 +31,48 @@
 
 - (bool)_loaded;
 
-- (bool)_timerLoaded;
-
 @end
 
-static void* _timerLoop(void* s)
-{
-    CFXSynergy* synergy = (__bridge CFXSynergy*)s;
-    
-    while(synergy._protocol != nil && [synergy _loaded] && [synergy _timerLoaded]) {
-        [synergy._protocol calv];
-        sleep(2);
-    }
-    
-    NSLog(@"II TIMERLOOP: exiting.");
-    
-    return NULL;
-}
+typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
 
 @implementation CFXSynergy
 {
-    int _sourceWidth, _sourceHeight;
-    int _targetWidth, _targetHeight;
-    int _remoteCursorX, _remoteCursorY;
-    int _currentCursorX, _currentCursorY;
-    int _dmmvSeq, _dmmvFilter;
-    double _xProjection, _yProjection;
-    BOOL _loaded, _noTimer;
-    pthread_t* _timerThread;
-    
+    CFXClients _clients;
+    pthread_mutex_t _initializationLock;
     id<CFXSocket> _socket;
+    id<CFXSynergyListener> _listener;
+    int _sourceWidth, _sourceHeight;
+    BOOL _loaded, _noTimer;
 }
 
 - (id)init
 {
     if(self = [super init]) {
+        self->_clients.clear();
         self->_socket = nil;
+        self->_initializationLock = PTHREAD_MUTEX_INITIALIZER;
         return self;
     } else {
         return nil;
     }
 }
 
+- (void)activate:(const char *)screenName
+{
+    pthread_mutex_lock(&self->_initializationLock);
+    for(CFXClients::iterator i = self->_clients.begin(); i != self->_clients.end(); i++) {
+        if(strcmp(screenName, i->second->name) == 0) {
+            self._active = i->first;
+            NSLog(@"II SYNERGY ACTIVATE: %s ACTIVATED", screenName);
+            break;
+        }
+    }
+    pthread_mutex_unlock(&self->_initializationLock);
+}
+
 - (void)load:(CFXPoint *)sourceResolution
 {
+    NSLog(@"II SYNERGY LOAD: upon loading, clients map has %lu elements", self->_clients.size());
     [self load:sourceResolution
           with:[[CFXFoundationSocket alloc] init]];
 }
@@ -72,13 +81,8 @@ static void* _timerLoop(void* s)
         with:(id<CFXSocket>)socket
 
 {
-    self->_dmmvFilter = 1;
     self->_sourceWidth = sourceResolution.x;
     self->_sourceHeight = sourceResolution.y;
-    self->_targetWidth = 1280;
-    self->_targetHeight = 800;
-    self->_remoteCursorX = self->_remoteCursorY = 1;
-    [self _updateProjection];
     
     self->_socket = socket;
     [self _setupSocket:self->_socket];
@@ -86,47 +90,34 @@ static void* _timerLoop(void* s)
     self->_loaded = YES;
     
     NSLog(@"II SYNERGY LOAD: initialized source res with: %d, %d", self->_sourceWidth, self->_sourceHeight);
+    NSLog(@"II SYNERGY LOAD: after init, clients map has %lu elements", self->_clients.size());
 }
 
 - (void)finalize
 {
     [self unload];
+    pthread_mutex_destroy(&self->_initializationLock);
 }
 
 - (void)unload
 {
     if(self->_loaded) {
-        [self unloadTimer];
+
         self->_loaded = NO;
-        [self._protocol unload];
+        for(std::map<CFXProtocol*, CFXClientContext*>::iterator i = self->_clients.begin(); i != self->_clients.end(); i++) {
+            [i->first unload];
+            free(i->second);
+        }
         [self->_socket disconnect];        
-        self._protocol = nil;
+        self._active = nil;
         self->_socket = nil;
 
-    }
-}
-
-// Convenience method used to disable
-// timer in situations where we don't want
-// it to run, such as unit testing.
-- (void)unloadTimer
-{
-    if(self->_timerThread) {
-        pthread_t timerThread = *self->_timerThread;
-        free(self->_timerThread);
-        self->_timerThread = NULL;
-        pthread_join(timerThread, NULL);
     }
 }
 
 - (void) disableCalvTimer
 {
     self->_noTimer = true;
-}
-
-- (bool)_timerLoaded
-{
-    return self->_timerThread != NULL;
 }
 
 - (bool)_loaded
@@ -136,8 +127,10 @@ static void* _timerLoop(void* s)
 
 - (void)changeOrientation
 {
-    if(self->_loaded) {
-        NSLog(@"II SYNERGY CHANGEORIENTATION %f, %f", self->_xProjection, self->_yProjection);
+    CFXClientContext* ctx = [self _getActiveCtx];
+    
+    if(self->_loaded && ctx) {
+        NSLog(@"II SYNERGY CHANGEORIENTATION %f, %f", ctx->_xProjection, ctx->_yProjection);
         double tmp = self->_sourceWidth;
         self->_sourceWidth = self->_sourceHeight;
         self->_sourceHeight = tmp;
@@ -150,8 +143,8 @@ static void* _timerLoop(void* s)
     if(!self->_loaded) {
         return;
     }
-    [self._protocol dkdn: character];
-    [self._protocol dkup: character];
+    [self._active dkdn: character];
+    [self._active dkup: character];
 }
 
 - (void)click:(CFXMouseButton)whichButton
@@ -159,8 +152,8 @@ static void* _timerLoop(void* s)
     if(!self->_loaded) {
         return;
     }
-    [self._protocol dmdn: whichButton];
-    [self._protocol dmup: whichButton];
+    [self._active dmdn: whichButton];
+    [self._active dmup: whichButton];
 }
 
 - (void)doubleClick:(CFXMouseButton)whichButton
@@ -177,8 +170,10 @@ static void* _timerLoop(void* s)
     if(!self->_loaded) {
         return;
     }
-    self->_currentCursorX = coordinates.x;
-    self->_currentCursorY = coordinates.y;
+    
+    CFXClientContext* ctx = [self _getActiveCtx];
+    ctx->_currentCursorX = coordinates.x;
+    ctx->_currentCursorY = coordinates.y;
 }
 
 - (void)mouseMove:(CFXPoint*)coordinates
@@ -187,39 +182,42 @@ static void* _timerLoop(void* s)
         return;
     }
     
-    if(self->_dmmvSeq++ % self->_dmmvFilter) {
+    CFXClientContext* ctx = [self _getActiveCtx];
+    
+    if(ctx->_dmmvSeq++ % ctx->_dmmvFilter) {
         // this is done to avoid flooding client.
         return;
     }
-    double projectedDeltaX = (coordinates.x - self->_currentCursorX) * self->_xProjection;
-    double projectedDeltaY = (coordinates.y - self->_currentCursorY) * self->_yProjection;
-    double projectedX = self->_remoteCursorX + projectedDeltaX;
-    double projectedY =self->_remoteCursorY + projectedDeltaY;
+    double projectedDeltaX = (coordinates.x - ctx->_currentCursorX) * ctx->_xProjection;
+    double projectedDeltaY = (coordinates.y - ctx->_currentCursorY) * ctx->_yProjection;
+    double projectedX = ctx->_remoteCursorX + projectedDeltaX;
+    double projectedY = ctx->_remoteCursorY + projectedDeltaY;
     
     
     CFXPoint* projected = [[CFXPoint alloc] initWith:projectedX > 0 ? projectedX : 0
                                              andWith:projectedY > 0 ? projectedY : 0];
     
     NSLog(@"II SYNERGY MOUSEMOVE: (%f, %f) rc(%d, %d) pj(%d, %d)", projectedDeltaX, projectedDeltaY,
-          self->_remoteCursorX, self->_remoteCursorY, projected.x, projected.y);
+          ctx->_remoteCursorX, ctx->_remoteCursorY, projected.x, projected.y);
     
-    [self._protocol dmov: projected];
+    [self._active dmov: projected];
     
-    self->_remoteCursorX = projected.x;
-    self->_remoteCursorY = projected.y;
-    self->_currentCursorX = coordinates.x;
-    self->_currentCursorY = coordinates.y;
+    ctx->_remoteCursorX = projected.x;
+    ctx->_remoteCursorY = projected.y;
+    ctx->_currentCursorX = coordinates.x;
+    ctx->_currentCursorY = coordinates.y;
 }
 
 - (void)receive:(UInt8*)cmd
          ofType:(CFXCommand)type
      withLength:(size_t)length
+     from:(CFXProtocol *)sender
 {
     if(!self->_loaded) {
         return;
     }
     
-    [self _processPacket:cmd ofType:type bytes:length];
+    [self _processPacket:cmd ofType:type bytes:length from:sender];
 }
 
 - (void)receive:(CFXSocketEvent)event
@@ -231,71 +229,147 @@ static void* _timerLoop(void* s)
     }
     
     if(event == kCFXSocketConnected) {
-        NSLog(@"II SYNERGY: got socket connected event");
+        NSLog(@"II SYNERGY RECEIVE: got socket connected event");
         id<CFXSocket> client = (__bridge id<CFXSocket>)data;
         [self _addClient:client];
     }
 }
 
+- (CFXClientContext*)getActiveContext
+{
+    return [self _getActiveCtx];
+}
+
 - (void)_updateProjection
 {
-    self->_xProjection = (double)self->_targetWidth / (double)self->_sourceWidth;
-    self->_yProjection = (double)self->_targetHeight / (double)self->_sourceHeight;
+    CFXClientContext* ctx = [self _getActiveCtx];
+    ctx->_xProjection = (double)ctx->_targetWidth / (double)self->_sourceWidth;
+    ctx->_yProjection = (double)ctx->_targetHeight / (double)self->_sourceHeight;
 }
 
 - (void)_addClient:(id<CFXSocket>)clientSocket
 {
-    if(self._protocol != nil) {
-        [self._protocol unload];
+    
+    CFXProtocol* _protocol = [[CFXProtocol alloc] initWithSocket: clientSocket
+                                                     andListener: self];
+    
+    CFXClientContext* ctx = (CFXClientContext*)malloc(sizeof(CFXClientContext));
+    ctx->_state = 0;
+    ctx->_dmmvFilter = 1;
+    ctx->_targetWidth = 1280;
+    ctx->_targetHeight = 800;
+    ctx->_remoteCursorX = ctx->_remoteCursorY = 1;
+    
+    pthread_mutex_lock(&self->_initializationLock);
+    
+    // FIXME: this is a hack to avoid
+    // a stray client getting added.
+    if(!self._active) {
+        self->_clients.clear();
     }
     
-    self._state = 0;
+    NSLog(@"II SYNERGY ADDCLIENT: %lu / %d", self->_clients.size(), [_protocol idTag]);
+    self->_clients[_protocol] = ctx;
+    pthread_mutex_unlock(&self->_initializationLock);
     
-    self._protocol = [[CFXProtocol alloc] initWithSocket: clientSocket
-                                             andListener: self];
+    if(!self._active) {
+        self._active = _protocol;
+        [self _updateProjection];
+    }
     
-    [self._protocol hail];
+    [_protocol hail];
 }
 
 - (void)_processPacket:(UInt8*)buffer
                 ofType:(CFXCommand)type
                  bytes:(size_t)numBytes
+                  from:(CFXProtocol*)sender
 {
+    //NSLog(@"(%d) II: SYNERGY PROCESSPACKET: IN", [sender idTag]);
+    CFXClientContext* ctx = self->_clients[sender];
+    
     // process packet data
     switch(type) {
-        case DINF: [self _processDinf: buffer bytes:numBytes]; break;
+        case HAIL: [self _processHailResponse:buffer bytes:numBytes context:ctx]; break;
+        case DINF: [self _processDinf: buffer bytes:numBytes context:ctx]; break;
+        case TERM: {
+            NSLog(@"(%d) TERMINATING", [sender idTag]);
+            pthread_mutex_lock(&self->_initializationLock);
+            std::map<CFXProtocol*, CFXClientContext*>::const_iterator i = self->_clients.find(sender);
+            if(i != self->_clients.end()) {
+                NSLog(@"%lu total clients left. P is %d.", self->_clients.size(), [i->first idTag]);
+                self->_clients.erase(i);
+
+                if(self._active == sender) {
+                    if(self->_clients.size() > 0) {
+                        CFXProtocol* p = self->_clients.begin()->first;
+                        NSLog(@"%lu total clients left. P is %d.", self->_clients.size(), [p idTag]);
+                        self._active = p;
+                        NSLog(@"(%d) ACTIVATED", [self._active idTag]);
+                        CFXClientContext* ctx = [self _getActiveCtxUnsafe];
+                        [self._active cinn: [[CFXPoint alloc] initWith:ctx->_remoteCursorX
+                                                               andWith:ctx->_remoteCursorY]];
+                    } else {
+                        self._active = nil;
+                    }
+                }
+            }
+            pthread_mutex_unlock(&self->_initializationLock);
+            [self->_listener receive:kCFXSynergyScreenLost with:ctx->name];
+            free(ctx);
+            return;
+        }
         default:break;
     }
     
-    NSLog(@"II: SYNERGY PROCESSPACKET: type %u, state %u, nbytes: %lu",type, self._state, numBytes);
+    NSLog(@"(%d) II: SYNERGY PROCESSPACKET: type %u, state %u, nbytes: %lu", [sender idTag], type, ctx->_state, numBytes);
     
     // reply to client
-    switch(self._state) {
+    switch(ctx->_state) {
         case 0:
-            self._state = 1;
+            ctx->_state = 1;
             
-            [self._protocol qinf];
+            [sender qinf];
             break;
         case 1:
-            [self._protocol ciak];
-            [self._protocol crop];
-            [self._protocol dsop];
+            [sender ciak];
+            [sender crop];
+            [sender dsop];
             
-            self._state = 2;
-            [self _runTimer];
-            break;            
-        case 2:
-            [self._protocol cinn: [[CFXPoint alloc] initWith:self->_remoteCursorX
-                                                     andWith:self->_remoteCursorY]];
-            self._state = 3;
-            
+            ctx->_state = 2;
+            if(!self->_noTimer) {
+                [sender runTimer];
+            }
             break;
+        case 2:
+        {
+            [sender cinn: [[CFXPoint alloc] initWith:ctx->_remoteCursorX
+                                                   andWith:ctx->_remoteCursorY]];
+            ctx->_state = 3;
+            break;
+        }
         default: break;
+    }
+    
+    //NSLog(@"(%d) II: SYNERGY PROCESSPACKET: OUT", [sender idTag]);
+}
+
+- (void)_processHailResponse:(UInt8 *)buffer
+                       bytes:(size_t)numBytes
+                     context:(CFXClientContext*)ctx
+{
+    NSLog(@"Received hail response: %lu bytes", numBytes);
+    memset(ctx->name, 0, sizeof(ctx->name));
+    strncpy(ctx->name, (const char*)buffer + 15, numBytes - 15);
+    
+    if(self->_listener) {
+        [self->_listener receive:kCFXSynergyNewScreen with:ctx->name];
     }
 }
 
 - (void)_processDinf:(UInt8 *)buffer
                 bytes:(size_t)numBytes
+             context:(CFXClientContext*)ctx
 {
     if(numBytes < 18) {
         NSLog(@"EE DINF response expected at least 18 bytes. Got %zu. Skipping packet.", numBytes);
@@ -309,10 +383,15 @@ static void* _timerLoop(void* s)
     UInt16 remoteCursorY = (buffer[16] << 8) + buffer[17];
     NSLog(@"!! Info received: tX: %d, tY: %d, cX: %d, cy: %d",
            targetWidth, targetHeight, remoteCursorX, remoteCursorY);
-    self->_targetWidth = targetWidth;
-    self->_targetHeight = targetHeight;
-    self->_remoteCursorX = remoteCursorX;
-    self->_remoteCursorY = remoteCursorY;
+    ctx->_targetWidth = targetWidth;
+    ctx->_targetHeight = targetHeight;
+    ctx->_remoteCursorX = remoteCursorX;
+    ctx->_remoteCursorY = remoteCursorY;
+}
+
+- (void)registerListener:(id<CFXSynergyListener>)listener
+{
+    self->_listener = listener;
 }
 
 - (void)_setupSocket:(id<CFXSocket>)socket
@@ -321,29 +400,16 @@ static void* _timerLoop(void* s)
     [socket listen:24800];
 }
 
-- (void)_keepAlive:(NSTimer*)timer
+-(CFXClientContext*)_getActiveCtxUnsafe
 {
-    if(self._protocol != nil) {
-        [self._protocol calv];
-    }
+    return self->_clients[self._active];
 }
 
-- (void)_runTimer
+-(CFXClientContext*)_getActiveCtx
 {
-    if(self->_noTimer) {
-        return;
-    }
-    
-    pthread_t thread;
-    pthread_attr_t attributes;
-    
-    if(pthread_attr_init(&attributes) != 0) {
-        NSLog(@"EE Failed to initalize thread attributes");
-    }
-    
-    pthread_create(&thread, &attributes, &_timerLoop, (__bridge void*)self);
-    self->_timerThread = (pthread_t*)malloc(sizeof(thread));
-    memcpy(self->_timerThread, &thread, sizeof(thread));
+    pthread_mutex_lock(&self->_initializationLock);
+    CFXClientContext* ctx = [self _getActiveCtxUnsafe];
+    pthread_mutex_unlock(&self->_initializationLock);
+    return ctx;
 }
-
 @end

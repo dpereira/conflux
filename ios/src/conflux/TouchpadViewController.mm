@@ -1,11 +1,92 @@
 #import "TouchpadViewController.h"
 #import "AppDelegate.h"
+#import <vector>
+#import <string>
+#import <algorithm>
 
 @interface TouchpadViewController ()
 
 @end
 
-@implementation TouchpadViewController
+typedef std::vector<std::string> CFXScreenNames;
+
+@implementation TouchpadViewController {
+    CFXScreenNames _screenNames;
+    CFXSynergy* _synergy;
+    int _screenCount;
+    std::string _waitingForScreensLabel;
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    AppDelegate* app = [[UIApplication sharedApplication] delegate];
+    self->_synergy = app._synergy;
+    
+    self.picker.delegate = self;
+    self.picker.dataSource = self;
+    
+    [self->_synergy registerListener:self];
+}
+
+- (void)resetScreens
+{
+    self->_screenCount = 0;
+    self->_screenNames.clear();
+    self->_screenNames.push_back(self->_waitingForScreensLabel);
+    [self updateAvailableScreens];
+}
+
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
+{
+    return 1;
+}
+
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
+{
+    return self->_screenNames.size();
+}
+
+- (NSString*)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
+{
+    return [NSString stringWithFormat:@"%s", self->_screenNames[row].c_str()];
+}
+
+- (void)pickerView:(UIPickerView *)pickerView
+      didSelectRow:(NSInteger)row
+       inComponent:(NSInteger)component
+{
+    [self->_synergy activate:self->_screenNames[row].c_str()];
+}
+
+- (void)addScreen:(const char*)name
+{
+    if(self->_screenCount == 0) {
+        self->_screenNames[0] = std::string(name);
+    } else {
+        self->_screenNames.push_back(std::string(name));
+    }
+
+    [self updateAvailableScreens];
+    
+    self->_screenCount++;
+}
+
+- (void)removeScreen:(const char *)name
+{
+    CFXScreenNames::const_iterator i = std::find(self->_screenNames.begin(), self->_screenNames.end(), name);
+    
+    if(i != self->_screenNames.end()) {
+        self->_screenNames.erase(i);
+        self->_screenCount--;
+        if(self->_screenCount == 0) {
+            self->_screenNames.push_back(self->_waitingForScreensLabel);
+        }
+    }
+    
+    [self updateAvailableScreens];
+}
 
 - (void)touchesBegan:(NSSet *)touches
            withEvent:(UIEvent *)event
@@ -15,8 +96,7 @@
     CGPoint location = [touched locationInView:touched.view];
     CFXPoint* p = [[CFXPoint alloc] initWith:location.x andWith:location.y];
     
-    AppDelegate* app = [[UIApplication sharedApplication] delegate];
-    [app._synergy beginMouseMove: p];
+    [self->_synergy beginMouseMove: p];
 }
 
 - (void)touchesMoved:(NSSet *)touches
@@ -25,23 +105,37 @@
     UITouch *touched = [[event allTouches] anyObject];
     CGPoint location = [touched locationInView:touched.view];
     CFXPoint* p = [[CFXPoint alloc] initWith:location.x andWith:location.y];
-    AppDelegate* app = [[UIApplication sharedApplication] delegate];
-    [app._synergy mouseMove: p];
+    
+    [self->_synergy mouseMove: p];
 }
 
 - (void)touchesEnded:(NSSet *)touches
            withEvent:(UIEvent *)event
 {
-    AppDelegate* app = [[UIApplication sharedApplication] delegate];
-    
     for (UITouch *aTouch in touches) {
         if (aTouch.tapCount >= 2) {
-            [app._synergy doubleClick: kCFXRight];
+            [self->_synergy doubleClick: kCFXRight];
         } else if(aTouch.tapCount == 1) {
-            [app._synergy click: kCFXRight];
+            [self->_synergy click: kCFXRight];
         }
     }
 }
 
+- (void)receive:(CFXSynergyEvent)event
+           with:(const void *)payload
+{
+    if(event == kCFXSynergyNewScreen) {
+        [self addScreen:(const char*)payload];
+    } else if(event == kCFXSynergyScreenLost) {
+        [self removeScreen:(const char*)payload];
+    }
+}
+
+- (void)updateAvailableScreens
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.picker reloadAllComponents];
+    });
+}
 
 @end

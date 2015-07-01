@@ -23,16 +23,11 @@ typedef enum
     CINN,
     DMOV,
     DMDN,
-    DMUP
+    DMUP,
+    TERM
 } CFXCommand;
 
-@protocol CFXProtocolListener <NSObject>
-
-- (void)receive:(UInt8*)cmd
-         ofType:(CFXCommand)type
-     withLength:(size_t)length;
-
-@end
+@protocol CFXProtocolListener;
 
 @interface CFXProtocol: NSObject <CFXSocketListener>
 
@@ -40,6 +35,10 @@ typedef enum
         andListener:(id<CFXProtocolListener>)listener;
 
 - (void)unload;
+
+- (int)idTag;
+
+- (void)runTimer;
 
 - (void)hail; // not a cmd per se, but a handshake sequence
 
@@ -74,6 +73,14 @@ typedef enum
             ofType:(CFXCommand)type
              bytes:(size_t)toSend;
 
+@end
+
+@protocol CFXProtocolListener <NSObject>
+
+- (void)receive:(UInt8*)cmd
+         ofType:(CFXCommand)type
+     withLength:(size_t)length
+     from:(CFXProtocol*)sender;
 @end
 
 #endif

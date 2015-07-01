@@ -92,6 +92,53 @@ extern "C" {
     [self _assertCommandIn:[clientSocket popSent] is:"CINN"];
 }
 
+/**
+ Tests whether synergy instances accept multiple
+ client connections concurrently.
+ */
+- (void)testMultipleConnections
+{
+    CFXMockSocket* clientSocket1 = [[CFXMockSocket alloc] init];
+    UInt8 hailResponse[] = {
+        0x53, 0x79, 0x6e, 0x65, 0x72, 0x67, 0x79, 0x00,
+        0x01, 0x00, 0x05, 0x00, 0x00, 0x00, 0x08, 0x75,
+        0x6e, 0x69, 0x74, 0x5f, 0x64, 0x65, 0x65
+    };
+    UInt8 dataResponse[] = {
+        0x44, 0x49, 0x4e, 0x46, 0x00, 0x00, 0x00, 0x00,
+        0x05, 0x50, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00
+    };
+    
+    [self _record:hailResponse with:sizeof(hailResponse) in:clientSocket1];
+    [self _record:dataResponse with:sizeof(dataResponse) in:clientSocket1];
+    
+    CFXMockSocket* clientSocket2 = [[CFXMockSocket alloc] init];
+    
+    CFXPoint* resolution = [[CFXPoint alloc] initWith:320 andWith:240];
+    [self.synergy load:resolution with:self.synergySocket];
+    
+
+    [self.synergy disableCalvTimer];
+    
+    [self.synergy receive:kCFXSocketConnected
+               fromSender:self.synergySocket
+              withPayload:(__bridge void*)clientSocket1];
+    [self.synergy disableCalvTimer];
+    
+    [self.synergy receive:kCFXSocketConnected
+               fromSender:self.synergySocket
+              withPayload:(__bridge void*)clientSocket2];
+
+    [self _assertCommandIn:[clientSocket1 popSent] is:"Synergy"];
+    [self _assertCommandIn:[clientSocket2 popSent] is:"Synergy"];
+    [clientSocket1 step];
+    [self _assertCommandIn:[clientSocket1 popSent] is:"QINF"];
+    
+    XCTAssertEqual(nil, [clientSocket1 popSent]);
+    XCTAssertEqual(nil, [clientSocket2 popSent]);
+}
+
 // auxiliary
 
 - (void)_record:(const char*)message
