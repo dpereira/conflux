@@ -292,37 +292,11 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
     switch(type) {
         case HAIL: [self _processHailResponse:buffer bytes:numBytes context:ctx]; break;
         case DINF: [self _processDinf: buffer bytes:numBytes context:ctx]; break;
-        case TERM: {
-            NSLog(@"(%d) TERMINATING", [sender idTag]);
-            pthread_mutex_lock(&self->_initializationLock);
-            std::map<CFXProtocol*, CFXClientContext*>::const_iterator i = self->_clients.find(sender);
-            if(i != self->_clients.end()) {
-                NSLog(@"%lu total clients left. P is %d.", self->_clients.size(), [i->first idTag]);
-                self->_clients.erase(i);
-
-                if(self._active == sender) {
-                    if(self->_clients.size() > 0) {
-                        CFXProtocol* p = self->_clients.begin()->first;
-                        NSLog(@"%lu total clients left. P is %d.", self->_clients.size(), [p idTag]);
-                        self._active = p;
-                        NSLog(@"(%d) ACTIVATED", [self._active idTag]);
-                        CFXClientContext* ctx = [self _getActiveCtxUnsafe];
-                        [self._active cinn: [[CFXPoint alloc] initWith:ctx->_remoteCursorX
-                                                               andWith:ctx->_remoteCursorY]];
-                    } else {
-                        self._active = nil;
-                    }
-                }
-            }
-            pthread_mutex_unlock(&self->_initializationLock);
-            [self->_listener receive:kCFXSynergyScreenLost with:ctx->name];
-            free(ctx);
-            return;
-        }
+        case TERM: [self _terminate: sender]; return;
         default:break;
     }
     
-    NSLog(@"(%d) II: SYNERGY PROCESSPACKET: type %u, state %u, nbytes: %lu", [sender idTag], type, ctx->_state, numBytes);
+    //NSLog(@"(%d) II: SYNERGY PROCESSPACKET: type %u, state %u, nbytes: %lu", [sender idTag], type, ctx->_state, numBytes);
     
     // reply to client
     switch(ctx->_state) {
@@ -352,6 +326,31 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
     }
     
     //NSLog(@"(%d) II: SYNERGY PROCESSPACKET: OUT", [sender idTag]);
+}
+
+- (void)_terminate:(CFXProtocol*)sender
+{
+        std::map<CFXProtocol*, CFXClientContext*>::const_iterator i = self->_clients.find(sender);
+    
+        if(i != self->_clients.end()) {
+            NSLog(@"II SYNGERGY TERMINATE: (%d)", [sender idTag]);
+            CFXClientContext* ctx = i->second;
+            NSLog(@"II SYNERGY TERMINATE: %lu total clients left. P is %d.", self->_clients.size(), [i->first idTag]);
+            pthread_mutex_lock(&self->_initializationLock);
+            self->_clients.erase(i);
+            pthread_mutex_unlock(&self->_initializationLock);
+            if(self._active == sender) {
+                if(self->_clients.size() > 0) {
+                    self._active = self->_clients.begin()->first;
+                    NSLog(@"II SYNERGY TERMINATE: (%d) ACTIVATED", [self._active idTag]);
+                } else {
+                    self._active = nil;
+                }
+            }
+            
+            [self->_listener receive:kCFXSynergyScreenLost with:ctx->name];
+            free(ctx);
+        }
 }
 
 - (void)_processHailResponse:(UInt8 *)buffer

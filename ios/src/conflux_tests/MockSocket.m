@@ -164,7 +164,6 @@
 }
 
 - (void)disconnect
-{
-}
+{}
 
 @end
