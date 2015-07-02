@@ -46,6 +46,8 @@ typedef enum {
 
 - (void) activate:(const char*)screenName;
 
+- (void)ii;
+
 @end
 
 #endif

@@ -48,7 +48,6 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
 - (id)init
 {
     if(self = [super init]) {
-        self->_clients.clear();
         self->_socket = nil;
         self->_initializationLock = PTHREAD_MUTEX_INITIALIZER;
         return self;
@@ -72,7 +71,6 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
 
 - (void)load:(CFXPoint *)sourceResolution
 {
-    NSLog(@"II SYNERGY LOAD: upon loading, clients map has %lu elements", self->_clients.size());
     [self load:sourceResolution
           with:[[CFXFoundationSocket alloc] init]];
 }
@@ -197,8 +195,8 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
     CFXPoint* projected = [[CFXPoint alloc] initWith:projectedX > 0 ? projectedX : 0
                                              andWith:projectedY > 0 ? projectedY : 0];
     
-    NSLog(@"II SYNERGY MOUSEMOVE: (%f, %f) rc(%d, %d) pj(%d, %d)", projectedDeltaX, projectedDeltaY,
-          ctx->_remoteCursorX, ctx->_remoteCursorY, projected.x, projected.y);
+    //NSLog(@"II SYNERGY MOUSEMOVE: (%f, %f) rc(%d, %d) pj(%d, %d)", projectedDeltaX, projectedDeltaY,
+    //      ctx->_remoteCursorX, ctx->_remoteCursorY, projected.x, projected.y);
     
     [self._active dmov: projected];
     
@@ -328,6 +326,11 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
     //NSLog(@"(%d) II: SYNERGY PROCESSPACKET: OUT", [sender idTag]);
 }
 
+- (void)ii
+{
+    NSLog(@">>%lu", self->_clients.size());
+}
+
 - (void)_terminate:(CFXProtocol*)sender
 {
         std::map<CFXProtocol*, CFXClientContext*>::const_iterator i = self->_clients.find(sender);
@@ -401,6 +404,10 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
 
 -(CFXClientContext*)_getActiveCtxUnsafe
 {
+    if(!self._active) {
+        return NULL;
+    }
+    
     return self->_clients[self._active];
 }
 
