@@ -19,6 +19,8 @@ typedef std::vector<std::string> CFXScreenNames;
 
 - (void)viewDidLoad
 {
+    self->_waitingForScreensLabel = "Ready...";
+    
     [super viewDidLoad];
     
     AppDelegate* app = [[UIApplication sharedApplication] delegate];
@@ -26,6 +28,8 @@ typedef std::vector<std::string> CFXScreenNames;
     
     self.picker.delegate = self;
     self.picker.dataSource = self;
+    
+    [self resetScreens];
     
     [self->_synergy registerListener:self];
 }
@@ -81,7 +85,7 @@ typedef std::vector<std::string> CFXScreenNames;
         self->_screenNames.erase(i);
         self->_screenCount--;
         if(self->_screenCount == 0) {
-            self->_screenNames.push_back(self->_waitingForScreensLabel);
+            [self resetScreens];
         }
     }
     
