@@ -45,6 +45,7 @@ static void* _timerLoop(void* p)
     id<CFXProtocolListener>  _listener;
     KeyMapper* _mapper;
     int _state, _id;
+    UInt8 _minor_version, _major_version;
     bool _loaded;
     pthread_t* _timerThread;
 }
@@ -53,6 +54,8 @@ static void* _timerLoop(void* p)
 -(id)initWithSocket:(id<CFXSocket>)socket
         andListener:(id<CFXProtocolListener>)listener
 {
+    self->_major_version = 1;
+    self->_minor_version = 6;
     if(self = [super init]) {
         [socket registerListener:self];
         
@@ -124,7 +127,7 @@ static void* _timerLoop(void* p)
 
 -(void)hail {
     NSLog(@"(%d) PROTOCOL: SENDING HAIL", self->_id);
-    UInt8 hail[] = {0x53, 0x79, 0x6e, 0x65, 0x72, 0x67, 0x79, 0x00, 0x01, 0x00, 0x05};
+    UInt8 hail[] = {0x53, 0x79, 0x6e, 0x65, 0x72, 0x67, 0x79, 0x00, self->_major_version, 0x00, self->_minor_version};
     [self _writeRaw:hail bytes:sizeof(hail)];
 }
 
