@@ -38,7 +38,7 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
 @implementation CFXSynergy
 {
     CFXClients _clients;
-    pthread_mutex_t _initializationLock;
+    pthread_mutex_t _clientsLock;
     id<CFXSocket> _socket;
     id<CFXSynergyListener> _listener;
     int _sourceWidth, _sourceHeight;
@@ -49,7 +49,7 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
 {
     if(self = [super init]) {
         self->_socket = nil;
-        self->_initializationLock = PTHREAD_MUTEX_INITIALIZER;
+        self->_clientsLock = PTHREAD_MUTEX_INITIALIZER;
         return self;
     } else {
         return nil;
@@ -58,7 +58,7 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
 
 - (void)activate:(const char *)screenName
 {
-    pthread_mutex_lock(&self->_initializationLock);
+    pthread_mutex_lock(&self->_clientsLock);
     for(CFXClients::iterator i = self->_clients.begin(); i != self->_clients.end(); i++) {
         if(strcmp(screenName, i->second->name) == 0) {
             self._active = i->first;
@@ -66,7 +66,7 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
             break;
         }
     }
-    pthread_mutex_unlock(&self->_initializationLock);
+    pthread_mutex_unlock(&self->_clientsLock);
 }
 
 - (void)load:(CFXPoint *)sourceResolution
@@ -94,7 +94,7 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
 - (void)finalize
 {
     [self unload];
-    pthread_mutex_destroy(&self->_initializationLock);
+    pthread_mutex_destroy(&self->_clientsLock);
 }
 
 - (void)unload
@@ -125,20 +125,22 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
 
 - (void)changeOrientation
 {
-    CFXClientContext* ctx = [self _getActiveCtx];
+    double tmp = self->_sourceWidth;
+    self->_sourceWidth = self->_sourceHeight;
+    self->_sourceHeight = tmp;
     
+    CFXClientContext* ctx = [self _getActiveCtx];
     if(self->_loaded && ctx) {
         NSLog(@"II SYNERGY CHANGEORIENTATION %f, %f", ctx->_xProjection, ctx->_yProjection);
-        double tmp = self->_sourceWidth;
-        self->_sourceWidth = self->_sourceHeight;
-        self->_sourceHeight = tmp;
+        pthread_mutex_lock(&self->_clientsLock);
         [self _updateProjection];
+        pthread_mutex_unlock(&self->_clientsLock);
     }
 }
 
 -(void)keyStroke:(UInt16)character
 {
-    if(!self->_loaded) {
+    if(!self->_loaded || !self._active) {
         return;
     }
     [self._active dkdn: character];
@@ -147,7 +149,7 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
 
 - (void)click:(CFXMouseButton)whichButton
 {
-    if(!self->_loaded) {
+    if(!self->_loaded || !self._active) {
         return;
     }
     [self._active dmdn: whichButton];
@@ -156,7 +158,7 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
 
 - (void)doubleClick:(CFXMouseButton)whichButton
 {
-    if(!self->_loaded) {
+    if(!self->_loaded || !self._active) {
         return;
     }
     [self click: whichButton];
@@ -165,7 +167,7 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
 
 - (void)beginMouseMove:(CFXPoint *)coordinates
 {
-    if(!self->_loaded) {
+    if(!self->_loaded || !self._active) {
         return;
     }
     
@@ -176,7 +178,7 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
 
 - (void)mouseMove:(CFXPoint*)coordinates
 {
-    if(!self->_loaded) {
+    if(!self->_loaded || !self._active) {
         return;
     }
     
@@ -233,16 +235,13 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
     }
 }
 
-- (CFXClientContext*)getActiveContext
-{
-    return [self _getActiveCtx];
-}
-
 - (void)_updateProjection
 {
-    CFXClientContext* ctx = [self _getActiveCtx];
-    ctx->_xProjection = (double)ctx->_targetWidth / (double)self->_sourceWidth;
-    ctx->_yProjection = (double)ctx->_targetHeight / (double)self->_sourceHeight;
+    CFXClientContext* ctx = [self _getActiveCtxUnsafe];
+    if(ctx) {
+        ctx->_xProjection = (double)ctx->_targetWidth / (double)self->_sourceWidth;
+        ctx->_yProjection = (double)ctx->_targetHeight / (double)self->_sourceHeight;
+    }
 }
 
 - (void)_addClient:(id<CFXSocket>)clientSocket
@@ -258,22 +257,14 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
     ctx->_targetHeight = 800;
     ctx->_remoteCursorX = ctx->_remoteCursorY = 1;
     
-    pthread_mutex_lock(&self->_initializationLock);
-    
-    // FIXME: this is a hack to avoid
-    // a stray client getting added.
-    if(!self._active) {
-        self->_clients.clear();
-    }
-    
+    pthread_mutex_lock(&self->_clientsLock);
     NSLog(@"II SYNERGY ADDCLIENT: %lu / %d", self->_clients.size(), [_protocol idTag]);
     self->_clients[_protocol] = ctx;
-    pthread_mutex_unlock(&self->_initializationLock);
-    
     if(!self._active) {
         self._active = _protocol;
         [self _updateProjection];
     }
+    pthread_mutex_unlock(&self->_clientsLock);
     
     [_protocol hail];
 }
@@ -285,6 +276,11 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
 {
     //NSLog(@"(%d) II: SYNERGY PROCESSPACKET: IN", [sender idTag]);
     CFXClientContext* ctx = self->_clients[sender];
+    
+    if(!ctx) {
+        NSLog(@"WW SYNERGY PROCESSPACKET: got command from unknown sender: %d", [sender idTag]);
+        return;
+    }
     
     // process packet data
     switch(type) {
@@ -339,9 +335,9 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
             NSLog(@"II SYNGERGY TERMINATE: (%d)", [sender idTag]);
             CFXClientContext* ctx = i->second;
             NSLog(@"II SYNERGY TERMINATE: %lu total clients left. P is %d.", self->_clients.size(), [i->first idTag]);
-            pthread_mutex_lock(&self->_initializationLock);
+            pthread_mutex_lock(&self->_clientsLock);
             self->_clients.erase(i);
-            pthread_mutex_unlock(&self->_initializationLock);
+            pthread_mutex_unlock(&self->_clientsLock);
             if(self._active == sender) {
                 if(self->_clients.size() > 0) {
                     self._active = self->_clients.begin()->first;
@@ -383,7 +379,7 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
     UInt16 targetHeight = (buffer[10] << 8) + buffer[11];
     UInt16 remoteCursorX = (buffer[14] << 8) + buffer[15];
     UInt16 remoteCursorY = (buffer[16] << 8) + buffer[17];
-    NSLog(@"!! Info received: tX: %d, tY: %d, cX: %d, cy: %d",
+    NSLog(@"II SYNERGY PROCESSDINF: Info received: tX: %d, tY: %d, cX: %d, cy: %d",
            targetWidth, targetHeight, remoteCursorX, remoteCursorY);
     ctx->_targetWidth = targetWidth;
     ctx->_targetHeight = targetHeight;
@@ -413,9 +409,9 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
 
 -(CFXClientContext*)_getActiveCtx
 {
-    pthread_mutex_lock(&self->_initializationLock);
+    pthread_mutex_lock(&self->_clientsLock);
     CFXClientContext* ctx = [self _getActiveCtxUnsafe];
-    pthread_mutex_unlock(&self->_initializationLock);
+    pthread_mutex_unlock(&self->_clientsLock);
     return ctx;
 }
 @end
