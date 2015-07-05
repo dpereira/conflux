@@ -1,6 +1,6 @@
-  conflux - a synergy server for mobile devices.
+  **conflux** - a synergy server for mobile devices.
   
-  Copyright (C) 2014-2015 Diego Pereira
+  _Copyright (C) 2014-2015 Diego Pereira_
 
 The GNU General Public License, Version 2, June 1991 (GPLv2)
 ============================================================
