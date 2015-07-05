@@ -19,9 +19,9 @@ To do so via bluetooth, follow these steps:
 
 1. Enable bluetooth in your iOS device.
 
-<p align="center">
-<img src="https://raw.githubusercontent.com/dpereira/conflux/master/doc/img/step%201.PNG" width=200x/>
-</p>
+  <p align="center">
+  <img src="https://raw.githubusercontent.com/dpereira/conflux/master/doc/img/step%201.PNG" width=200x/>
+  </p>
 
 2. Enable bluetooth in the device running the Synergy client.
 3. Enable the Personal Hotspot in your iOS device.
