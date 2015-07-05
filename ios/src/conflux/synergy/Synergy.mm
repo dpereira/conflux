@@ -102,7 +102,7 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
     if(self->_loaded) {
 
         self->_loaded = NO;
-        for(std::map<CFXProtocol*, CFXClientContext*>::iterator i = self->_clients.begin(); i != self->_clients.end(); i++) {
+        for(CFXClients::iterator i = self->_clients.begin(); i != self->_clients.end(); i++) {
             [i->first unload];
             free(i->second);
         }
@@ -329,7 +329,7 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
 
 - (void)_terminate:(CFXProtocol*)sender
 {
-        std::map<CFXProtocol*, CFXClientContext*>::const_iterator i = self->_clients.find(sender);
+        CFXClients::const_iterator i = self->_clients.find(sender);
     
         if(i != self->_clients.end()) {
             NSLog(@"II SYNGERGY TERMINATE: (%d)", [sender idTag]);
