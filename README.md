@@ -64,4 +64,6 @@ To do so via bluetooth, follow these steps:
   <img src="https://raw.githubusercontent.com/dpereira/conflux/master/doc/img/step%209.PNG" height=275x/>
   </p>
 
+10. You can now use the default view as if it were a touchpad, and the mouse cursor in the client device should respond to your input. If you want to go to the keyboard and back again, use the navigation links in the navigation bar at the top of the application. Enjoy!
+
 These steps can be addapted to USB and direct wireless connections by modifying the steps 1-4 to whatever is needed to ensure both devices have a direct network data link between each other.
