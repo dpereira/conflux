@@ -56,7 +56,6 @@
              object:device];
    
     self._synergy = [[CFXSynergy alloc] init];
-    [self._synergy ii];
     
     return YES;
 }

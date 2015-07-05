@@ -13,17 +13,11 @@ typedef struct {
     int _targetWidth, _targetHeight;
     int _remoteCursorX, _remoteCursorY;
     int _currentCursorX, _currentCursorY;
-    int _dmmvSeq, _dmmvFilter;
     double _xProjection, _yProjection;
     char name[256];
 } CFXClientContext;
 
 @interface CFXSynergy()
-
-/**
- Holds the currently active client.
- */
-@property CFXProtocol* _active;
 
 - (void)_addClient:(id<CFXSocket>)clientSocket;
 
@@ -37,12 +31,18 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
 
 @implementation CFXSynergy
 {
-    CFXClients _clients;
-    pthread_mutex_t _clientsLock;
     id<CFXSocket> _socket;
     id<CFXSynergyListener> _listener;
+
+    CFXProtocol* _active; // the active client
+    CFXClients _clients; // all clients that connected so far
+    pthread_mutex_t _clientsLock;
+    
+
+    
+    
     int _sourceWidth, _sourceHeight;
-    BOOL _loaded, _noTimer;
+    bool _loaded, _noTimer;
 }
 
 - (id)init
@@ -61,7 +61,7 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
     pthread_mutex_lock(&self->_clientsLock);
     for(CFXClients::iterator i = self->_clients.begin(); i != self->_clients.end(); i++) {
         if(strcmp(screenName, i->second->name) == 0) {
-            self._active = i->first;
+            self->_active = i->first;
             NSLog(@"II SYNERGY ACTIVATE: %s ACTIVATED", screenName);
             break;
         }
@@ -107,7 +107,7 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
             free(i->second);
         }
         [self->_socket disconnect];        
-        self._active = nil;
+        self->_active = nil;
         self->_socket = nil;
 
     }
@@ -140,25 +140,25 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
 
 -(void)keyStroke:(UInt16)character
 {
-    if(!self->_loaded || !self._active) {
+    if(!self->_loaded || !self->_active) {
         return;
     }
-    [self._active dkdn: character];
-    [self._active dkup: character];
+    [self->_active dkdn: character];
+    [self->_active dkup: character];
 }
 
 - (void)click:(CFXMouseButton)whichButton
 {
-    if(!self->_loaded || !self._active) {
+    if(!self->_loaded || !self->_active) {
         return;
     }
-    [self._active dmdn: whichButton];
-    [self._active dmup: whichButton];
+    [self->_active dmdn: whichButton];
+    [self->_active dmup: whichButton];
 }
 
 - (void)doubleClick:(CFXMouseButton)whichButton
 {
-    if(!self->_loaded || !self._active) {
+    if(!self->_loaded || !self->_active) {
         return;
     }
     [self click: whichButton];
@@ -167,7 +167,7 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
 
 - (void)beginMouseMove:(CFXPoint *)coordinates
 {
-    if(!self->_loaded || !self._active) {
+    if(!self->_loaded || !self->_active) {
         return;
     }
     
@@ -178,16 +178,12 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
 
 - (void)mouseMove:(CFXPoint*)coordinates
 {
-    if(!self->_loaded || !self._active) {
+    if(!self->_loaded || !self->_active) {
         return;
     }
     
     CFXClientContext* ctx = [self _getActiveCtx];
     
-    if(ctx->_dmmvSeq++ % ctx->_dmmvFilter) {
-        // this is done to avoid flooding client.
-        return;
-    }
     double projectedDeltaX = (coordinates.x - ctx->_currentCursorX) * ctx->_xProjection;
     double projectedDeltaY = (coordinates.y - ctx->_currentCursorY) * ctx->_yProjection;
     double projectedX = ctx->_remoteCursorX + projectedDeltaX;
@@ -200,7 +196,7 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
     //NSLog(@"II SYNERGY MOUSEMOVE: (%f, %f) rc(%d, %d) pj(%d, %d)", projectedDeltaX, projectedDeltaY,
     //      ctx->_remoteCursorX, ctx->_remoteCursorY, projected.x, projected.y);
     
-    [self._active dmov: projected];
+    [self->_active dmov: projected];
     
     ctx->_remoteCursorX = projected.x;
     ctx->_remoteCursorY = projected.y;
@@ -252,7 +248,6 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
     
     CFXClientContext* ctx = (CFXClientContext*)malloc(sizeof(CFXClientContext));
     ctx->_state = 0;
-    ctx->_dmmvFilter = 1;
     ctx->_targetWidth = 1280;
     ctx->_targetHeight = 800;
     ctx->_remoteCursorX = ctx->_remoteCursorY = 1;
@@ -260,8 +255,8 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
     pthread_mutex_lock(&self->_clientsLock);
     NSLog(@"II SYNERGY ADDCLIENT: %lu / %d", self->_clients.size(), [_protocol idTag]);
     self->_clients[_protocol] = ctx;
-    if(!self._active) {
-        self._active = _protocol;
+    if(!self->_active) {
+        self->_active = _protocol;
         [self _updateProjection];
     }
     pthread_mutex_unlock(&self->_clientsLock);
@@ -322,11 +317,6 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
     //NSLog(@"(%d) II: SYNERGY PROCESSPACKET: OUT", [sender idTag]);
 }
 
-- (void)ii
-{
-    NSLog(@">>%lu", self->_clients.size());
-}
-
 - (void)_terminate:(CFXProtocol*)sender
 {
         CFXClients::const_iterator i = self->_clients.find(sender);
@@ -338,12 +328,12 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
             pthread_mutex_lock(&self->_clientsLock);
             self->_clients.erase(i);
             pthread_mutex_unlock(&self->_clientsLock);
-            if(self._active == sender) {
+            if(self->_active == sender) {
                 if(self->_clients.size() > 0) {
-                    self._active = self->_clients.begin()->first;
-                    NSLog(@"II SYNERGY TERMINATE: (%d) ACTIVATED", [self._active idTag]);
+                    self->_active = self->_clients.begin()->first;
+                    NSLog(@"II SYNERGY TERMINATE: (%d) ACTIVATED", [self->_active idTag]);
                 } else {
-                    self._active = nil;
+                    self->_active = nil;
                 }
             }
             
@@ -400,11 +390,11 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
 
 -(CFXClientContext*)_getActiveCtxUnsafe
 {
-    if(!self._active) {
+    if(!self->_active) {
         return NULL;
     }
     
-    return self->_clients[self._active];
+    return self->_clients[self->_active];
 }
 
 -(CFXClientContext*)_getActiveCtx
