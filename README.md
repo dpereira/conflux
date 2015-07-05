@@ -19,15 +19,49 @@ To do so via bluetooth, follow these steps:
 
 1. Enable bluetooth in your iOS device.
 
-<img src="https://raw.githubusercontent.com/dpereira/conflux/master/doc/img/step%201.PNG" width=200x/>
+  <p align="center">
+  <img src="https://raw.githubusercontent.com/dpereira/conflux/master/doc/img/step%201.PNG" width=200x/>
+  </p>
 
 2. Enable bluetooth in the device running the Synergy client.
+  <p align="center">
+  <img src="https://raw.githubusercontent.com/dpereira/conflux/master/doc/img/step%202.PNG" width=200x/>
+  </p>
+
 3. Enable the Personal Hotspot in your iOS device.
+  <p align="center">
+  <img src="https://raw.githubusercontent.com/dpereira/conflux/master/doc/img/step%203a.PNG" width=200x/>
+  <img src="https://raw.githubusercontent.com/dpereira/conflux/master/doc/img/step%203b.PNG" width=200x/>
+  </p>
+
 4. Pair both devices.
+  <p align="center">
+  <img src="https://raw.githubusercontent.com/dpereira/conflux/master/doc/img/step%204a.PNG" width=200x/>
+  <img src="https://raw.githubusercontent.com/dpereira/conflux/master/doc/img/step%204b.PNG" width=200x/>
+  </p>
 5. Start Conflux in your iOS device. It will begin listening for connections.
+  <p align="center">
+  <img src="https://raw.githubusercontent.com/dpereira/conflux/master/doc/img/step%205.PNG" width=200x/>
+  </p>
+
 6. In the device running the client, connect to the Personal Hotspot by clicking in the /Connect to Network/ menu entry for the iOS in the bluetooth settings.
+  <p align="center">
+  <img src="https://raw.githubusercontent.com/dpereira/conflux/master/doc/img/step%206.PNG" width=200x/>
+  </p>
+
 7. Find out your default gateway ip address. In OSX or Linux systems, you can do so via /route/, /traceroute/ or /ifconfig/ commands. If you have more interfaces active then the one used for the Personal Hotspot, pay attention to retrieve the gateway for correct one.
+  <p align="center">
+  <img src="https://raw.githubusercontent.com/dpereira/conflux/master/doc/img/step%207.PNG" width=200x/>
+  </p>
+
 8. In the Synergy client settings, type in the IP address of the default gateway you've just retrieved, and click /Apply/.
+  <p align="center">
+  <img src="https://raw.githubusercontent.com/dpereira/conflux/master/doc/img/step%208.PNG" width=200x/>
+  </p>
+
 9. Client and server should connect, and you should see the /Ready.../ label in the Conflux application change to the name of your client device.
+  <p align="center">
+  <img src="https://raw.githubusercontent.com/dpereira/conflux/master/doc/img/step%209.PNG" width=200x/>
+  </p>
 
 These steps can be addapted to USB and direct wireless connections by modifying the steps 1-4 to whatever is needed to ensure both devices have a direct network data link between each other.
