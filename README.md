@@ -39,27 +39,28 @@ To do so via bluetooth, follow these steps:
   <img src="https://raw.githubusercontent.com/dpereira/conflux/master/doc/img/step%204a.PNG" height=275x/>
   <img src="https://raw.githubusercontent.com/dpereira/conflux/master/doc/img/step%204b.PNG" height=275x/>
   </p>
+
 5. Start Conflux in your iOS device. It will begin listening for connections.
   <p align="center">
   <img src="https://raw.githubusercontent.com/dpereira/conflux/master/doc/img/step%205.PNG" height=275x/>
   </p>
 
-6. In the device running the client, connect to the Personal Hotspot by clicking in the /Connect to Network/ menu entry for the iOS in the bluetooth settings.
+6. In the device running the client, connect to the Personal Hotspot by clicking in the _Connect to Network_ menu entry for the iOS in the bluetooth settings.
   <p align="center">
   <img src="https://raw.githubusercontent.com/dpereira/conflux/master/doc/img/step%206.PNG" height=275x/>
   </p>
 
-7. Find out your default gateway ip address. In OSX or Linux systems, you can do so via /route/, /traceroute/ or /ifconfig/ commands. If you have more interfaces active then the one used for the Personal Hotspot, pay attention to retrieve the gateway for correct one.
+7. Find out your default gateway ip address. In OSX or Linux systems, you can do so via _route_, _traceroute_ or _ifconfig_ commands. If you have more interfaces active then the one used for the Personal Hotspot, pay attention to retrieve the gateway for correct one.
   <p align="center">
   <img src="https://raw.githubusercontent.com/dpereira/conflux/master/doc/img/step%207.PNG" height=275x/>
   </p>
 
-8. In the Synergy client settings, type in the IP address of the default gateway you've just retrieved, and click /Apply/.
+8. In the Synergy client settings, type in the IP address of the default gateway you've just retrieved, and click _Start_ or _Apply_.
   <p align="center">
   <img src="https://raw.githubusercontent.com/dpereira/conflux/master/doc/img/step%208.PNG" height=275x/>
   </p>
 
-9. Client and server should connect, and you should see the /Ready.../ label in the Conflux application change to the name of your client device.
+9. Client and server should connect, and you should see the _Ready..._ label in the Conflux application change to the name of your client device.
   <p align="center">
   <img src="https://raw.githubusercontent.com/dpereira/conflux/master/doc/img/step%209.PNG" height=275x/>
   </p>
