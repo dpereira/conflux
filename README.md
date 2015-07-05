@@ -10,10 +10,10 @@ Supported OSes:
  - Android: planned.
  - Windows Phone: planned.
 
-Leveraging a Personal Hotspot:
-------------------------------
+Conflux + Personal Hotspot:
+---------------------------
 
-Using Conflux in an iOS device running a Personal Hotspot is a very straightforward way to extend the connectivity possibilities between a Synergy client and the Conflux/Synergy server, making it possible to connect them via Bluetooth, USB, or even wireless directly, without requiring access points.
+Using Conflux in an iOS device running a Personal Hotspot is a very straightforward way to extend the connectivity possibilities between a Synergy client and the Conflux/Synergy server, making it possible to connect them via Bluetooth, USB, or even wireless directly, without requiring access points or a previously configured network infrastructure.
 
 To do so via bluetooth, follow these steps:
 
