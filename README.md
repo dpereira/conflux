@@ -25,7 +25,7 @@ To do so via bluetooth, follow these steps:
 
 2. Enable bluetooth in the device running the Synergy client.
   <p align="center">
-  <img src="https://raw.githubusercontent.com/dpereira/conflux/master/doc/img/step%202.PNG" height=275x/>
+  <img src="https://raw.githubusercontent.com/dpereira/conflux/master/doc/img/step%202.PNG" width=300x/>
   </p>
 
 3. Enable the Personal Hotspot in your iOS device.
@@ -52,7 +52,7 @@ To do so via bluetooth, follow these steps:
 
 7. Find out your default gateway ip address. In OSX or Linux systems, you can do so via _route_, _traceroute_ or _ifconfig_ commands. If you have more interfaces active then the one used for the Personal Hotspot, pay attention to retrieve the gateway for correct one.
   <p align="center">
-  <img src="https://raw.githubusercontent.com/dpereira/conflux/master/doc/img/step%207.PNG" height=275x/>
+  <img src="https://raw.githubusercontent.com/dpereira/conflux/master/doc/img/step%207.PNG" width=300x/>
   </p>
 
 8. In the Synergy client settings, type in the IP address of the default gateway you've just retrieved, and click _Start_ or _Apply_.
@@ -64,5 +64,7 @@ To do so via bluetooth, follow these steps:
   <p align="center">
   <img src="https://raw.githubusercontent.com/dpereira/conflux/master/doc/img/step%209.PNG" height=275x/>
   </p>
+
+10. You can now use the default view as if it were a touchpad, and the mouse cursor in the client device should respond to your input. If you want to go to the keyboard and back again, use the navigation links in the navigation bar at the top of the application. Enjoy!
 
 These steps can be addapted to USB and direct wireless connections by modifying the steps 1-4 to whatever is needed to ensure both devices have a direct network data link between each other.
