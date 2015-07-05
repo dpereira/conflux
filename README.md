@@ -23,7 +23,7 @@ To do so via bluetooth, follow these steps:
 4. Pair both devices.
 5. Start Conflux in your iOS device. It will begin listening for connections.
 6. In the device running the client, connect to the Personal Hotspot by clicking in the /Connect to Network/ menu entry for the iOS in the bluetooth settings.
-7. Find out your default gateway ip address. In OSX or Linux systems, you can do so via /ipconfig/ command.
+7. Find out your default gateway ip address. In OSX or Linux systems, you can do so via /route/, /traceroute/ or /ifconfig/ commands. If you have more interfaces active then the one used for the Personal Hotspot, pay attention to retrieve the gateway for correct one.
 8. In the Synergy client settings, type in the IP address of the default gateway you've just retrieved, and click /Apply/.
 9. Client and server should connect, and you should see the /Ready.../ label in the Conflux application change to the name of your client device.
 
