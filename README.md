@@ -25,7 +25,7 @@ To do so via bluetooth, follow these steps:
 
 2. Enable bluetooth in the device running the Synergy client.
   <p align="center">
-  <img src="https://raw.githubusercontent.com/dpereira/conflux/master/doc/img/step%202.PNG" width=200x/>
+  <img src="https://raw.githubusercontent.com/dpereira/conflux/master/doc/img/step%202.PNG" width=300x/>
   </p>
 
 3. Enable the Personal Hotspot in your iOS device.
@@ -51,7 +51,7 @@ To do so via bluetooth, follow these steps:
 
 7. Find out your default gateway ip address. In OSX or Linux systems, you can do so via /route/, /traceroute/ or /ifconfig/ commands. If you have more interfaces active then the one used for the Personal Hotspot, pay attention to retrieve the gateway for correct one.
   <p align="center">
-  <img src="https://raw.githubusercontent.com/dpereira/conflux/master/doc/img/step%207.PNG" width=200x/>
+  <img src="https://raw.githubusercontent.com/dpereira/conflux/master/doc/img/step%207.PNG" width=300x/>
   </p>
 
 8. In the Synergy client settings, type in the IP address of the default gateway you've just retrieved, and click /Apply/.
