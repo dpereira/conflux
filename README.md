@@ -17,7 +17,7 @@ Using Conflux in an iOS device running a Personal Hotspot is a very straightforw
 
 To do so via bluetooth, follow these steps:
 
-1. Enable bluetooth in your iOS device. ![Enable bluetooth in iOS](/doc/img/step1.png)
+1. Enable bluetooth in your iOS device. ![Enable bluetooth in iOS](/doc/img/step%201.png)
 2. Enable bluetooth in the device running the Synergy client.
 3. Enable the Personal Hotspot in your iOS device.
 4. Pair both devices.
