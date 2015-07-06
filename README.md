@@ -1,4 +1,4 @@
-Conflux [![Build status](https://travis-ci.org/dpereira/conflux.svg?branch=master)](https://travis-ci.org/dpereira/conflux) [![License](https://img.shields.io/badge/license-GPLv2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html#SEC1)
+Conflux [![Build status](https://travis-ci.org/dpereira/conflux.svg?branch=master)](https://travis-ci.org/dpereira/conflux) [![License](https://img.shields.io/badge/license-GPLv2-blue.svg)](https://github.com/dpereira/conflux/blob/master/LICENSE.md)
 =======
 
 A [Synergy](http://synergy-project.org/) server for mobile devices.
