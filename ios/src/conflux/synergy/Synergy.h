@@ -34,6 +34,10 @@ typedef enum {
 
 - (void) mouseMove:(CFXPoint*)coordinates;
 
+- (void) beginMouseDrag:(CFXPoint*)coordinates;
+
+- (void) endMouseDrag:(CFXPoint*)coordinates;
+
 - (void) doubleClick:(CFXMouseButton)whichButton;
 
 - (void) click:(CFXMouseButton)whichButton;

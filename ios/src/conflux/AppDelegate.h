@@ -6,7 +6,7 @@
 
 @property (strong, nonatomic) UIWindow *window;
 
-@property CFXSynergy *_synergy;
+@property (strong, atomic) CFXSynergy *_synergy;
 
 @end
 

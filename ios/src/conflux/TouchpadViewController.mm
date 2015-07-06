@@ -10,10 +10,16 @@
 
 typedef std::vector<std::string> CFXScreenNames;
 
+typedef enum {
+    kCFXDefault,
+    kCFXDoubleTap
+} CFXTouchpadState;
+
 @implementation TouchpadViewController {
     CFXScreenNames _screenNames;
     CFXSynergy* _synergy;
     int _screenCount;
+    CFXTouchpadState _state;
     std::string _waitingForScreensLabel;
 }
 
@@ -100,7 +106,19 @@ typedef std::vector<std::string> CFXScreenNames;
     CGPoint location = [touched locationInView:touched.view];
     CFXPoint* p = [[CFXPoint alloc] initWith:location.x andWith:location.y];
     
-    [self->_synergy beginMouseMove: p];
+    for (UITouch *aTouch in touches) {
+        if (aTouch.tapCount >= 2) {
+            self->_state = kCFXDoubleTap;
+            NSLog(@"Began double-tap");
+        }
+    }
+    
+    if(self->_state == kCFXDoubleTap) {
+        [self->_synergy beginMouseDrag: p];
+        NSLog(@"Dragging ...");
+    } else {
+        [self->_synergy beginMouseMove: p];
+    }
 }
 
 - (void)touchesMoved:(NSSet *)touches
@@ -116,12 +134,18 @@ typedef std::vector<std::string> CFXScreenNames;
 - (void)touchesEnded:(NSSet *)touches
            withEvent:(UIEvent *)event
 {
-    for (UITouch *aTouch in touches) {
-        if (aTouch.tapCount >= 2) {
-            [self->_synergy doubleClick: kCFXRight];
-        } else if(aTouch.tapCount == 1) {
-            [self->_synergy click: kCFXRight];
+    if(self->_state != kCFXDoubleTap) {
+        for (UITouch *aTouch in touches) {
+            if (aTouch.tapCount >= 2) {
+                [self->_synergy doubleClick: kCFXRight];
+            } else if(aTouch.tapCount == 1) {
+                [self->_synergy click: kCFXRight];
+            }
         }
+    } else {
+        self->_state = kCFXDefault;
+        [self->_synergy endMouseDrag:NULL];
+        NSLog(@"Dragging ended.");
     }
 }
 

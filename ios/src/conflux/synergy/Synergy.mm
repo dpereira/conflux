@@ -38,9 +38,6 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
     CFXClients _clients; // all clients that connected so far
     pthread_mutex_t _clientsLock;
     
-
-    
-    
     int _sourceWidth, _sourceHeight;
     bool _loaded, _noTimer;
 }
@@ -202,6 +199,16 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
     ctx->_remoteCursorY = projected.y;
     ctx->_currentCursorX = coordinates.x;
     ctx->_currentCursorY = coordinates.y;
+}
+
+- (void) beginMouseDrag:(CFXPoint*)coordinates
+{
+    [self->_active dmdn:kCFXRight];
+}
+
+- (void) endMouseDrag:(CFXPoint*)coordinates
+{
+    [self->_active dmup:kCFXRight];
 }
 
 - (void)receive:(UInt8*)cmd
