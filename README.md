@@ -6,9 +6,14 @@ A [Synergy](http://synergy-project.org/) server for mobile devices.
 Supported OSes:
 ---------------
 
- - iOS: in progress.
- - Android: planned.
+ - iOS
+  In progress.
+  v0.1 released.
+
+ - Android
+  Planned.
  - Windows Phone: planned.
+  Planned.
 
 Conflux + Personal Hotspot:
 ---------------------------
