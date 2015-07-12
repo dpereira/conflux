@@ -7,17 +7,14 @@ Supported OSes:
 ---------------
 
  - iOS
-
   - In progress.
   - v0.1 released.
 
  - Android
-
-  Planned.
+  - Planned.
 
  - Windows Phone
-
-  Planned.
+  - Planned.
 
 Conflux + Personal Hotspot:
 ---------------------------
