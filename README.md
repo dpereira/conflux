@@ -8,8 +8,8 @@ Supported OSes:
 
  - iOS
 
-  In progress.
-  v0.1 released.
+  - In progress.
+  - v0.1 released.
 
  - Android
 
