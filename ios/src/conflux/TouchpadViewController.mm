@@ -29,6 +29,8 @@ typedef enum {
     
     [super viewDidLoad];
     
+    [self setupRecognizers];
+    
     AppDelegate* app = [[UIApplication sharedApplication] delegate];
     self->_synergy = app._synergy;
     
@@ -38,6 +40,89 @@ typedef enum {
     [self resetScreens];
     
     [self->_synergy registerListener:self];
+}
+
+- (void)setupRecognizers
+{
+    UIPanGestureRecognizer* panRecognizer = [[UIPanGestureRecognizer alloc]
+                                                       initWithTarget:self action:@selector(panning:)
+                                                       ];
+    panRecognizer.minimumNumberOfTouches = 1;
+    panRecognizer.maximumNumberOfTouches = 1;
+    [self.view addGestureRecognizer:panRecognizer];
+    
+    UIPanGestureRecognizer* twoFingersPanRecognizer = [[UIPanGestureRecognizer alloc]
+                                             initWithTarget:self action:@selector(twoFingersPanning:)
+                                            ];
+    twoFingersPanRecognizer.minimumNumberOfTouches = 2;
+    [self.view addGestureRecognizer:twoFingersPanRecognizer];
+    
+    UITapGestureRecognizer* tapRecognizer = [[UITapGestureRecognizer alloc]
+                                                   initWithTarget:self action:@selector(tapping:)
+                                                   ];
+    tapRecognizer.numberOfTouchesRequired = 1;
+    tapRecognizer.numberOfTapsRequired = 1;
+    [self.view addGestureRecognizer:tapRecognizer];
+    
+    UITapGestureRecognizer* doubleTapRecognizer = [[UITapGestureRecognizer alloc]
+                                             initWithTarget:self action:@selector(doubleTapping:)
+                                             ];
+    doubleTapRecognizer.numberOfTouchesRequired = 1;
+    doubleTapRecognizer.numberOfTapsRequired = 2;
+    [self.view addGestureRecognizer:doubleTapRecognizer];
+    
+    UITapGestureRecognizer* twoFingersTapRecognizer = [[UITapGestureRecognizer alloc]
+                                                   initWithTarget:self action:@selector(twoFingersTapping:)
+                                                   ];
+    twoFingersTapRecognizer.numberOfTouchesRequired = 2;
+    twoFingersTapRecognizer.numberOfTapsRequired = 1;
+    [self.view addGestureRecognizer:twoFingersTapRecognizer];
+}
+
+- (IBAction)tapping:(UIPanGestureRecognizer*)tapRecognizer
+{
+    NSLog(@"Me tapping long time");
+    
+    if(tapRecognizer.state == UIGestureRecognizerStateEnded) {
+        [self->_synergy click:kCFXRight];
+    }
+}
+
+- (IBAction)doubleTapping:(UIPanGestureRecognizer*)tapRecognizer
+{
+    NSLog(@"Me tapping long time");
+    if(tapRecognizer.state == UIGestureRecognizerStateEnded) {
+        [self->_synergy doubleClick:kCFXRight];
+    }
+}
+
+- (IBAction)twoFingersTapping:(UIPanGestureRecognizer*)tapRecognizer
+{
+    NSLog(@"Me tapping long time");
+    if(tapRecognizer.state == UIGestureRecognizerStateEnded) {
+        [self->_synergy click:kCFXLeft];
+    }
+}
+
+- (IBAction)panning:(UIPanGestureRecognizer*)panRecognizer
+{
+    NSLog(@"Me panning long time");
+    if(panRecognizer.state == UIGestureRecognizerStateBegan) {
+        CGPoint p = [panRecognizer locationInView:panRecognizer.view];
+        CFXPoint *coordinate = [[CFXPoint alloc] initWith:p.x andWith:p.y];
+        [self->_synergy beginMouseMove:coordinate];
+    } else if(panRecognizer.state == UIGestureRecognizerStateChanged) {
+        CGPoint p = [panRecognizer locationInView:panRecognizer.view];
+        CFXPoint *coordinate = [[CFXPoint alloc] initWith:p.x andWith:p.y];
+        [self->_synergy mouseMove:coordinate];
+    } else if(panRecognizer.state == UIGestureRecognizerStateEnded) {
+    }
+}
+
+- (IBAction)twoFingersPanning:(UIPanGestureRecognizer*)panRecognizer
+{
+    NSLog(@"Me scrolling long time");
+    // TODO: scroll wheel
 }
 
 - (void)resetScreens
@@ -98,6 +183,7 @@ typedef enum {
     [self updateAvailableScreens];
 }
 
+/*
 - (void)touchesBegan:(NSSet *)touches
            withEvent:(UIEvent *)event
 {
@@ -117,6 +203,7 @@ typedef enum {
         [self->_synergy beginMouseDrag: p];
         NSLog(@"Dragging ...");
     } else {
+        NSLog(@"Moving ...");
         [self->_synergy beginMouseMove: p];
     }
 }
@@ -137,9 +224,11 @@ typedef enum {
     if(self->_state != kCFXDoubleTap) {
         for (UITouch *aTouch in touches) {
             if (aTouch.tapCount >= 2) {
+                NSLog(@"D-Click");
                 [self->_synergy doubleClick: kCFXRight];
             } else if(aTouch.tapCount == 1) {
                 [self->_synergy click: kCFXRight];
+                NSLog(@"S-Click");                
             }
         }
     } else {
@@ -148,7 +237,7 @@ typedef enum {
         NSLog(@"Dragging ended.");
     }
 }
-
+*/
 - (void)receive:(CFXSynergyEvent)event
            with:(const void *)payload
 {

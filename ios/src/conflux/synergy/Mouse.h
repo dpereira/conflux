@@ -6,8 +6,8 @@ typedef enum
     //None
     //Back,
     kCFXRight = 0x01,
-    //Middle,
-    //Left,
+    kCFXMiddle = 0x02,
+    kCFXLeft = 0x03    
     //Forward
 
 } CFXMouseButton;
