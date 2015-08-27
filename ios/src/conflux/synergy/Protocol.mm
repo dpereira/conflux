@@ -179,12 +179,16 @@ static void* _timerLoop(void* p)
     [self _writeRaw:cmd bytes:sizeof(cmd)];
 }
 
-- (void)dmwm:(int)x // ignored, AON
-         andWith:(int)y {
-    const UInt8 cmd[] = {
-        'D', 'M', 'W', 'M', 0x00, 0x00, // x is ignored AON
-        static_cast<const UInt8>(y < 0 ? 0xFF : 0x00),
-        static_cast<const UInt8>((y < 0 ? -y : y) & 0xFF)
+- (void)dmwm:(int16_t)x
+         andWith:(int16_t)y {
+    
+    y *= 3;
+    const UInt8 cmd[] = {'D', 'M', 'W', 'M',
+        0x00, 0x00,
+        //static_cast<const UInt8>(y < 0 ? 0x80 : 0x00),
+        //static_cast<const UInt8>((y < 0 ?  -y : y) & 0xFF)
+        static_cast<const UInt8>(( y >> 8) & 0xFF),
+        static_cast<const UInt8>(y & 0xFF)
     };
     [self _writeRaw:cmd bytes:sizeof(cmd)];
 }
