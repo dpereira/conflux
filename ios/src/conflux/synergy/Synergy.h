@@ -34,6 +34,10 @@ typedef enum {
 
 - (void) mouseMove:(CFXPoint*)coordinates;
 
+- (void) beginMouseScroll:(CFXPoint*)coordinates;
+
+- (void) mouseScroll:(CFXPoint*)coordinates;
+
 - (void) beginMouseDrag:(CFXPoint*)coordinates;
 
 - (void) endMouseDrag:(CFXPoint*)coordinates;

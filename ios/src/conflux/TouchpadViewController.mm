@@ -122,7 +122,16 @@ typedef enum {
 - (IBAction)twoFingersPanning:(UIPanGestureRecognizer*)panRecognizer
 {
     NSLog(@"Me scrolling long time");
-    // TODO: scroll wheel
+    if(panRecognizer.state == UIGestureRecognizerStateBegan) {
+        CGPoint p = [panRecognizer locationInView:panRecognizer.view];
+        CFXPoint *coordinate = [[CFXPoint alloc] initWith:p.x andWith:p.y];
+        [self->_synergy beginMouseScroll:coordinate];
+    } else if(panRecognizer.state == UIGestureRecognizerStateChanged) {
+        CGPoint p = [panRecognizer locationInView:panRecognizer.view];
+        CFXPoint *coordinate = [[CFXPoint alloc] initWith:p.x andWith:p.y];
+        [self->_synergy mouseScroll:coordinate];
+    } else if(panRecognizer.state == UIGestureRecognizerStateEnded) {
+    }
 }
 
 - (void)resetScreens

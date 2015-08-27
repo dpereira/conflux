@@ -13,6 +13,7 @@ typedef struct {
     int _targetWidth, _targetHeight;
     int _remoteCursorX, _remoteCursorY;
     int _currentCursorX, _currentCursorY;
+    int _currentWheelX, _currentWheelY;
     double _xProjection, _yProjection;
     char name[256];
 } CFXClientContext;
@@ -199,6 +200,33 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
     ctx->_remoteCursorY = projected.y;
     ctx->_currentCursorX = coordinates.x;
     ctx->_currentCursorY = coordinates.y;
+}
+
+- (void)beginMouseScroll:(CFXPoint*)coordinates
+{
+    if(!self->_loaded && !self->_active) {
+        return;
+    }
+    
+    CFXClientContext* ctx = [self _getActiveCtx];
+    ctx->_currentWheelX = coordinates.x;
+    ctx->_currentWheelY = coordinates.y;
+}
+
+- (void)mouseScroll:(CFXPoint*)coordinates
+{
+    if(!self->_loaded || !self->_active) {
+        return;
+    }
+    
+    CFXClientContext* ctx = [self _getActiveCtx];
+    double deltaX = coordinates.x - ctx->_currentWheelX;
+    double deltaY = coordinates.y - ctx->_currentWheelY;
+    
+    [self->_active dmwm:deltaX andWith:deltaY];
+    
+    ctx->_currentWheelX = coordinates.x;
+    ctx->_currentWheelY = coordinates.y;
 }
 
 - (void) beginMouseDrag:(CFXPoint*)coordinates

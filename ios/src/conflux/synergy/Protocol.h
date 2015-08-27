@@ -60,6 +60,8 @@ typedef enum
 
 - (void)dmup:(const CFXMouseButton)whichButton; // moves given mouse button up (btn release)
 
+- (void)dmwm:(int)x andWith:(int)y; // mouse wheel move
+
 - (void)dkdn:(UInt16)key;
 
 - (void)dkup:(UInt16)key;
