@@ -15,7 +15,7 @@
 {
     [super viewDidLoad];
     
-    self._placeholder = @">";
+    self._placeholder = @" > ";
     
     UITextView *textArea = [self _textArea];
     textArea.delegate = self;

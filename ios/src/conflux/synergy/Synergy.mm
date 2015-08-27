@@ -60,6 +60,11 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
     for(CFXClients::iterator i = self->_clients.begin(); i != self->_clients.end(); i++) {
         if(strcmp(screenName, i->second->name) == 0) {
             self->_active = i->first;
+            [self->_active cinn:[[CFXPoint alloc] initWith:10 andWith:10]];
+            [self _updateProjection];
+            CFXClientContext* ctx = [self _getActiveCtxUnsafe];
+            ctx->_currentCursorX = 10;
+            ctx->_currentCursorY = 10;
             NSLog(@"II SYNERGY ACTIVATE: %s ACTIVATED", screenName);
             break;
         }
@@ -170,6 +175,7 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
     }
     
     CFXClientContext* ctx = [self _getActiveCtx];
+    NSLog(@"BEGIN MOUSE MOVE ACTIVE CTX: %s @ %f, %f", ctx->name, coordinates.x, coordinates.y);
     ctx->_currentCursorX = coordinates.x;
     ctx->_currentCursorY = coordinates.y;
 }
@@ -181,12 +187,13 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
     }
     
     CFXClientContext* ctx = [self _getActiveCtx];
-    
+    NSLog(@"MOUSE MOVE ACTIVE CTX: %s", ctx->name);
     double projectedDeltaX = (coordinates.x - ctx->_currentCursorX) * ctx->_xProjection;
     double projectedDeltaY = (coordinates.y - ctx->_currentCursorY) * ctx->_yProjection;
     double projectedX = ctx->_remoteCursorX + projectedDeltaX;
     double projectedY = ctx->_remoteCursorY + projectedDeltaY;
     
+    NSLog(@"DMMV MOVING @ %f %f", projectedX, projectedY);
     
     CFXPoint* projected = [[CFXPoint alloc] initWith:projectedX > 0 ? projectedX : 0
                                              andWith:projectedY > 0 ? projectedY : 0];

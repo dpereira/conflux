@@ -81,8 +81,6 @@ typedef enum {
 
 - (IBAction)tapping:(UIPanGestureRecognizer*)tapRecognizer
 {
-    NSLog(@"Me tapping long time");
-    
     if(tapRecognizer.state == UIGestureRecognizerStateEnded) {
         [self->_synergy click:kCFXRight];
     }
@@ -90,7 +88,6 @@ typedef enum {
 
 - (IBAction)doubleTapping:(UIPanGestureRecognizer*)tapRecognizer
 {
-    NSLog(@"Me tapping long time");
     if(tapRecognizer.state == UIGestureRecognizerStateEnded) {
         [self->_synergy doubleClick:kCFXRight];
     }
@@ -98,7 +95,6 @@ typedef enum {
 
 - (IBAction)twoFingersTapping:(UIPanGestureRecognizer*)tapRecognizer
 {
-    NSLog(@"Me tapping long time");
     if(tapRecognizer.state == UIGestureRecognizerStateEnded) {
         [self->_synergy click:kCFXLeft];
     }
@@ -106,7 +102,6 @@ typedef enum {
 
 - (IBAction)panning:(UIPanGestureRecognizer*)panRecognizer
 {
-    NSLog(@"Me panning long time");
     if(panRecognizer.state == UIGestureRecognizerStateBegan) {
         CGPoint p = [panRecognizer locationInView:panRecognizer.view];
         CFXPoint *coordinate = [[CFXPoint alloc] initWith:p.x andWith:p.y];
@@ -121,7 +116,6 @@ typedef enum {
 
 - (IBAction)twoFingersPanning:(UIPanGestureRecognizer*)panRecognizer
 {
-    NSLog(@"Me scrolling long time");
     if(panRecognizer.state == UIGestureRecognizerStateBegan) {
         CGPoint p = [panRecognizer locationInView:panRecognizer.view];
         CFXPoint *coordinate = [[CFXPoint alloc] initWith:p.x andWith:p.y];
