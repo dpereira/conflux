@@ -13,6 +13,7 @@ typedef struct {
     int _targetWidth, _targetHeight;
     int _remoteCursorX, _remoteCursorY;
     int _currentCursorX, _currentCursorY;
+    int _currentWheelX, _currentWheelY;
     double _xProjection, _yProjection;
     char name[256];
 } CFXClientContext;
@@ -59,6 +60,11 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
     for(CFXClients::iterator i = self->_clients.begin(); i != self->_clients.end(); i++) {
         if(strcmp(screenName, i->second->name) == 0) {
             self->_active = i->first;
+            [self->_active cinn:[[CFXPoint alloc] initWith:10 andWith:10]];
+            [self _updateProjection];
+            CFXClientContext* ctx = [self _getActiveCtxUnsafe];
+            ctx->_currentCursorX = 10;
+            ctx->_currentCursorY = 10;
             NSLog(@"II SYNERGY ACTIVATE: %s ACTIVATED", screenName);
             break;
         }
@@ -169,6 +175,7 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
     }
     
     CFXClientContext* ctx = [self _getActiveCtx];
+    NSLog(@"BEGIN MOUSE MOVE ACTIVE CTX: %s @ %f, %f", ctx->name, coordinates.x, coordinates.y);
     ctx->_currentCursorX = coordinates.x;
     ctx->_currentCursorY = coordinates.y;
 }
@@ -180,12 +187,13 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
     }
     
     CFXClientContext* ctx = [self _getActiveCtx];
-    
+    NSLog(@"MOUSE MOVE ACTIVE CTX: %s", ctx->name);
     double projectedDeltaX = (coordinates.x - ctx->_currentCursorX) * ctx->_xProjection;
     double projectedDeltaY = (coordinates.y - ctx->_currentCursorY) * ctx->_yProjection;
     double projectedX = ctx->_remoteCursorX + projectedDeltaX;
     double projectedY = ctx->_remoteCursorY + projectedDeltaY;
     
+    NSLog(@"DMMV MOVING @ %f %f", projectedX, projectedY);
     
     CFXPoint* projected = [[CFXPoint alloc] initWith:projectedX > 0 ? projectedX : 0
                                              andWith:projectedY > 0 ? projectedY : 0];
@@ -199,6 +207,33 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
     ctx->_remoteCursorY = projected.y;
     ctx->_currentCursorX = coordinates.x;
     ctx->_currentCursorY = coordinates.y;
+}
+
+- (void)beginMouseScroll:(CFXPoint*)coordinates
+{
+    if(!self->_loaded && !self->_active) {
+        return;
+    }
+    
+    CFXClientContext* ctx = [self _getActiveCtx];
+    ctx->_currentWheelX = coordinates.x;
+    ctx->_currentWheelY = coordinates.y;
+}
+
+- (void)mouseScroll:(CFXPoint*)coordinates
+{
+    if(!self->_loaded || !self->_active) {
+        return;
+    }
+    
+    CFXClientContext* ctx = [self _getActiveCtx];
+    double deltaX = coordinates.x - ctx->_currentWheelX;
+    double deltaY = coordinates.y - ctx->_currentWheelY;
+    
+    [self->_active dmwm:deltaX andWith:deltaY];
+    
+    ctx->_currentWheelX = coordinates.x;
+    ctx->_currentWheelY = coordinates.y;
 }
 
 - (void) beginMouseDrag:(CFXPoint*)coordinates
