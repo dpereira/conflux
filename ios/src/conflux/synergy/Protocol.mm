@@ -179,6 +179,20 @@ static void* _timerLoop(void* p)
     [self _writeRaw:cmd bytes:sizeof(cmd)];
 }
 
+- (void)dmwm:(int16_t)x
+         andWith:(int16_t)y {
+    
+    y *= 3;
+    const UInt8 cmd[] = {'D', 'M', 'W', 'M',
+        0x00, 0x00,
+        //static_cast<const UInt8>(y < 0 ? 0x80 : 0x00),
+        //static_cast<const UInt8>((y < 0 ?  -y : y) & 0xFF)
+        static_cast<const UInt8>(( y >> 8) & 0xFF),
+        static_cast<const UInt8>(y & 0xFF)
+    };
+    [self _writeRaw:cmd bytes:sizeof(cmd)];
+}
+
 -(void)dkdn:(UInt16) key {
     NSLog(@"Key down: %02x |%c| <> ||", key, key);
     
@@ -205,6 +219,8 @@ static void* _timerLoop(void* p)
 }
 
 -(void)_writeRaw:(const UInt8 *)bytes bytes:(int)howMany {
+    UInt8 cmd[] = {bytes[0], bytes[1], bytes[2], bytes[3], 0x00 };
+    NSLog(@"(%d) -> %s", self->_id, cmd);
     UInt8 header[] = {0x00, 0x00, 0x00, (UInt8) howMany };
     UInt8 *buffer = (UInt8*)malloc(sizeof(header) + howMany);
     memcpy(buffer, header, sizeof(header));
@@ -215,7 +231,7 @@ static void* _timerLoop(void* p)
 }
 
 -(void)_writeSimple:(const char *)payload {
-    NSLog(@"(%d) -> %s", self->_id, payload);
+    //NSLog(@"(%d) -> %s", self->_id, payload);
     [self _writeRaw:(const UInt8 *)payload bytes:(int)strlen(payload)];
 }
 

@@ -1,14 +1,22 @@
-Conflux [![Build status](https://travis-ci.org/dpereira/conflux.svg?branch=master)](https://travis-ci.org/dpereira/conflux) [![License](https://img.shields.io/badge/license-GPLv2-blue.svg)](https://github.com/dpereira/conflux/blob/master/LICENSE.md)
+Conflux
 =======
 
+[![Build status](https://travis-ci.org/dpereira/conflux.svg?branch=master)](https://travis-ci.org/dpereira/conflux) [![License](https://img.shields.io/badge/license-GPLv2-blue.svg)](https://github.com/dpereira/conflux/blob/master/LICENSE.md)
+ 
 A [Synergy](http://synergy-project.org/) server for mobile devices.
 
 Supported OSes:
 ---------------
 
- - iOS: in progress.
- - Android: planned.
- - Windows Phone: planned.
+ - iOS
+  - In progress.
+  - v0.1 released.
+
+ - Android
+  - Planned.
+
+ - Windows Phone
+  - Planned.
 
 Conflux + Personal Hotspot:
 ---------------------------
@@ -67,4 +75,4 @@ To do so via bluetooth, follow these steps:
 
 10. You can now use the default view as if it were a touchpad, and the mouse cursor in the client device should respond to your input. If you want to go to the keyboard and back again, use the navigation links in the navigation bar at the top of the application. Enjoy!
 
-These steps can be addapted to USB and direct wireless connections by modifying the steps 1-4 to whatever is needed to ensure both devices have a direct network data link between each other.
+These steps can be adapted to USB and direct wireless connections by modifying the steps 1-4 to whatever is needed to ensure both devices have a direct network data link between each other.
