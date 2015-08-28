@@ -29,6 +29,7 @@
 		F1907EE81A70A60E00182F78 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F1907EE71A70A60E00182F78 /* Images.xcassets */; };
 		F1907EEB1A70A60E00182F78 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = F1907EE91A70A60E00182F78 /* LaunchScreen.xib */; };
 		F1907EF71A70A60E00182F78 /* SynergyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F1907EF61A70A60E00182F78 /* SynergyTests.m */; };
+		F1B533001B9009670040ED3B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1B532FF1B9009670040ED3B /* AudioToolbox.framework */; };
 		F1B7C8DB1AF6EB4100DBE5B3 /* KeyMapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = F1B7C8DA1AF6EB4100DBE5B3 /* KeyMapper.mm */; };
 /* End PBXBuildFile section */
 
@@ -80,6 +81,7 @@
 		F1907EF01A70A60E00182F78 /* confluxTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = confluxTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1907EF51A70A60E00182F78 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F1907EF61A70A60E00182F78 /* SynergyTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SynergyTests.m; sourceTree = "<group>"; };
+		F1B532FF1B9009670040ED3B /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		F1B7C8DA1AF6EB4100DBE5B3 /* KeyMapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = KeyMapper.mm; path = synergy/KeyMapper.mm; sourceTree = "<group>"; };
 		F1B7C8DC1AF6EB7B00DBE5B3 /* KeyMapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = KeyMapper.h; path = synergy/KeyMapper.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -89,6 +91,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F1B533001B9009670040ED3B /* AudioToolbox.framework in Frameworks */,
 				F187A9621AF6B75F0061CE4C /* libPods-confluxTests-OCMock.a in Frameworks */,
 				F187A9631AF6B75F0061CE4C /* libPods-confluxTests.a in Frameworks */,
 				F187A95F1AF6B6750061CE4C /* UIKit.framework in Frameworks */,
@@ -123,6 +126,7 @@
 		44995AF32C6F661206CF458A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F1B532FF1B9009670040ED3B /* AudioToolbox.framework */,
 				F187A9601AF6B75F0061CE4C /* libPods-confluxTests-OCMock.a */,
 				F187A9611AF6B75F0061CE4C /* libPods-confluxTests.a */,
 				F187A95E1AF6B6750061CE4C /* UIKit.framework */,

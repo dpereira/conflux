@@ -3,6 +3,7 @@
 #import <vector>
 #import <string>
 #import <algorithm>
+#import <AudioToolbox/AudioToolbox.h>
 
 @interface TouchpadViewController ()
 
@@ -77,6 +78,26 @@ typedef enum {
     twoFingersTapRecognizer.numberOfTouchesRequired = 2;
     twoFingersTapRecognizer.numberOfTapsRequired = 1;
     [self.view addGestureRecognizer:twoFingersTapRecognizer];
+    
+    UILongPressGestureRecognizer* pressRecognizer = [[UILongPressGestureRecognizer alloc]
+                                                     initWithTarget:self action:@selector(pressing:)
+                                                     ];
+    [self.view addGestureRecognizer:pressRecognizer];
+}
+
+- (IBAction)pressing:(UILongPressGestureRecognizer*)pressRecognizer
+{
+    CGPoint p = [pressRecognizer locationInView:pressRecognizer.view];
+    CFXPoint *coordinate = [[CFXPoint alloc] initWith:p.x andWith:p.y];
+    
+    if(pressRecognizer.state == UIGestureRecognizerStateBegan) {
+        AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+        [self->_synergy beginMouseDrag:coordinate];
+    } else if(pressRecognizer.state == UIGestureRecognizerStateChanged) {
+        [self->_synergy mouseMove:coordinate];
+    } else if(pressRecognizer.state == UIGestureRecognizerStateEnded) {
+        [self->_synergy endMouseDrag:coordinate];
+    }
 }
 
 - (IBAction)tapping:(UIPanGestureRecognizer*)tapRecognizer
@@ -186,61 +207,6 @@ typedef enum {
     [self updateAvailableScreens];
 }
 
-/*
-- (void)touchesBegan:(NSSet *)touches
-           withEvent:(UIEvent *)event
-{
-
-    UITouch *touched = [[event allTouches] anyObject];
-    CGPoint location = [touched locationInView:touched.view];
-    CFXPoint* p = [[CFXPoint alloc] initWith:location.x andWith:location.y];
-    
-    for (UITouch *aTouch in touches) {
-        if (aTouch.tapCount >= 2) {
-            self->_state = kCFXDoubleTap;
-            NSLog(@"Began double-tap");
-        }
-    }
-    
-    if(self->_state == kCFXDoubleTap) {
-        [self->_synergy beginMouseDrag: p];
-        NSLog(@"Dragging ...");
-    } else {
-        NSLog(@"Moving ...");
-        [self->_synergy beginMouseMove: p];
-    }
-}
-
-- (void)touchesMoved:(NSSet *)touches
-           withEvent:(UIEvent *)event
-{
-    UITouch *touched = [[event allTouches] anyObject];
-    CGPoint location = [touched locationInView:touched.view];
-    CFXPoint* p = [[CFXPoint alloc] initWith:location.x andWith:location.y];
-    
-    [self->_synergy mouseMove: p];
-}
-
-- (void)touchesEnded:(NSSet *)touches
-           withEvent:(UIEvent *)event
-{
-    if(self->_state != kCFXDoubleTap) {
-        for (UITouch *aTouch in touches) {
-            if (aTouch.tapCount >= 2) {
-                NSLog(@"D-Click");
-                [self->_synergy doubleClick: kCFXRight];
-            } else if(aTouch.tapCount == 1) {
-                [self->_synergy click: kCFXRight];
-                NSLog(@"S-Click");                
-            }
-        }
-    } else {
-        self->_state = kCFXDefault;
-        [self->_synergy endMouseDrag:NULL];
-        NSLog(@"Dragging ended.");
-    }
-}
-*/
 - (void)receive:(CFXSynergyEvent)event
            with:(const void *)payload
 {
