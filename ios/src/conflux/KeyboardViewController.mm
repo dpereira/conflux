@@ -31,7 +31,7 @@
     textArea.text = self._placeholder;
 
     AppDelegate* app = [[UIApplication sharedApplication] delegate];
-    [app._synergy keyStroke: len > 1 ? [text characterAtIndex:len - 1] : '\b'];
+    [app._synergy keyStroke: len > self._placeholder.length ? [text characterAtIndex:len - 1] : '\b'];
 }
 
 - (UITextView*)_textArea
