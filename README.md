@@ -21,9 +21,7 @@ Supported OSes:
 Usage:
 ------
 
-By default, Conflux displays the touchpad view:
-
-This is mostly a blank screen that allows for basic input from the user when she performs touchscreen actions:
+By default, Conflux displays the touchpad view. To switch to the keyboard view, use the link in the top-right edge of the navigation bar. Supported touchpad gestures:
 
  - Sliding the touchpad with one finger will move the Synergy client screen mouse pointer accordingly.
  - A single tap will translate into a single mouse click in the client screen.
@@ -38,6 +36,7 @@ These are temporary limitations, and it is planned to remove them as soon as pos
 
  - Only tested with Synergy 1.7 clients, in Windows and Mac OSX.
  - No support for SSL; clients must be configured to disable the support, or they won't be able to connect to the Conflux server.
+ - The only keyboard mapping works best with en-US keyboard layout, and even in it not every character from the iOS keyboard are properly translated, event though all the ones needed for standard usage are.
 
 
 Conflux + Personal Hotspot:
