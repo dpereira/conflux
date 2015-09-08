@@ -27,7 +27,7 @@ By default, Conflux displays the touchpad view. To switch to the keyboard view, 
  - A single tap will translate into a single mouse click in the client screen.
  - Double tapping will translate into a double click in the client screen.
  - Long pressing with one finger will initiate a mouse drag movement; it will select whatever is under the mouse pointer in the client screen. The mobile phone will vibrate to indicate that the dragging has begun. After that, moving the touching finger in any direction will drag any selected item in the client screen. To finish the drag and perform a "drop", release the finger touching the mobile screen.
- - Sliding two fingers simultaneously will trigger a vertical mouse wheel scrool; horizontal mouse wheel scrolling is still not implemented.
+ - Sliding two fingers simultaneously will trigger a vertical mouse wheel scroll; horizontal mouse wheel scrolling is still not implemented.
 
 Limitations:
 ------------
