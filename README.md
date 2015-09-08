@@ -10,13 +10,35 @@ Supported OSes:
 
  - iOS
   - In progress.
-  - v0.1 released.
+  - v0.2 released.
 
  - Android
   - Planned.
 
  - Windows Phone
   - Planned.
+
+Usage:
+------
+
+By default, Conflux displays the touchpad view:
+
+This is mostly a blank screen that allows for basic input from the user when she performs touchscreen actions:
+
+ - Sliding the touchpad with one finger will move the Synergy client screen mouse pointer accordingly.
+ - A single tap will translate into a single mouse click in the client screen.
+ - Double tapping will translate into a double click in the client screen.
+ - Long pressing with one finger will initiate a mouse drag movement; it will select whatever is under the mouse pointer in the client screen. The mobile phone will vibrate to indicate that the dragging has begun. After that, moving the touching finger in any direction will drag any selected item in the client screen. To finish the drag and perform a "drop", release the finger touching the mobile screen.
+ - Sliding two fingers simultaneously will trigger a vertical mouse wheel scrool; horizontal mouse wheel scrolling is still not implemented.
+
+Limitations:
+------------
+
+These are temporary limitations, and it is planned to remove them as soon as possible.
+
+ - Only tested with Synergy 1.7 clients, in Windows and Mac OSX.
+ - No support for SSL; clients must be configured to disable the support, or they won't be able to connect to the Conflux server.
+
 
 Conflux + Personal Hotspot:
 ---------------------------
