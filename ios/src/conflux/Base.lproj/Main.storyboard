@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="hrm-6g-OLw">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--Touchpad View Controller-->
@@ -17,13 +18,25 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <pickerView contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mqo-Yi-JWo">
-                                <rect key="frame" x="184" y="392" width="233" height="162"/>
+                                <rect key="frame" x="184" y="504" width="233" height="162"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="textColor">
+                                        <color key="value" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <variation key="heightClass=regular" misplaced="YES">
+                                    <rect key="frame" x="141" y="492" width="320" height="162"/>
+                                </variation>
+                                <variation key="heightClass=regular-widthClass=regular" misplaced="YES">
+                                    <rect key="frame" x="240" y="638" width="320" height="162"/>
+                                </variation>
                             </pickerView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="centerY" secondItem="mqo-Yi-JWo" secondAttribute="centerY" constant="-173" id="KsR-wy-pNH"/>
-                            <constraint firstAttribute="centerX" secondItem="mqo-Yi-JWo" secondAttribute="centerX" id="ZVZ-1r-MYC"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="mqo-Yi-JWo" secondAttribute="bottom" constant="-63" id="1jj-Fo-dr3"/>
+                            <constraint firstAttribute="centerX" secondItem="mqo-Yi-JWo" secondAttribute="centerX" id="2vU-nm-q8M"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="4P5-oW-vou">
@@ -32,6 +45,11 @@
                                 <segue destination="QDu-7u-Cjt" kind="show" id="dYU-xe-Fqg"/>
                             </connections>
                         </barButtonItem>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="color" keyPath="barTintColor">
+                                <color key="value" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
                     </navigationItem>
                     <connections>
                         <outlet property="picker" destination="mqo-Yi-JWo" id="Rk9-ca-Tcw"/>
@@ -57,9 +75,14 @@
                                 <rect key="frame" x="0.0" y="64" width="164" height="60"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="26"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="textColor">
+                                        <color key="value" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                             </textView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
                         <constraints>
                             <constraint firstAttribute="width" secondItem="eGi-eO-RwS" secondAttribute="width" id="Ybj-d5-f59"/>
                         </constraints>
@@ -77,6 +100,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="color" keyPath="barTintColor">
+                            <color key="value" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
                     <connections>
                         <segue destination="vXZ-lx-hvc" kind="relationship" relationship="rootViewController" id="1Le-kf-vba"/>
                     </connections>
@@ -86,4 +114,5 @@
             <point key="canvasLocation" x="-2660" y="-2194"/>
         </scene>
     </scenes>
+    <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
 </document>

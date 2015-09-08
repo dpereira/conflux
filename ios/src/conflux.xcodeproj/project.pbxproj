@@ -27,7 +27,6 @@
 		F1907EE31A70A60E00182F78 /* TouchpadViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = F1907EE21A70A60E00182F78 /* TouchpadViewController.mm */; };
 		F1907EE61A70A60E00182F78 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F1907EE41A70A60E00182F78 /* Main.storyboard */; };
 		F1907EE81A70A60E00182F78 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F1907EE71A70A60E00182F78 /* Images.xcassets */; };
-		F1907EEB1A70A60E00182F78 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = F1907EE91A70A60E00182F78 /* LaunchScreen.xib */; };
 		F1907EF71A70A60E00182F78 /* SynergyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F1907EF61A70A60E00182F78 /* SynergyTests.m */; };
 		F1B533001B9009670040ED3B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1B532FF1B9009670040ED3B /* AudioToolbox.framework */; };
 		F1B7C8DB1AF6EB4100DBE5B3 /* KeyMapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = F1B7C8DA1AF6EB4100DBE5B3 /* KeyMapper.mm */; };
@@ -77,7 +76,6 @@
 		F1907EE21A70A60E00182F78 /* TouchpadViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = TouchpadViewController.mm; sourceTree = "<group>"; };
 		F1907EE51A70A60E00182F78 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		F1907EE71A70A60E00182F78 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		F1907EEA1A70A60E00182F78 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		F1907EF01A70A60E00182F78 /* confluxTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = confluxTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1907EF51A70A60E00182F78 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F1907EF61A70A60E00182F78 /* SynergyTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SynergyTests.m; sourceTree = "<group>"; };
@@ -197,7 +195,6 @@
 				F1907EE11A70A60E00182F78 /* TouchpadViewController.h */,
 				F1907EE21A70A60E00182F78 /* TouchpadViewController.mm */,
 				F1907EE41A70A60E00182F78 /* Main.storyboard */,
-				F1907EE91A70A60E00182F78 /* LaunchScreen.xib */,
 				F1907EE71A70A60E00182F78 /* Images.xcassets */,
 				F1907EDA1A70A60E00182F78 /* Supporting Files */,
 			);
@@ -317,7 +314,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				F1907EE61A70A60E00182F78 /* Main.storyboard in Resources */,
-				F1907EEB1A70A60E00182F78 /* LaunchScreen.xib in Resources */,
 				F1907EE81A70A60E00182F78 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -407,14 +403,6 @@
 				F1907EE51A70A60E00182F78 /* Base */,
 			);
 			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		F1907EE91A70A60E00182F78 /* LaunchScreen.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				F1907EEA1A70A60E00182F78 /* Base */,
-			);
-			name = LaunchScreen.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

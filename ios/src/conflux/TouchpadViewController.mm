@@ -4,6 +4,7 @@
 #import <string>
 #import <algorithm>
 #import <AudioToolbox/AudioToolbox.h>
+#import <UIKit/UIKit.h>
 
 @interface TouchpadViewController ()
 
@@ -27,6 +28,9 @@ typedef enum {
 - (void)viewDidLoad
 {
     self->_waitingForScreensLabel = "Ready...";
+    
+    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
+    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     
     [super viewDidLoad];
     
