@@ -30,6 +30,7 @@
 		F1907EF71A70A60E00182F78 /* SynergyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F1907EF61A70A60E00182F78 /* SynergyTests.m */; };
 		F1B533001B9009670040ED3B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1B532FF1B9009670040ED3B /* AudioToolbox.framework */; };
 		F1B7C8DB1AF6EB4100DBE5B3 /* KeyMapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = F1B7C8DA1AF6EB4100DBE5B3 /* KeyMapper.mm */; };
+		F1BD135D1B9E753B007935FA /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = F1BD135C1B9E753B007935FA /* LaunchScreen.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -82,6 +83,7 @@
 		F1B532FF1B9009670040ED3B /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		F1B7C8DA1AF6EB4100DBE5B3 /* KeyMapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = KeyMapper.mm; path = synergy/KeyMapper.mm; sourceTree = "<group>"; };
 		F1B7C8DC1AF6EB7B00DBE5B3 /* KeyMapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = KeyMapper.h; path = synergy/KeyMapper.h; sourceTree = "<group>"; };
+		F1BD135C1B9E753B007935FA /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LaunchScreen.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -205,6 +207,7 @@
 			isa = PBXGroup;
 			children = (
 				F1907EDB1A70A60E00182F78 /* Info.plist */,
+				F1BD135C1B9E753B007935FA /* LaunchScreen.xib */,
 				F1907EDC1A70A60E00182F78 /* main.mm */,
 			);
 			name = "Supporting Files";
@@ -314,6 +317,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F1907EE61A70A60E00182F78 /* Main.storyboard in Resources */,
+				F1BD135D1B9E753B007935FA /* LaunchScreen.xib in Resources */,
 				F1907EE81A70A60E00182F78 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
