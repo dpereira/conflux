@@ -24,8 +24,9 @@ Usage:
 By default, Conflux displays the touchpad view. To switch to the keyboard view, use the link in the top-right edge of the navigation bar. Supported touchpad gestures:
 
  - Sliding the touchpad with one finger will move the Synergy client screen mouse pointer accordingly.
- - A single tap will translate into a single mouse click in the client screen.
- - Double tapping will translate into a double click in the client screen.
+ - A single tap will translate into a single mouse left-click in the client screen.
+ - A single tap with two fingers will translate into a single right-click in the client screen.
+ - Double tapping will translate into a double left-click in the client screen.
  - Long pressing with one finger will initiate a mouse drag movement; it will select whatever is under the mouse pointer in the client screen. The mobile phone will vibrate to indicate that the dragging has begun. After that, moving the touching finger in any direction will drag any selected item in the client screen. To finish the drag and perform a "drop", release the finger touching the mobile screen.
  - Sliding two fingers simultaneously will trigger a vertical mouse wheel scroll; horizontal mouse wheel scrolling is still not implemented.
 
