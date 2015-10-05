@@ -7,6 +7,7 @@
 #import "Synergy.h"
 #import "Protocol.h"
 #import "Mouse.h"
+#import "server/PrimaryClient.h"
 
 typedef struct {
     int _state;
@@ -48,6 +49,9 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
     if(self = [super init]) {
         self->_socket = nil;
         self->_clientsLock = PTHREAD_MUTEX_INITIALIZER;
+        
+        PrimaryClient*  p = new PrimaryClient(String("name"), NULL);
+        
         return self;
     } else {
         return nil;
@@ -175,7 +179,7 @@ typedef std::map<CFXProtocol*, CFXClientContext*> CFXClients;
     }
     
     CFXClientContext* ctx = [self _getActiveCtx];
-    NSLog(@"BEGIN MOUSE MOVE ACTIVE CTX: %s @ %f, %f", ctx->name, coordinates.x, coordinates.y);
+    NSLog(@"BEGIN MOUSE MOVE ACTIVE CTX: %s @ %d, %d", ctx->name, coordinates.x, coordinates.y);
     ctx->_currentCursorX = coordinates.x;
     ctx->_currentCursorY = coordinates.y;
 }

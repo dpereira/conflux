@@ -10,6 +10,7 @@
 		EC6C7023EA5E18735C35F448 /* libPods-confluxTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 72EB220625794A3E5C680179 /* libPods-confluxTests.a */; };
 		F11F9F421AA6B4190088A456 /* Socket.mm in Sources */ = {isa = PBXBuildFile; fileRef = F11F9F411AA6B4190088A456 /* Socket.mm */; };
 		F13E66531AD3805A00330539 /* KeyboardViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = F13E66521AD3805A00330539 /* KeyboardViewController.mm */; };
+		F14C277B1BC2084100C78220 /* libserver_fat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F14C277A1BC2084100C78220 /* libserver_fat.a */; };
 		F14D42891A9A8A270027C4C4 /* Protocol.mm in Sources */ = {isa = PBXBuildFile; fileRef = F14D42881A9A8A270027C4C4 /* Protocol.mm */; };
 		F14D42901A9AC42C0027C4C4 /* Synergy.mm in Sources */ = {isa = PBXBuildFile; fileRef = F14D428F1A9AC42C0027C4C4 /* Synergy.mm */; };
 		F14D42941A9AFFE20027C4C4 /* Point.mm in Sources */ = {isa = PBXBuildFile; fileRef = F14D42931A9AFFE20027C4C4 /* Point.mm */; };
@@ -51,6 +52,10 @@
 		F11F9F411AA6B4190088A456 /* Socket.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Socket.mm; sourceTree = "<group>"; };
 		F13E66521AD3805A00330539 /* KeyboardViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = KeyboardViewController.mm; sourceTree = "<group>"; };
 		F13E66541AD3806E00330539 /* KeyboardViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KeyboardViewController.h; sourceTree = "<group>"; };
+		F14C276F1BC0D86300C78220 /* libserver.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libserver.a; path = ../../external/synergy/lib/libserver.a; sourceTree = "<group>"; };
+		F14C27711BC0E82400C78220 /* libserver.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libserver.a; path = ../../external/synergy/src/lib/server/libserver.a; sourceTree = "<group>"; };
+		F14C27781BC2082B00C78220 /* server */ = {isa = PBXFileReference; lastKnownFileType = folder; name = server; path = ../../external/synergy/src/lib/server; sourceTree = "<group>"; };
+		F14C277A1BC2084100C78220 /* libserver_fat.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libserver_fat.a; path = ../../external/synergy/src/lib/server/libserver_fat.a; sourceTree = "<group>"; };
 		F14D42881A9A8A270027C4C4 /* Protocol.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Protocol.mm; path = synergy/Protocol.mm; sourceTree = "<group>"; };
 		F14D428B1A9A8B890027C4C4 /* Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Protocol.h; path = synergy/Protocol.h; sourceTree = "<group>"; };
 		F14D428E1A9AC42C0027C4C4 /* Synergy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Synergy.h; path = synergy/Synergy.h; sourceTree = "<group>"; };
@@ -91,6 +96,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F14C277B1BC2084100C78220 /* libserver_fat.a in Frameworks */,
 				F1B533001B9009670040ED3B /* AudioToolbox.framework in Frameworks */,
 				F187A9621AF6B75F0061CE4C /* libPods-confluxTests-OCMock.a in Frameworks */,
 				F187A9631AF6B75F0061CE4C /* libPods-confluxTests.a in Frameworks */,
@@ -126,6 +132,10 @@
 		44995AF32C6F661206CF458A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F14C277A1BC2084100C78220 /* libserver_fat.a */,
+				F14C27781BC2082B00C78220 /* server */,
+				F14C27711BC0E82400C78220 /* libserver.a */,
+				F14C276F1BC0D86300C78220 /* libserver.a */,
 				F1B532FF1B9009670040ED3B /* AudioToolbox.framework */,
 				F187A9601AF6B75F0061CE4C /* libPods-confluxTests-OCMock.a */,
 				F187A9611AF6B75F0061CE4C /* libPods-confluxTests.a */,
@@ -416,6 +426,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
+				ARCHS = arm64;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_CXX_LIBRARY = "compiler-default";
 				CLANG_ENABLE_MODULES = YES;
@@ -457,12 +468,9 @@
 				LINKER_DISPLAYS_MANGLED_NAMES = YES;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-lc++",
-				);
+				OTHER_LDFLAGS = "-lc++";
 				SDKROOT = iphoneos;
-				VALID_ARCHS = "armv7s arm64 armv7";
+				VALID_ARCHS = arm64;
 			};
 			name = Debug;
 		};
@@ -470,6 +478,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
+				ARCHS = arm64;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_CXX_LIBRARY = "compiler-default";
 				CLANG_ENABLE_MODULES = YES;
@@ -505,19 +514,17 @@
 				LINKER_DISPLAYS_MANGLED_NAMES = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-lc++",
-				);
+				OTHER_LDFLAGS = "-lc++";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
-				VALID_ARCHS = "armv7s arm64 armv7";
+				VALID_ARCHS = arm64;
 			};
 			name = Release;
 		};
 		F1907EFB1A70A60E00182F78 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = arm64;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -528,25 +535,33 @@
 					"$(PROJECT_DIR)/conflux_tests/include/",
 					"$(PROJECT_DIR)/external/synergy/src/lib",
 				);
+				"HEADER_SEARCH_PATHS[arch=*]" = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"$(PROJECT_DIR)/conflux_tests/include/",
+					"$(PROJECT_DIR)/external/synergy/src/lib",
+				);
 				INFOPLIST_FILE = conflux/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/diego/githome/conflux/external/synergy/lib,
+					/Users/diego/githome/conflux/external/synergy/src/lib/server,
+				);
 				LINKER_DISPLAYS_MANGLED_NAMES = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-lc++",
-				);
+				OTHER_LDFLAGS = "-lc++";
 				PRODUCT_NAME = conflux;
 				PROVISIONING_PROFILE = "";
-				VALID_ARCHS = "armv7s armv7 arm64";
+				VALID_ARCHS = arm64;
 			};
 			name = Debug;
 		};
 		F1907EFC1A70A60E00182F78 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = arm64;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -556,19 +571,25 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(PROJECT_DIR)/conflux_tests/include/",
 				);
+				"HEADER_SEARCH_PATHS[arch=*]" = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"$(PROJECT_DIR)/conflux_tests/include/",
+				);
 				INFOPLIST_FILE = conflux/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/diego/githome/conflux/external/synergy/lib,
+					/Users/diego/githome/conflux/external/synergy/src/lib/server,
+				);
 				LINKER_DISPLAYS_MANGLED_NAMES = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-lc++",
-				);
+				OTHER_LDFLAGS = "-lc++";
 				PRODUCT_NAME = conflux;
 				PROVISIONING_PROFILE = "";
-				VALID_ARCHS = "armv7s armv7 arm64";
+				VALID_ARCHS = arm64;
 			};
 			name = Release;
 		};
