@@ -3,7 +3,9 @@ Conflux
 
 [![Build status](https://travis-ci.org/dpereira/conflux.svg?branch=master)](https://travis-ci.org/dpereira/conflux) [![License](https://img.shields.io/badge/license-GPLv2-blue.svg)](https://github.com/dpereira/conflux/blob/master/LICENSE.md)
  
-A [Synergy](http://synergy-project.org/) server for mobile devices.
+A [Synergy](http://synergy-project.org/)-compatible server for mobile devices.
+
+Conflux is a virtual KVM server that allows you to remotely control multiple Synergy-enabled computers through your mobile, by transforming it into a fully functional touchpad-and-keyboard.
 
 Supported OSes:
 ---------------
